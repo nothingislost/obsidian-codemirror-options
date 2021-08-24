@@ -1,0 +1,1137 @@
+/* @settings
+name: CodeMirror Options
+id: CodeMirror Options
+settings:
+  - 
+    id: cm-header-theme
+    title: Syntax Highlighting Theme
+    type: heading
+    level: 1
+    collapsed: false
+  -
+    id: cm-theme-selection
+    title: Theme
+    type: class-select
+    allowEmpty: false
+    default: cm-theme-custom
+    options:
+      - 
+        label: Solarized Light
+        value: cm-theme-solarized-light
+      - 
+        label: Material Palenight
+        value: cm-theme-material-palenight
+      - 
+        label: Dracula
+        value: cm-theme-dracula
+      - 
+        label: Custom
+        value: cm-theme-custom
+  - 
+    id: cm-header-styles
+    title: Syntax Highlighting Styling
+    type: heading
+    level: 1
+    collapsed: true
+  -
+    id: cm-font-monospace
+    title: Code Block Font
+    type: variable-text
+    default: 'Jetbrains Mono, SFMono-Regular, Consolas, "Roboto Mono",
+    monospace'
+  -
+    id: cm-font-size
+    title: Code Block Font Size
+    type: variable-text
+    default: '18px'
+  -
+    id: cm-line-height
+    title: Code Block Line Height
+    type: variable-number
+    default: 1.5
+  -
+    id: cm-font-weight
+    title: Code Block Font Weight
+    type: variable-number
+    default: 500
+  -
+    id: cm-wrap-lines
+    title: Code Block Wrap Lines in Peview
+    type: variable-select
+    default: 'pre-wrap'
+    options:
+        - 
+          label: Wrap Lines
+          value: pre-wrap
+        -
+          label: Do Not Wrap Lines
+          value: pre
+  - 
+    id: cm-header-colors
+    title: Syntax Highlighting Custom Colors (select theme "Custom" to enable
+    type: heading
+    level: 1
+    collapsed: true
+  -
+    id: cm-background-color
+    title: Code Block Background Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#292d3e'
+    default-dark: '#292d3e'
+  -
+    id: cm-active-line-background-color
+    title: Code Block Active Line Background-Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#353a50'
+    default-dark: '#353a50'
+  -
+    id: cm-foreground-color
+    title: Code Block Foreground Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#d4d4d4'
+    default-dark: '#d4d4d4'
+  -
+    id: cm-keyword
+    title: Code Block Keyword Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#c792ea'
+    default-dark: '#c792ea'
+  -
+    id: cm-atom
+    title: Code Block Atom Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#f78c6c'
+    default-dark: '#f78c6c'
+  -
+    id: cm-number
+    title: Code Block Number Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ff5370'
+    default-dark: '#ff5370'
+  -
+    id: cm-type
+    title: Code Block Type Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#decb6b'
+    default-dark: '#decb6b'
+  -
+    id: cm-def
+    title: Code Block Definition Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#82aaff'
+    default-dark: '#82aaff'
+  -
+    id: cm-definition
+    title: Code Block Definition-2 Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#82aaff'
+    default-dark: '#82aaff'
+  -
+    id: cm-property
+    title: Code Block Property Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#c792ea'
+    default-dark: '#c792ea'
+  -
+    id: cm-variable
+    title: Code Block Variable Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#f07178'
+    default-dark: '#f07178'
+  -
+    id: cm-variable-2
+    title: Code Block Variable-2 Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#eeffff'
+    default-dark: '#eeffff'
+  -
+    id: cm-variable-3
+    title: Code Block Variable-3 Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#f07178'
+    default-dark: '#f07178'
+  -
+    id: cm-callee
+    title: Code Block Callee Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#89ddff'
+    default-dark: '#89ddff'
+  -
+    id: cm-qualifier
+    title: Code Block Qualifier Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#decb6b'
+    default-dark: '#decb6b'
+  -
+    id: cm-operator
+    title: Code Block Operator Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#89ddff'
+    default-dark: '#89ddff'
+  -
+    id: cm-hr
+    title: Code Block HR Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#98e342'
+    default-dark: '#98e342'
+  -
+    id: cm-link
+    title: Code Block Link Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#696d70'
+    default-dark: '#696d70'
+  -
+    id: cm-error-bg
+    title: Code Block Error Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ff5370'
+    default-dark: '#ff5370'
+  -
+    id: cm-header
+    title: Code Block Header Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#da7dae'
+    default-dark: '#da7dae'
+  -
+    id: cm-builtin
+    title: Code Block Builtin Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ffcb6b'
+    default-dark: '#ffcb6b'
+  -
+    id: cm-meta
+    title: Code Block Meta Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ffcb6b'
+    default-dark: '#ffcb6b'
+  -
+    id: cm-matching-bracket
+    title: Code Block Matching Bracket Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ffffff'
+    default-dark: '#ffffff'
+  -
+    id: cm-tag
+    title: Code Block Tag Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ff5370'
+    default-dark: '#ff5370'
+  -
+    id: cm-tag-in-comment
+    title: Code Block Tag in Comment Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ff5370'
+    default-dark: '#ff5370'
+  -
+    id: cm-string-2
+    title: Code Block String-2 Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#f07178'
+    default-dark: '#f07178'
+  -
+    id: cm-bracket
+    title: Code Block Bracket Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#ff5370'
+    default-dark: '#ff5370'
+  -
+    id: cm-comment
+    title: Code Block Comment Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#676e95'
+    default-dark: '#676e95'
+  -
+    id: cm-string
+    title: Code Block String Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#c3e88d'
+    default-dark: '#c3e88d'
+  -
+    id: cm-attribute
+    title: Code Block Attribute Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#c792ea'
+    default-dark: '#c792ea'
+  -
+    id: cm-attribute-in-comment
+    title: Code Block Attribute In Comment Color
+    type: variable-themed-color
+    format: hex
+    default-light: '#c792ea'
+    default-dark: '#c792ea'
+
+*/
+
+:root {
+    --cm-font-weight: 500;
+    --cm-font-size: 18px;
+    --cm-font-monospace: Jetbrains Mono, SFMono-Regular, Consolas, "Roboto Mono",
+      monospace;
+    --cm-wrap-lines: pre-wrap;
+    --cm-line-height: 1.5;
+}
+
+:root,
+.unified-cm-highlighting.cm-theme-custom {
+    /* material: palenight theme */
+    --cm-keyword: #c792ea;
+    --cm-atom: #f78c6c;
+    --cm-number: #ff5370;
+    --cm-type: #decb6b;
+    --cm-def: #82aaff;
+    --cm-property: #c792ea;
+    --cm-variable: #f07178;
+    --cm-variable-2: #eeffff;
+    --cm-variable-3: #f07178;
+    --cm-definition: #82aaff;
+    --cm-callee: #89ddff;
+    --cm-qualifier: #decb6b;
+    --cm-operator: #89ddff;
+    --cm-hr: #98e342;
+    --cm-link: #696d70;
+    --cm-error-bg: #ff5370;
+    --cm-header: #da7dae;
+    --cm-builtin: #ffcb6b;
+    --cm-meta: #ffcb6b;
+    --cm-matching-bracket: #ffffff;
+    --cm-tag: #ff5370;
+    --cm-tag-in-comment: #ff5370;
+    --cm-string-2: #f07178;
+    --cm-bracket: #ff5370;
+    --cm-comment: #676e95;
+    --cm-string: #c3e88d;
+    --cm-attribute: #c792ea;
+    --cm-attribute-in-comment: #c792ea;
+    --cm-background-color: #292d3e;
+    --cm-active-line-background-color: #353a50;
+    --cm-foreground-color: #d4d4d4;
+}
+
+body.unified-cm-highlighting.theme-light.cm-theme-dracula,
+body.unified-cm-highlighting.theme-dark.cm-theme-dracula {
+    --cm-background: #282a36;
+    --cm-foreground: #f8f8f2;
+    --cm-comment: #6272a4;
+    --cm-string: #f1fa8c;
+    --cm-string-2: #f1fa8c;
+    --cm-number: #bd93f9;
+    --cm-variable: #50fa7b;
+    --cm-variable-2: #ffffff;
+    --cm-def: #50fa7b;
+    --cm-operator: #ff79c6;
+    --cm-keyword: #ff79c6;
+    --cm-atom: #bd93f9;
+    --cm-meta: #f8f8f2;
+    --cm-tag: #ff79c6;
+    --cm-attribute: #50fa7b;
+    --cm-qualifier: #50fa7b;
+    --cm-property: #66d9ef;
+    --cm-builtin: #50fa7b;
+    --cm-variable-3: #ffb86c;
+    --cm-type: #ffb86c;
+    --cm-activeline-background: rgba(255,255,255,0.1);
+    --cm-matchingbracket: #fffff;
+}
+
+body.unified-cm-highlighting.theme-light.cm-theme-material-palenight,
+body.unified-cm-highlighting.theme-dark.cm-theme-material-palenight {
+  /* material: palenight theme */
+  --cm-keyword: #c792ea;
+  --cm-atom: #f78c6c;
+  --cm-number: #ff5370;
+  --cm-type: #decb6b;
+  --cm-def: #82aaff;
+  --cm-property: #c792ea;
+  --cm-variable: #f07178;
+  --cm-variable-2: #eeffff;
+  --cm-variable-3: #f07178;
+  --cm-definition: #82aaff;
+  --cm-callee: #89ddff;
+  --cm-qualifier: #decb6b;
+  --cm-operator: #89ddff;
+  --cm-hr: #98e342;
+  --cm-link: #696d70;
+  --cm-error-bg: #ff5370;
+  --cm-header: #da7dae;
+  --cm-builtin: #ffcb6b;
+  --cm-meta: #ffcb6b;
+  --cm-matching-bracket: #ffffff;
+  --cm-tag: #ff5370;
+  --cm-tag-in-comment: #ff5370;
+  --cm-string-2: #f07178;
+  --cm-bracket: #ff5370;
+  --cm-comment: #676e95;
+  --cm-string: #c3e88d;
+  --cm-attribute: #c792ea;
+  --cm-attribute-in-comment: #c792ea;
+  --cm-background-color: #292d3e;
+  --cm-active-line-background-color: #353a50;
+  --cm-foreground-color: #d4d4d4;
+}
+
+body.theme-light.cm-theme-solarized-light,
+body.theme-dark.cm-theme-solarized-light {
+    /* solarized */
+    --cm-keyword: #cb4b16;
+    --cm-atom: #d33682;
+    --cm-number: #d33682;
+    --cm-type: #6c71c4;
+    --cm-def: #2aa198;
+    --cm-property: #2aa198;
+    --cm-variable: #839496;
+    --cm-variable-2: #b58900;
+    --cm-variable-3: #6c71c4;
+    --cm-definition: #82aaff;
+    --cm-callee: #89ddff;
+    --cm-qualifier: #b58900;
+    --cm-operator: #6c71c4;
+    --cm-hr: #98e342;
+    --cm-link: #93a1a1;
+    --cm-error-bg: #ff5370;
+    --cm-header: #586e75;
+    --cm-builtin: #d33682;
+    --cm-meta: #859900;
+    --cm-matching-bracket: #859900;
+    --cm-tag: #93a1a1;
+    --cm-tag-in-comment: #ff5370;
+    --cm-string-2: #b58900;
+    --cm-bracket: #cb4b16;
+    --cm-comment: #586e75;
+    --cm-string: #859900;
+    --cm-attribute: #2aa198;
+    --cm-attribute-in-comment: #c792ea;
+    --cm-background-color: #fdf6e3;
+    --cm-active-line-background-color: #fffcf4;
+    --cm-foreground-color: #657b83;
+  }
+
+.setting-item.cm-warning .setting-item-description {
+    color: red;
+}
+
+/* make the "class based selection" background match the default ::selection background */
+body.style-active-selection span.CodeMirror-selectedtext {
+    background-color: var(--text-selection) !important;
+}
+
+/* body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock,
+body.fallback-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock {
+    --code-bg: var(--cm-background-color);
+    --note: var(--cm-background-color);
+} */
+
+body.unified-cm-highlighting[class*="theme-"] .HyperMD-codeblock-bg,
+body.fallback-highlighting[class*="theme-"] .HyperMD-codeblock-bg {
+  /* this is required to override YingYang's !important declaration */
+  /* will remove as soon as it's removed from YinYang */
+  --pre-code: var(--cm-background-color)
+}
+
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-section code,
+body.fallback-highlighting[class*="theme-"] .markdown-preview-section code {
+  /* this is required to override YingYang's !important declaration */
+  /* will remove as soon as it's removed from YinYang */
+    --inline-code: var(--cm-foreground-color);
+}
+
+/* Reasoning for body.unified-cm-highlighting[class*="theme-"]  */
+/* I had to get very specific to override the styling from Editor Syntax Highlighing and themes like Yin and Yang */
+
+/* Setting the cursor since the cursor is black by default in the base theme
+   * and it gets lost in a code black with a black background */
+body.unified-cm-highlighting[class*="theme-"] .CodeMirror-cursor {
+  --cursor-color: #afbaff;
+  border-color: var(--cursor-color);
+}
+
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian div.HyperMD-codeblock-bg, /* code block in edit mode */
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.CodeMirror-linebackground, /* frontmatter block in edit mode */
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.CodeMirror-linebackground, /* math block in edit mode */
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] /* code block in preview mode */ 
+{
+  background: var(--cm-background-color);
+  background-color: var(--cm-background-color);
+  text-shadow: none; /* just no */
+}
+
+/* edit modes */
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math,
+body.unified-cm-highlighting[class*="theme-"] .HyperMD-codeblock,
+body.unified-cm-highlighting[class*="theme-"] .cm-hmd-codeblock
+{
+  background: transparent;
+  --font-monospace: var(--cm-font-monospace);
+  color: var(--cm-foreground-color);
+  font-family: var(--cm-font-monospace);
+  font-weight: var(--cm-font-weight);
+  line-height: var(--cm-line-height);
+  font-size: var(--cm-font-size);
+  white-space: pre-wrap; /* lines must wrap in edit mode or it breaks CM */
+}
+
+/* preview modes */
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"],
+body.fallback-highlighting[class*="theme-"] .markdown-preview-view .HyperMD-codeblock,
+body.fallback-highlighting[class*="theme-"] .markdown-preview-view .cm-hmd-codeblock {
+    --font-monospace: var(--cm-font-monospace);
+    color: var(--cm-foreground-color);
+    font-family: var(--cm-font-monospace);
+    font-weight: var(--cm-font-weight);
+    line-height: var(--cm-line-height);
+    font-size: var(--cm-font-size);
+    white-space: var(--cm-wrap-lines);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-keyword,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-keyword,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-keyword,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-keyword {
+  color: var(--cm-keyword);
+  font-weight: normal;
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-atom,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-atom,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-atom,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-atom {
+  color: var(--cm-atom);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-number,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-number,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-number,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-number {
+  color: var(--cm-number);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-hmd-frontmatter.cm-type,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-math.cm-type,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  span.cm-type,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  span.cm-type {
+  color: var(--cm-type);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-def,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-def,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-def,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-def {
+  color: var(--cm-def);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-hmd-frontmatter.cm-property,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-math.cm-property,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  span.cm-property,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  span.cm-property {
+  color: var(--cm-property);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-hmd-frontmatter.cm-variable,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-math.cm-variable,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  span.cm-variable,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  span.cm-variable {
+  color: var(--cm-variable);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-hmd-frontmatter.cm-variable-2,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-math.cm-variable-2,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  span.cm-variable-2,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  span.cm-variable-2 {
+  color: var(--cm-variable-2);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-hmd-frontmatter.cm-variable-3,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  span.cm-math.cm-variable-3,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  span.cm-variable-3,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  span.cm-variable-3 {
+  color: var(--cm-variable-3);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-type.cm-def,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-type.cm-def,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-type.cm-def,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-type.cm-def {
+  color: var(--cm-definition);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-callee,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-callee,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-callee,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-callee {
+  color: var(--cm-callee);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-operator,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-operator,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-operator,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-operator {
+  color: var(--cm-operator);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-qualifier,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-qualifier,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-qualifier,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-qualifier {
+  color: var(--cm-qualifier);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-tag,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-tag,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-tag,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-tag {
+  color: var(--cm-tag);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-tag.cm-bracket,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-tag.cm-bracket,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-tag.cm-bracket,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-tag.cm-bracket {
+  color: var(--cm-bracket);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-attribute,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-attribute,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-attribute,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-attribute {
+  color: var(--cm-attribute);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-comment,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-comment,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-comment,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-comment {
+  color: var(--cm-comment);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-comment.cm-attribute,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-comment.cm-attribute,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-comment.cm-attribute,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-comment.cm-attribute {
+  color: var(--cm-attribute-in-comment);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-comment.cm-tag,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-comment.cm-tag,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-comment.cm-tag,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-comment.cm-tag {
+  color: var(--cm-tag-in-comment);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-string,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-string,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-string,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-string {
+  color: var(--cm-string);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-string-2,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-string-2,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-string-2,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-string-2 {
+  color: var(--cm-string-2);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-meta,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-meta,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-meta,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-meta {
+  color: var(--cm-meta);
+  background: inherit;
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-builtin,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.cm-builtin,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-builtin,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-builtin {
+  color: var(--cm-builtin);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-header,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-header,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-header,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-header {
+  color: var(--cm-header);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-hr,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-hr,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-hr,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-hr {
+  color: var(--cm-hr);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-link,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-link,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-link,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-link {
+  color: var(--cm-link);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.cm-error,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-error,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .cm-error,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .cm-error {
+  color: white;
+  background-color: var(--cm-error-bg);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.CodeMirror-activeline-background,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.CodeMirror-activeline-background,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .HyperMD-codeblock-bg.CodeMirror-activeline-background,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .CodeMirror-activeline-background {
+  background: var(--cm-active-line-background-color);
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter.CodeMirror-matchingbracket,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-math.CodeMirror-matchingbracket,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock
+  .CodeMirror-matchingbracket,
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian
+  .CodeMirror-matchingbracket {
+  text-decoration: underline;
+  color: rgb(var(--cm-matching-bracket)) !important;
+}
+
+/* END CODE BLOCK EDITOR MODE SYNTAX HIGHLIGHTING[class*="theme-"] */
+
+/* FALL BACK CODE BLOCK PREVIEW MODE SYNTAX HIGHLIGHTING */
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre[class*="language-"] {
+  /* material: palenight theme */
+  background-color: var(--cm-background-color);
+}
+
+body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre code,
+body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre code * {
+  text-shadow: none;
+  color: var(--cm-foreground-color);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.keyword {
+  color: var(--cm-keyword);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.class-name {
+  color: var(--cm-def);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.class {
+  color: var(--cm-qualifier);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.function {
+  color: var(--cm-def);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.punctuation {
+  color: var(--cm-foreground-color);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.operator {
+  color: var(--cm-operator);
+  background: transparent;
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.entity {
+  color: var(--cm-attribute);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.parameter {
+  color: var(--cm-property);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.property {
+  color: var(--cm-property);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.important {
+  color: var(--cm-error-bg);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.attr-name {
+  color: var(--cm-tag);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.attr-value {
+  color: var(--cm-string);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.builtin {
+  color: var(--cm-builtin);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.string {
+  color: var(--cm-string);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.number {
+  color: var(--cm-number);
+}
+
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre
+  code
+  span.unit {
+  color: var(--cm-number);
+}
+
+/* END FALL BACK CODE BLOCK PREVIEW MODE SYNTAX HIGHLIGHTING */

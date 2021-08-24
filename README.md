@@ -13,19 +13,117 @@ To manually install
 
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
+## Features
+
+### Syntax Highlighting
+
+When enabled, this plugin will apply a consistent syntax highlighting theme to code blocks in both edit and preview modes.
+
+By default, the plugin applies the theme "Material: Palenight" to both light and dark modes.
+
+If you'd like to customize the syntax highlighting theme, install Style Settings and explore the CodeMirror Options section within the Style Settings Plugin Options.
+
+This plugin currently includes 4 theme options out of the box:
+
+- Solarized Light
+- Material Palenight
+- Dracula
+- Custom
+
+When using the custom theme, you can customize any of the available syntax highlighting colors. You can also use the custom theme option to import your own themes using the Style Settings import function.
+
+Here's an example of importing the Dracula theme for use in dark mode only:
+
+```json
+{
+"CodeMirror Options@@cm-background@@dark": "#282a36",
+"CodeMirror Options@@cm-foreground@@dark": "#f8f8f2",
+"CodeMirror Options@@cm-comment@@dark": "#6272a4",
+"CodeMirror Options@@cm-string@@dark": "#f1fa8c",
+"CodeMirror Options@@cm-string-2@@dark": "#f1fa8c",
+"CodeMirror Options@@cm-number@@dark": "#bd93f9",
+"CodeMirror Options@@cm-variable@@dark": "#50fa7b",
+"CodeMirror Options@@cm-variable-2@@dark": "#ffffff",
+"CodeMirror Options@@cm-def@@dark": "#50fa7b",
+"CodeMirror Options@@cm-operator@@dark": "#ff79c6",
+"CodeMirror Options@@cm-keyword@@dark": "#ff79c6",
+"CodeMirror Options@@cm-atom@@dark": "#bd93f9",
+"CodeMirror Options@@cm-meta@@dark": "#f8f8f2",
+"CodeMirror Options@@cm-tag@@dark": "#ff79c6",
+"CodeMirror Options@@cm-attribute@@dark": "#50fa7b",
+"CodeMirror Options@@cm-qualifier@@dark": "#50fa7b",
+"CodeMirror Options@@cm-property@@dark": "#66d9ef",
+"CodeMirror Options@@cm-builtin@@dark": "#50fa7b",
+"CodeMirror Options@@cm-variable-3@@dark": "#ffb86c",
+"CodeMirror Options@@cm-type@@dark": "#ffb86c",
+"CodeMirror Options@@cm-activeline-background@@dark": "#414458",
+"CodeMirror Options@@cm-matchingbracket@@dark": "#ffffff"
+}
+```
+
+Similarly, you can import a theme for use in light mode by using @@light:
+
+```json
+{
+"CodeMirror Options@@cm-background@@light": "#282a36",
+"CodeMirror Options@@cm-foreground@@light": "#f8f8f2",
+"CodeMirror Options@@cm-comment@@light": "#6272a4",
+"CodeMirror Options@@cm-string@@light": "#f1fa8c",
+"CodeMirror Options@@cm-string-2@@light": "#f1fa8c",
+"CodeMirror Options@@cm-number@@light": "#bd93f9",
+"CodeMirror Options@@cm-variable@@light": "#50fa7b",
+"CodeMirror Options@@cm-variable-2@@light": "#ffffff",
+"CodeMirror Options@@cm-def@@light": "#50fa7b",
+"CodeMirror Options@@cm-operator@@light": "#ff79c6",
+"CodeMirror Options@@cm-keyword@@light": "#ff79c6",
+"CodeMirror Options@@cm-atom@@light": "#bd93f9",
+"CodeMirror Options@@cm-meta@@light": "#f8f8f2",
+"CodeMirror Options@@cm-tag@@light": "#ff79c6",
+"CodeMirror Options@@cm-attribute@@light": "#50fa7b",
+"CodeMirror Options@@cm-qualifier@@light": "#50fa7b",
+"CodeMirror Options@@cm-property@@light": "#66d9ef",
+"CodeMirror Options@@cm-builtin@@light": "#50fa7b",
+"CodeMirror Options@@cm-variable-3@@light": "#ffb86c",
+"CodeMirror Options@@cm-type@@light": "#ffb86c",
+"CodeMirror Options@@cm-activeline-background@@light": "#414458",
+"CodeMirror Options@@cm-matchingbracket@@light": "#ffffff"
+}
+```
+
+The CSS properties match closely to the standard properties used by CodeMirror. You can find more theme colors here https://codemirror.net/theme/ and adapt them to this import format.
+
 ## Settings
 
 ### Dynamic Cursor Sizing
 
+When enabled, the cursor height will be determined by the max height of the entire line. When disabled, the cursor's height is based on the height of the adjacent reference character.
+
 ### Retain Active Line on Selection
+
+When enabled, text selection will not remove the .active-line class on the current line. When disabled text selection on the active line will remove the .active-line class.
 
 ### Mark Selected Text with a CSS class
 
+When enabled, selected text will be marked with the CSS class .CodeMirror-selectedtext. Useful to force the styling of selected text when ::selection is not sufficient.
+
+### Use CodeMirror for syntax highlighting in preview mode
+
+This setting creates consistent highlighting between edit and preview by using CodeMirror to highlight in both modes. **Note**: This setting requires the "Editor Syntax Highlight" plugin to function.
+
+### Fallback: Unify the default prism.js code block styling
+
+This setting is a fallback option if you do not want to inject CM into preview mode. It will try and unify the prism.js colors to match the CodeMirror theme as close as possible.
+
 ## Known Issues
 
-- This plugin leverages the CM5 API directly which is a deprecated action. Obsidian will be moving to CM6 soon and this plugin will break. I'm not sure yet if I'll be able to make these same tweaks on CM6.
+- This plugin leverages the CM5 API directly which is a deprecated option. Obsidian will be moving to CM6 soon and this plugin will break. I'm not sure yet if I'll be able to make these same tweaks on CM6.
 
 ## Changelog
+
+### 0.0.2
+
+- Code cleanup
+- Added Syntax Highlighting options
 
 ### 0.0.1
 

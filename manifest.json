@@ -1,9 +1,9 @@
 {
   "id": "obsidian-codemirror-options",
   "name": "CodeMirror Options",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Enable/Disable certain CodeMirror options",
   "author": "NothingIsLost",
-  "authorUrl": "",
+  "authorUrl": "https://github.com/nothingislost",
   "isDesktopOnly": true
 }
