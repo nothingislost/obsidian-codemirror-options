@@ -1,3 +1,6 @@
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
 // Because sometimes you need to mark the selected *text*.
 //
 // Adds an option 'styleSelectedText' which, when enabled, gives
@@ -30,6 +33,8 @@
     function onChange(cm) {
       if (cm.state.markedSelection.length)
         cm.operation(function() { clear(cm); });
+      if (cm.state.markedLines.length)
+        cm.operation(function() { clear(cm); });        
     }
   
     var CHUNK_SIZE = 8;
@@ -40,7 +45,9 @@
     }
   
     function coverRange(cm, from, to, addAt) {
-      if (cmp(from, to) == 0) return;
+      if (cmp(from, to) == 0) {
+        return;
+      }
       var array = cm.state.markedSelection;
       var lines = cm.state.markedLines = [];
       var cls = cm.state.markedSelectionStyle;
@@ -64,6 +71,10 @@
       var array = cm.state.markedSelection;
       for (var i = 0; i < array.length; ++i) array[i].clear();
       array.length = 0;
+      clearLines(cm);
+    }
+
+    function clearLines(cm) {
       var lines = cm.state.markedLines;
       if (lines) { 
         for (var i = 0; i < lines.length; ++i) {
@@ -75,12 +86,30 @@
   
     function reset(cm) {
       clear(cm);
-      var from = cm.getCursor("start"), to = cm.getCursor("end");
-      coverRange(cm, from, to);
+      cm.listSelections().forEach((selection) => {
+        if (selection.anchor.line < selection.head.line) {
+          coverRange(cm, selection.anchor, selection.head)
+        } else if (selection.anchor.line === selection.head.line && selection.anchor.ch < selection.head.ch) {
+          coverRange(cm, selection.anchor, selection.head)
+         } else {
+          coverRange(cm, selection.head, selection.anchor)
+        }
+      });
     }
   
     function update(cm) {
-      var from = cm.getCursor("start"), to = cm.getCursor("end");
+      cm.listSelections().forEach((selection) => {
+         if (selection.anchor.line < selection.head.line) { 
+           update2(cm, selection.anchor, selection.head);
+          } else if (selection.anchor.line === selection.head.line && selection.anchor.ch < selection.head.ch) {
+           update2(cm, selection.anchor, selection.head);
+          } else {
+           update2(cm, selection.head, selection.anchor);
+          }
+      });
+    }
+
+    function update2(cm, from, to) {
       if (cmp(from, to) == 0) return clear(cm);
   
       var array = cm.state.markedSelection;
@@ -93,13 +122,14 @@
   
       while (cmp(from, coverStart.from) > 0) {
         array.shift().clear();
-        coverStart = array[0].find();
+        if (array[0]) coverStart = array[0].find();
       }
       if (cmp(from, coverStart.from) < 0) {
         if (coverStart.to.line - from.line < CHUNK_SIZE) {
           array.shift().clear();
           coverRange(cm, from, coverStart.to, 0);
         } else {
+          clearLines(cm);
           coverRange(cm, from, coverStart.from, 0);
         }
       }

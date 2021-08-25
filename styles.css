@@ -439,9 +439,14 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   color: red;
 }
 
-/* make the "class based selection" background match the default ::selection background */
+/* set the new text selection mode to use --text-selection */
 body.style-active-selection span.CodeMirror-selectedtext {
   background-color: var(--text-selection) !important;
+}
+
+/* disable the default CodeMirror selection */
+body.style-active-selection .CodeMirror-selected {
+  background: transparent !important;
 }
 
 /* body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock,

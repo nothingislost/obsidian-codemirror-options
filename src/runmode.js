@@ -1,3 +1,6 @@
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
 CodeMirror.runMode = function(string, modespec, callback, options) {
     var mode = CodeMirror.getMode(CodeMirror.defaults, modespec);
     var ie = /MSIE \d/.test(navigator.userAgent);

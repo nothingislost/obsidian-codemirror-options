@@ -1,3 +1,6 @@
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
 CodeMirror.colorize = (function() {
 
     var isBlock = /^(p|li|div|h\\d|pre|blockquote|td)$/;
