@@ -42,12 +42,17 @@
     function coverRange(cm, from, to, addAt) {
       if (cmp(from, to) == 0) return;
       var array = cm.state.markedSelection;
+      var lines = cm.state.markedLines = [];
       var cls = cm.state.markedSelectionStyle;
       for (var line = from.line;;) {
         var start = line == from.line ? from : Pos(line, 0);
         var endLine = line + CHUNK_SIZE, atEnd = endLine >= to.line;
         var end = atEnd ? to : Pos(endLine, 0);
         var mark = cm.markText(start, end, {className: cls});
+        for (var i = from.line; i < to.line + 1; ++i) {
+          var line = cm.addLineClass(i, "wrap", "CodeMirror-activeline");
+          lines.push(line);
+        }
         if (addAt == null) array.push(mark);
         else array.splice(addAt++, 0, mark);
         if (atEnd) break;
@@ -59,6 +64,13 @@
       var array = cm.state.markedSelection;
       for (var i = 0; i < array.length; ++i) array[i].clear();
       array.length = 0;
+      var lines = cm.state.markedLines;
+      if (lines) { 
+        for (var i = 0; i < lines.length; ++i) {
+          cm.removeLineClass(lines[i], "wrap", "CodeMirror-activeline")
+        }
+        lines.length = 0;
+      }
     }
   
     function reset(cm) {

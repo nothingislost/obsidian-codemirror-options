@@ -68,7 +68,7 @@ settings:
           value: pre
   - 
     id: cm-header-colors
-    title: Syntax Highlighting Custom Colors (select theme "Custom" to enable
+    title: Syntax Highlighting Custom Colors (select theme "Custom" to enable)
     type: heading
     level: 1
     collapsed: true
@@ -293,74 +293,74 @@ settings:
 */
 
 :root {
-    --cm-font-weight: 500;
-    --cm-font-size: 18px;
-    --cm-font-monospace: Jetbrains Mono, SFMono-Regular, Consolas, "Roboto Mono",
-      monospace;
-    --cm-wrap-lines: pre-wrap;
-    --cm-line-height: 1.5;
+  --cm-font-weight: 500;
+  --cm-font-size: 18px;
+  --cm-font-monospace: Jetbrains Mono, SFMono-Regular, Consolas, "Roboto Mono",
+    monospace;
+  --cm-wrap-lines: pre-wrap;
+  --cm-line-height: 1.5;
 }
 
 :root,
 .unified-cm-highlighting.cm-theme-custom {
-    /* material: palenight theme */
-    --cm-keyword: #c792ea;
-    --cm-atom: #f78c6c;
-    --cm-number: #ff5370;
-    --cm-type: #decb6b;
-    --cm-def: #82aaff;
-    --cm-property: #c792ea;
-    --cm-variable: #f07178;
-    --cm-variable-2: #eeffff;
-    --cm-variable-3: #f07178;
-    --cm-definition: #82aaff;
-    --cm-callee: #89ddff;
-    --cm-qualifier: #decb6b;
-    --cm-operator: #89ddff;
-    --cm-hr: #98e342;
-    --cm-link: #696d70;
-    --cm-error-bg: #ff5370;
-    --cm-header: #da7dae;
-    --cm-builtin: #ffcb6b;
-    --cm-meta: #ffcb6b;
-    --cm-matching-bracket: #ffffff;
-    --cm-tag: #ff5370;
-    --cm-tag-in-comment: #ff5370;
-    --cm-string-2: #f07178;
-    --cm-bracket: #ff5370;
-    --cm-comment: #676e95;
-    --cm-string: #c3e88d;
-    --cm-attribute: #c792ea;
-    --cm-attribute-in-comment: #c792ea;
-    --cm-background-color: #292d3e;
-    --cm-active-line-background-color: #353a50;
-    --cm-foreground-color: #d4d4d4;
+  /* material: palenight theme */
+  --cm-keyword: #c792ea;
+  --cm-atom: #f78c6c;
+  --cm-number: #ff5370;
+  --cm-type: #decb6b;
+  --cm-def: #82aaff;
+  --cm-property: #c792ea;
+  --cm-variable: #f07178;
+  --cm-variable-2: #eeffff;
+  --cm-variable-3: #f07178;
+  --cm-definition: #82aaff;
+  --cm-callee: #89ddff;
+  --cm-qualifier: #decb6b;
+  --cm-operator: #89ddff;
+  --cm-hr: #98e342;
+  --cm-link: #696d70;
+  --cm-error-bg: #ff5370;
+  --cm-header: #da7dae;
+  --cm-builtin: #ffcb6b;
+  --cm-meta: #ffcb6b;
+  --cm-matching-bracket: #ffffff;
+  --cm-tag: #ff5370;
+  --cm-tag-in-comment: #ff5370;
+  --cm-string-2: #f07178;
+  --cm-bracket: #ff5370;
+  --cm-comment: #676e95;
+  --cm-string: #c3e88d;
+  --cm-attribute: #c792ea;
+  --cm-attribute-in-comment: #c792ea;
+  --cm-background-color: #292d3e;
+  --cm-active-line-background-color: #353a50;
+  --cm-foreground-color: #d4d4d4;
 }
 
 body.unified-cm-highlighting.theme-light.cm-theme-dracula,
 body.unified-cm-highlighting.theme-dark.cm-theme-dracula {
-    --cm-background: #282a36;
-    --cm-foreground: #f8f8f2;
-    --cm-comment: #6272a4;
-    --cm-string: #f1fa8c;
-    --cm-string-2: #f1fa8c;
-    --cm-number: #bd93f9;
-    --cm-variable: #50fa7b;
-    --cm-variable-2: #ffffff;
-    --cm-def: #50fa7b;
-    --cm-operator: #ff79c6;
-    --cm-keyword: #ff79c6;
-    --cm-atom: #bd93f9;
-    --cm-meta: #f8f8f2;
-    --cm-tag: #ff79c6;
-    --cm-attribute: #50fa7b;
-    --cm-qualifier: #50fa7b;
-    --cm-property: #66d9ef;
-    --cm-builtin: #50fa7b;
-    --cm-variable-3: #ffb86c;
-    --cm-type: #ffb86c;
-    --cm-activeline-background: rgba(255,255,255,0.1);
-    --cm-matchingbracket: #fffff;
+  --cm-background: #282a36;
+  --cm-foreground: #f8f8f2;
+  --cm-comment: #6272a4;
+  --cm-string: #f1fa8c;
+  --cm-string-2: #f1fa8c;
+  --cm-number: #bd93f9;
+  --cm-variable: #50fa7b;
+  --cm-variable-2: #ffffff;
+  --cm-def: #50fa7b;
+  --cm-operator: #ff79c6;
+  --cm-keyword: #ff79c6;
+  --cm-atom: #bd93f9;
+  --cm-meta: #f8f8f2;
+  --cm-tag: #ff79c6;
+  --cm-attribute: #50fa7b;
+  --cm-qualifier: #50fa7b;
+  --cm-property: #66d9ef;
+  --cm-builtin: #50fa7b;
+  --cm-variable-3: #ffb86c;
+  --cm-type: #ffb86c;
+  --cm-activeline-background: #414458;
+  --cm-matchingbracket: #fffff;
 }
 
 body.unified-cm-highlighting.theme-light.cm-theme-material-palenight,
@@ -399,49 +399,49 @@ body.unified-cm-highlighting.theme-dark.cm-theme-material-palenight {
   --cm-foreground-color: #d4d4d4;
 }
 
-body.theme-light.cm-theme-solarized-light,
-body.theme-dark.cm-theme-solarized-light {
-    /* solarized */
-    --cm-keyword: #cb4b16;
-    --cm-atom: #d33682;
-    --cm-number: #d33682;
-    --cm-type: #6c71c4;
-    --cm-def: #2aa198;
-    --cm-property: #2aa198;
-    --cm-variable: #839496;
-    --cm-variable-2: #b58900;
-    --cm-variable-3: #6c71c4;
-    --cm-definition: #82aaff;
-    --cm-callee: #89ddff;
-    --cm-qualifier: #b58900;
-    --cm-operator: #6c71c4;
-    --cm-hr: #98e342;
-    --cm-link: #93a1a1;
-    --cm-error-bg: #ff5370;
-    --cm-header: #586e75;
-    --cm-builtin: #d33682;
-    --cm-meta: #859900;
-    --cm-matching-bracket: #859900;
-    --cm-tag: #93a1a1;
-    --cm-tag-in-comment: #ff5370;
-    --cm-string-2: #b58900;
-    --cm-bracket: #cb4b16;
-    --cm-comment: #586e75;
-    --cm-string: #859900;
-    --cm-attribute: #2aa198;
-    --cm-attribute-in-comment: #c792ea;
-    --cm-background-color: #fdf6e3;
-    --cm-active-line-background-color: #fffcf4;
-    --cm-foreground-color: #657b83;
-  }
+body.unified-cm-highlighting.theme-light.cm-theme-solarized-light,
+body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
+  /* solarized */
+  --cm-keyword: #cb4b16;
+  --cm-atom: #d33682;
+  --cm-number: #d33682;
+  --cm-type: #6c71c4;
+  --cm-def: #2aa198;
+  --cm-property: #2aa198;
+  --cm-variable: #839496;
+  --cm-variable-2: #b58900;
+  --cm-variable-3: #6c71c4;
+  --cm-definition: #82aaff;
+  --cm-callee: #89ddff;
+  --cm-qualifier: #b58900;
+  --cm-operator: #6c71c4;
+  --cm-hr: #98e342;
+  --cm-link: #93a1a1;
+  --cm-error-bg: #ff5370;
+  --cm-header: #586e75;
+  --cm-builtin: #d33682;
+  --cm-meta: #859900;
+  --cm-matching-bracket: #859900;
+  --cm-tag: #93a1a1;
+  --cm-tag-in-comment: #ff5370;
+  --cm-string-2: #b58900;
+  --cm-bracket: #cb4b16;
+  --cm-comment: #586e75;
+  --cm-string: #859900;
+  --cm-attribute: #2aa198;
+  --cm-attribute-in-comment: #c792ea;
+  --cm-background-color: #fdf6e3;
+  --cm-active-line-background-color: #fffcf4;
+  --cm-foreground-color: #657b83;
+}
 
 .setting-item.cm-warning .setting-item-description {
-    color: red;
+  color: red;
 }
 
 /* make the "class based selection" background match the default ::selection background */
 body.style-active-selection span.CodeMirror-selectedtext {
-    background-color: var(--text-selection) !important;
+  background-color: var(--text-selection) !important;
 }
 
 /* body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock,
@@ -454,14 +454,14 @@ body.unified-cm-highlighting[class*="theme-"] .HyperMD-codeblock-bg,
 body.fallback-highlighting[class*="theme-"] .HyperMD-codeblock-bg {
   /* this is required to override YingYang's !important declaration */
   /* will remove as soon as it's removed from YinYang */
-  --pre-code: var(--cm-background-color)
+  --pre-code: var(--cm-background-color);
 }
 
 body.unified-cm-highlighting[class*="theme-"] .markdown-preview-section code,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-section code {
   /* this is required to override YingYang's !important declaration */
   /* will remove as soon as it's removed from YinYang */
-    --inline-code: var(--cm-foreground-color);
+  --inline-code: var(--cm-foreground-color);
 }
 
 /* Reasoning for body.unified-cm-highlighting[class*="theme-"]  */
@@ -477,20 +477,22 @@ body.unified-cm-highlighting[class*="theme-"] .CodeMirror-cursor {
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian div.HyperMD-codeblock-bg, /* code block in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.CodeMirror-linebackground, /* frontmatter block in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.CodeMirror-linebackground, /* math block in edit mode */
-body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] /* code block in preview mode */ 
-{
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] /* code block in preview mode */ {
   background: var(--cm-background-color);
   background-color: var(--cm-background-color);
   text-shadow: none; /* just no */
 }
 
 /* edit modes */
-body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter,
-body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  .cm-hmd-frontmatter,
+body.unified-cm-highlighting[class*="theme-"]
+  .cm-s-obsidian
+  pre.HyperMD-codeblock,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math,
 body.unified-cm-highlighting[class*="theme-"] .HyperMD-codeblock,
-body.unified-cm-highlighting[class*="theme-"] .cm-hmd-codeblock
-{
+body.unified-cm-highlighting[class*="theme-"] .cm-hmd-codeblock {
   background: transparent;
   --font-monospace: var(--cm-font-monospace);
   color: var(--cm-foreground-color);
@@ -502,16 +504,22 @@ body.unified-cm-highlighting[class*="theme-"] .cm-hmd-codeblock
 }
 
 /* preview modes */
-body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"],
-body.fallback-highlighting[class*="theme-"] .markdown-preview-view .HyperMD-codeblock,
-body.fallback-highlighting[class*="theme-"] .markdown-preview-view .cm-hmd-codeblock {
-    --font-monospace: var(--cm-font-monospace);
-    color: var(--cm-foreground-color);
-    font-family: var(--cm-font-monospace);
-    font-weight: var(--cm-font-weight);
-    line-height: var(--cm-line-height);
-    font-size: var(--cm-font-size);
-    white-space: var(--cm-wrap-lines);
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian[class*="language-"],
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  .HyperMD-codeblock,
+body.fallback-highlighting[class*="theme-"]
+  .markdown-preview-view
+  .cm-hmd-codeblock {
+  --font-monospace: var(--cm-font-monospace);
+  color: var(--cm-foreground-color);
+  font-family: var(--cm-font-monospace);
+  font-weight: var(--cm-font-weight);
+  line-height: var(--cm-line-height);
+  font-size: var(--cm-font-size);
+  white-space: var(--cm-wrap-lines);
 }
 
 body.unified-cm-highlighting[class*="theme-"]
