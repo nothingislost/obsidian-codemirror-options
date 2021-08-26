@@ -17,6 +17,8 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ### Syntax Highlighting
 
+<img src="imgs/cmo-syntax-highlighting.gif" alt="cmo-syntax-highlighting" style="zoom:67%;" />
+
 When enabled, this plugin will apply a consistent syntax highlighting theme to code blocks in both edit and preview modes.
 
 By default, the plugin applies the theme "Material: Palenight" to both light and dark modes.
@@ -96,15 +98,21 @@ The CSS properties match closely to the standard properties used by CodeMirror. 
 
 ### Dynamic Cursor Sizing
 
+<img src="imgs/cmo-dynamic-cursor-size.gif" alt="cmo-dynamic-cursor-size" style="zoom:67%;" />
+
 When enabled, the cursor height will be determined by the max height of the entire line. When disabled, the cursor's height is based on the height of the adjacent reference character.
 
 ### Retain Active Line on Selection
+
+<img src="imgs/cmo-mark-acrtive-line.gif" alt="cmo-mark-acrtive-line" style="zoom: 67%;" />
 
 When enabled, text selection will not remove the .active-line class on the current line. When disabled text selection on the active line will remove the .active-line class.
 
 ### Mark Selected Text with a CSS class
 
-When enabled, selected text will be marked with the CSS class .CodeMirror-selectedtext. Useful to force the styling of selected text when ::selection is not sufficient.
+<img src="imgs/cmo-mark-selection.gif" alt="cmo-mark-selection" style="zoom:50%;" />
+
+When enabled, selected text will be marked with the CSS class .CodeMirror-selectedtext. This replaces the default CodeMirror selection functionality which mimics a selection by painting a background layer behind the text. This new option grants more styling flexibility and avoids issues when selecting items that have defined backgrounds.
 
 ### Use CodeMirror for syntax highlighting in preview mode
 
@@ -119,6 +127,14 @@ This setting is a fallback option if you do not want to inject CM into preview m
 - This plugin leverages the CM5 API directly which is a deprecated option. Obsidian will be moving to CM6 soon and this plugin will break. I'm not sure yet if I'll be able to make these same tweaks on CM6.
 
 ## Changelog
+
+### 0.0.4
+
+- Updated "Retain Active Line on Selection" to support multi-cursor selection
+
+### 0.0.3
+
+- Updated "Retain Active Line on Selection" to support multi-line selection
 
 ### 0.0.2
 
