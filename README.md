@@ -128,6 +128,11 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.0.5
+
+- Fixed a bug in the "Style Active Selection" option which was causing an undefined variable error on file load
+
+
 ### 0.0.4
 
 - Updated "Retain Active Line on Selection" to support multi-cursor selection
