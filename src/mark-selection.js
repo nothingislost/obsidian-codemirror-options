@@ -33,11 +33,11 @@
   }
 
   function onChange(cm) {
-    if (cm.state.markedSelection.length)
+    if (cm.state.markedSelection?.length)
       cm.operation(function () {
         clear(cm);
       });
-    if (cm.state.markedLines.length)
+    if (cm.state.markedLines?.length)
       cm.operation(function () {
         clear(cm);
       });
