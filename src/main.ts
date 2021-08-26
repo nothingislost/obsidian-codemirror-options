@@ -108,7 +108,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.setCodeMirrorOption("styleSelectedText", this.settings.markSelection);
     this.setCodeMirrorOption("singleCursorHeightPerLine", this.settings.dynamicCursor);
     this.setCodeMirrorOption("styleActiveLine", this.settings.activeLineOnSelect);
-    if (this.settings.activeLineOnSelect) {
+    if (this.settings.markSelection) {
       document.body.addClass("style-active-selection");
     } else {
       document.body.removeClass("style-active-selection");
