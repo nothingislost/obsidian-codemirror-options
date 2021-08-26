@@ -11,3 +11,9 @@ main.js
 *.js.map
 
 obsidian.d.ts
+
+*.lock
+*.code-workspace
+.DS_Store
+dist/
+*.log
