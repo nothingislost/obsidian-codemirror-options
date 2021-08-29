@@ -41,7 +41,6 @@
     }
   
     function updateActiveLines(cm, ranges) {
-      console.log(ranges);
       var active = [];
       for (var i = 0; i < ranges.length; i++) {
         var range = ranges[i];
