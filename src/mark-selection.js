@@ -7,10 +7,12 @@
 // selected text the CSS class given as option value, or
 // "CodeMirror-selectedtext" when the value is not a string.
 
-(function () {
+(function(mod) {
+    mod(CodeMirror);
+})(function(CodeMirror) {
   "use strict";
 
-  CodeMirror.defineOption("styleSelectedText", false, function (cm, val, old) {
+  CodeMirror.defineOption("styleSelectedText", false, function(cm, val, old) {
     var prev = old && old != CodeMirror.Init;
     if (val && !prev) {
       cm.state.markedSelection = [];
@@ -27,47 +29,28 @@
   });
 
   function onCursorActivity(cm) {
-    cm.operation(function () {
-      updateHandler(cm);
-    });
+    if (cm.state.markedSelection)
+      cm.operation(function() { update(cm); });
   }
 
   function onChange(cm) {
-    if (cm.state.markedSelection?.length)
-      cm.operation(function () {
-        clear(cm);
-      });
-    if (cm.state.markedLines?.length)
-      cm.operation(function () {
-        clear(cm);
-      });
+    if (cm.state.markedSelection && cm.state.markedSelection.length)
+      cm.operation(function() { clear(cm); });
   }
 
   var CHUNK_SIZE = 8;
   var Pos = CodeMirror.Pos;
-
-  function cmp(pos1, pos2) {
-    return pos1.line - pos2.line || pos1.ch - pos2.ch;
-  }
+  var cmp = CodeMirror.cmpPos;
 
   function coverRange(cm, from, to, addAt) {
-    if (cmp(from, to) == 0) {
-      return;
-    }
+    if (cmp(from, to) == 0) return;
     var array = cm.state.markedSelection;
-    var lines = (cm.state.markedLines = []);
     var cls = cm.state.markedSelectionStyle;
-    for (var line = from.line; ; ) {
+    for (var line = from.line;;) {
       var start = line == from.line ? from : Pos(line, 0);
-      var endLine = line + CHUNK_SIZE,
-        atEnd = endLine >= to.line;
+      var endLine = line + CHUNK_SIZE, atEnd = endLine >= to.line;
       var end = atEnd ? to : Pos(endLine, 0);
-      var mark = cm.markText(start, end, { className: cls });
-      // addLineClass additions made by "nothingislost" to enable multi-line .active-line application
-      for (var i = from.line; i < to.line + 1; ++i) {
-        var line = cm.addLineClass(i, "wrap", "CodeMirror-activeline");
-        lines.push(line);
-      }
+      var mark = cm.markText(start, end, {className: cls});
       if (addAt == null) array.push(mark);
       else array.splice(addAt++, 0, mark);
       if (atEnd) break;
@@ -79,72 +62,38 @@
     var array = cm.state.markedSelection;
     for (var i = 0; i < array.length; ++i) array[i].clear();
     array.length = 0;
-    clearLines(cm);
-  }
-
-  function clearLines(cm) {
-    var lines = cm.state.markedLines;
-    if (lines) {
-      for (var i = 0; i < lines.length; ++i) {
-        cm.removeLineClass(lines[i], "wrap", "CodeMirror-activeline");
-      }
-      lines.length = 0;
-    }
   }
 
   function reset(cm) {
     clear(cm);
-    cm.listSelections().forEach(selection => {
-      if (selection.anchor.line < selection.head.line) {
-        coverRange(cm, selection.anchor, selection.head);
-      } else if (selection.anchor.line === selection.head.line && selection.anchor.ch < selection.head.ch) {
-        coverRange(cm, selection.anchor, selection.head);
-      } else {
-        coverRange(cm, selection.head, selection.anchor);
-      }
-    });
+    var ranges = cm.listSelections();
+    for (var i = 0; i < ranges.length; i++)
+      coverRange(cm, ranges[i].from(), ranges[i].to());
   }
 
-  // modifications to the default codemirror code made by "nothingislost" to enable multi-selection awareness
-  function updateHandler(cm) {
-    cm.listSelections().forEach(selection => {
-      if (selection.anchor.line < selection.head.line) {
-        update(cm, selection.anchor, selection.head);
-      } else if (selection.anchor.line === selection.head.line && selection.anchor.ch < selection.head.ch) {
-        update(cm, selection.anchor, selection.head);
-      } else {
-        update(cm, selection.head, selection.anchor);
-      }
-    });
-  }
+  function update(cm) {
+    if (!cm.somethingSelected()) return clear(cm);
+    if (cm.listSelections().length > 1) return reset(cm);
 
-  function update(cm, from, to) {
-    if (cmp(from, to) == 0) return clear(cm);
+    var from = cm.getCursor("start"), to = cm.getCursor("end");
 
     var array = cm.state.markedSelection;
     if (!array.length) return coverRange(cm, from, to);
 
-    var coverStart = array[0].find(),
-      coverEnd = array[array.length - 1].find();
-    if (
-      !coverStart ||
-      !coverEnd ||
-      to.line - from.line < CHUNK_SIZE ||
-      cmp(from, coverEnd.to) >= 0 ||
-      cmp(to, coverStart.from) <= 0
-    )
+    var coverStart = array[0].find(), coverEnd = array[array.length - 1].find();
+    if (!coverStart || !coverEnd || to.line - from.line <= CHUNK_SIZE ||
+        cmp(from, coverEnd.to) >= 0 || cmp(to, coverStart.from) <= 0)
       return reset(cm);
 
     while (cmp(from, coverStart.from) > 0) {
       array.shift().clear();
-      if (array[0]) coverStart = array[0].find();
+      coverStart = array[0].find();
     }
     if (cmp(from, coverStart.from) < 0) {
       if (coverStart.to.line - from.line < CHUNK_SIZE) {
         array.shift().clear();
         coverRange(cm, from, coverStart.to, 0);
       } else {
-        clearLines(cm);
         coverRange(cm, from, coverStart.from, 0);
       }
     }
@@ -162,4 +111,4 @@
       }
     }
   }
-})();
+});

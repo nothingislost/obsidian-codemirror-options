@@ -1,6 +1,6 @@
 {
     "name": "obsidian-codemirror-options",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Enable/Disable certain CodeMirror options",
     "main": "main.js",
     "scripts": {
@@ -19,6 +19,7 @@
         "@types/node": "^14.14.2",
         "@typescript-eslint/eslint-plugin": "^4.29.3",
         "@typescript-eslint/parser": "^4.29.3",
+        "codemirror": "^5.62.2",
         "eslint": "^7.32.0",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-config-prettier": "^8.3.0",

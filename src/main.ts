@@ -3,8 +3,11 @@ import { ObsidianCodeMirrorOptionsSettings, ObsidianCodeMirrorOptionsSettingsTab
 import "./runmode";
 import "./colorize";
 import "./mark-selection";
+import "./active-line";
 import { MarkdownView, MarkdownPreviewRenderer, Plugin } from "obsidian";
-import * as codemirror from "codemirror";
+// import * as codemirror from "codemirror";
+import type codemirror from "codemirror";
+import { EditorConfiguration } from "codemirror";
 
 declare module "codemirror" {
   // These typescript definitions were pulled from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/codemirror
@@ -144,7 +147,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     return null;
   }
 
-  setCodeMirrorOption(optionKey: any, optionValue: any) {
+  setCodeMirrorOption(optionKey: keyof EditorConfiguration, optionValue: boolean | Record<string, unknown>) {
     const cmEditor = this.getCmEditor();
     // styleActiveLine requires an object to set the behavior we want
     if (optionKey === "styleActiveLine") optionValue = optionValue === true ? { nonEmpty: true } : true;

@@ -128,10 +128,16 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.0.6
+
+- Changed the method used for marking multiple lines with .active-line which should resolve a few bugs
+- Previously .active-line would start behaving strangely after having 8 lines selected
+- The previous method was also not effecient and applied the .active-lines class too often
+- Previously, the "Style Active Selection" and "Mark Active Lines" settings were too intermingled. You can now set each feature on or off without impacting each other.
+
 ### 0.0.5
 
 - Fixed a bug in the "Style Active Selection" option which was causing an undefined variable error on file load
-
 
 ### 0.0.4
 
