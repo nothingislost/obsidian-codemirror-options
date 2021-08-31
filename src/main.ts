@@ -134,8 +134,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
 
   refreshPanes() {
     this.app.workspace.getLeavesOfType("markdown").forEach(leaf => {
-      if (leaf.getViewState().state.mode.includes("preview")) {
-        // @ts-ignore
+      if (leaf.view instanceof MarkdownView && leaf.view.getMode() === 'preview') {
         leaf.view.previewMode.rerender(true);
       }
     });
