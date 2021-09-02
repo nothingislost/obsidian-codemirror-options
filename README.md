@@ -128,6 +128,12 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.0.7 (pre-release)
+
+- This release adds two HyperMD features
+  1. Hide Markdown Syntax
+  2. Click Handling for Checkboxes
+
 ### 0.0.6
 
 - Changed the method used for marking multiple lines with .active-line which should resolve a few bugs

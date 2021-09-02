@@ -4,8 +4,12 @@ import "./runmode";
 import "./colorize";
 import "./mark-selection";
 import "./active-line";
+
+import "./hmd-core";
+import "./hmd-click";
+import "./hmd-hide-token";
+
 import { MarkdownView, MarkdownPreviewRenderer, Plugin } from "obsidian";
-// import * as codemirror from "codemirror";
 import type codemirror from "codemirror";
 import { EditorConfiguration } from "codemirror";
 
@@ -30,6 +34,8 @@ declare module "codemirror" {
      * Useful to change the colour of the selection (in addition to the background).
      */
     styleSelectedText?: boolean | string | undefined;
+    hmdClick?: boolean | string | undefined;
+    hmdHideToken?: boolean | string | undefined;
     /**
      * When enabled gives the wrapper of the line that contains the cursor the class CodeMirror-activeline,
      * adds a background with the class CodeMirror-activeline-background, and adds the class CodeMirror-activeline-gutter to the line's gutter space is enabled.
@@ -111,6 +117,13 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.setCodeMirrorOption("styleSelectedText", this.settings.markSelection);
     this.setCodeMirrorOption("singleCursorHeightPerLine", this.settings.dynamicCursor);
     this.setCodeMirrorOption("styleActiveLine", this.settings.activeLineOnSelect);
+    this.setCodeMirrorOption("hmdHideToken", this.settings.editModeHideTokens);
+    this.setCodeMirrorOption("hmdClick", this.settings.editModeClickHandler);
+    if (this.settings.editModeHideTokens) {
+      document.body.addClass("hide-tokens");
+    } else {
+      document.body.removeClass("hide-tokens");
+    }
     if (this.settings.markSelection) {
       document.body.addClass("style-active-selection");
     } else {
@@ -129,6 +142,8 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("styleSelectedText", false);
       cm.setOption("singleCursorHeightPerLine", true);
       cm.setOption("styleActiveLine", true);
+      cm.setOption('hmdHideToken', false);
+      cm.setOption('hmdClick', false);
     });
   }
 

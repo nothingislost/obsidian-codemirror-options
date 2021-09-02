@@ -8,6 +8,8 @@ export class ObsidianCodeMirrorOptionsSettings {
   activeLineOnSelect = false;
   enableCMinPreview = false;
   enablePrismJSStyling = false;
+  editModeHideTokens = false;
+  editModeClickHandler = false;
 }
 
 export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
@@ -24,6 +26,33 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
     containerEl.empty();
 
     containerEl.createEl("h2", { text: "CodeMirror Options" });
+
+    new Setting(containerEl)
+      .setName("Hide Markdown Tokens")
+      .setDesc(
+        `This mode emulates WYSIWYG in edit mode by hiding markdown tokens on inactive lines. This mode will tag all inactive lines 
+       with .hmd-inactive-line and all hidden tokens with .hmd-hidden-token`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.editModeHideTokens).onChange(value => {
+          this.plugin.settings.editModeHideTokens = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyCodeMirrorOptions();
+        })
+      );
+
+    new Setting(containerEl)
+      .setName("Edit Mode Click Handler")
+      .setDesc(
+        `Currently supports clicking checkboxes in edit mode. Disable this is you encounter any issues with mouse clicks.`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.editModeClickHandler).onChange(value => {
+          this.plugin.settings.editModeClickHandler = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyCodeMirrorOptions();
+        })
+      );
 
     new Setting(containerEl)
       .setName("Dynamic cursor size")

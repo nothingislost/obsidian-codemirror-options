@@ -435,9 +435,47 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   --cm-foreground-color: #657b83;
 }
 
-.setting-item.cm-warning .setting-item-description {
-  color: red;
+/* Hide Tokens Styling */
+/* Note: Most of the token hiding styling is already in the base Obsidian theme */
+
+.hide-tokens .cm-s-obsidian pre.hmd-inactive-line span.cm-formatting-link {
+  font-size: 0;
 }
+.hide-tokens .cm-s-obsidian span.cm-link.hmd-hidden-token {
+  color: transparent;
+}
+.hide-tokens .cm-s-obsidian pre.hmd-inactive-line.HyperMD-hr span.cm-hr {
+  color: transparent;
+  background-color: transparent;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-hr {
+  left: 0;
+  right: 0;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAQAAAAziH6sAAAADklEQVR42mOc+Z9x5n8ACTkDM4ikM1IAAAAASUVORK5CYII=)
+    repeat-x 0 center;
+}
+.hide-tokens .cm-s-obsidian pre.hmd-inactive-line span.cm-formatting-quote {
+  color: transparent;
+}
+.hide-tokens .cm-s-obsidian span.cm-formatting-task {
+  white-space: pre;
+  display: inline-block;
+  height: 1em;
+  line-height: 1em;
+  min-width: 1em;
+  text-align: center;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  background-position: center 0;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.5);
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAMAAAA8VkqRAAAAclBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACa4vOeAAAAJXRSTlMADcjpDswcLZOzsvOYBvWdbtvTX0D69+ORa1dRJCDtuaF7ZDkoQyuUXgAAAMhJREFUOMvt0reywjAUhOFjKxmcrgMZboL//V8Rm6GwkNUx0LClvhkVZ1fEZoqHqMwO7wuUSb0YxcJKxtLpxIt2SzJRykkQp5RgdAjaIKRJCEn6gWdA9OzRoqLVRscQnc9bdtXX/eyurOF7N3erLVDPwCGHxoVwamH1LwGUBfBbhrCvoLlMitL9DY8trLtJg7qoCj18VAN1OYE/YJBuDe1RJtBVo5wbqPb+GL5yWG1GLX0YZYw5iQ93yQ/yAHfZzu5qt/mxr97VFS15JGSVM0C6AAAAAElFTkSuQmCC");
+  background-size: 1em;
+}
+.hide-tokens .cm-s-obsidian span.cm-formatting-task.cm-property {
+  background-position-y: -1em;
+}
+
 
 /* set the new text selection mode to use --text-selection */
 body.style-active-selection span.CodeMirror-selectedtext {
