@@ -43,7 +43,7 @@ settings:
     id: cm-font-size
     title: Code Block Font Size
     type: variable-text
-    default: '18px'
+    default: '16px'
   -
     id: cm-line-height
     title: Code Block Line Height
