@@ -17,7 +17,7 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ### Syntax Highlighting
 
-<img src="imgs/cmo-syntax-highlighting.gif" alt="cmo-syntax-highlighting" style="zoom:67%;" />
+<img src="https://user-images.githubusercontent.com/89109712/132953836-bac79ab0-581c-469b-a971-6c2dcde2773f.gif" width=70% height=70%>
 
 When enabled, this plugin will apply a consistent syntax highlighting theme to code blocks in both edit and preview modes.
 
@@ -98,19 +98,19 @@ The CSS properties match closely to the standard properties used by CodeMirror. 
 
 ### Dynamic Cursor Sizing
 
-<img src="imgs/cmo-dynamic-cursor-size.gif" alt="cmo-dynamic-cursor-size" style="zoom:67%;" />
+<img src="https://user-images.githubusercontent.com/89109712/132953850-c2b4b791-9a7a-47fa-845f-62d72208c2e4.gif" width=50% height=50%>
 
 When enabled, the cursor height will be determined by the max height of the entire line. When disabled, the cursor's height is based on the height of the adjacent reference character.
 
 ### Retain Active Line on Selection
 
-<img src="imgs/cmo-mark-acrtive-line.gif" alt="cmo-mark-acrtive-line" style="zoom: 67%;" />
+<img src="https://user-images.githubusercontent.com/89109712/132953861-07d4c5ed-3e81-4a5c-b630-88bcb4168697.gif" width=50% height=50%>
 
 When enabled, text selection will not remove the .active-line class on the current line. When disabled text selection on the active line will remove the .active-line class.
 
 ### Mark Selected Text with a CSS class
 
-<img src="imgs/cmo-mark-selection.gif" alt="cmo-mark-selection" style="zoom:50%;" />
+<img src="https://user-images.githubusercontent.com/89109712/132953864-82bab013-ed55-4226-a8e7-738fb387155e.gif" width=50% height=50%>
 
 When enabled, selected text will be marked with the CSS class .CodeMirror-selectedtext. This replaces the default CodeMirror selection functionality which mimics a selection by painting a background layer behind the text. This new option grants more styling flexibility and avoids issues when selecting items that have defined backgrounds.
 
