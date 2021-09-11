@@ -128,6 +128,23 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.1.0
+
+- Add an option to show line numbers in preview mode
+- Add a copy button to code blocks in preview mode
+- Fix the default font size for code blocks to 16px. This can be overridden using Style Settings
+- In preview mode, wrap code blocks in a `<code>` element to better mimic the original prism.js DOM structure.
+  - The structure is now `<div><pre><code></code></pre></div>`
+  - This change should hopefully be transparent for most use csses
+
+### 0.0.8
+
+- This is the stable(ish) release of the features introduced in the 0.0.7 pre-release.
+- This release adds two HyperMD features
+  - Hide Markdown Syntax
+  - Click Handling for Checkboxes
+- Adds syntax highlighting support for plugins like Obisdian Plaintext & CodeView
+
 ### 0.0.7 (pre-release)
 
 - This release adds two HyperMD features

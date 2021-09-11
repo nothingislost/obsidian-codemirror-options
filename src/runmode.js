@@ -1,21 +1,32 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
+function leftFillNum(num, targetLength) {
+  return num.toString().padStart(targetLength, 0);
+}
+
 CodeMirror.runMode = function (string, modespec, callback, options) {
   var mode = CodeMirror.getMode(CodeMirror.defaults, modespec);
-  var ie = /MSIE \d/.test(navigator.userAgent);
-  var ie_lt9 = ie && (document.documentMode == null || document.documentMode < 9);
-
+  var lineNumber = 1;
   if (callback.nodeType == 1) {
     var tabSize = (options && options.tabSize) || CodeMirror.defaults.tabSize;
+    var lineNums = (options && options.lineNums) || false;
     var node = callback,
       col = 0;
     node.innerHTML = "";
     callback = function (text, style) {
       if (text == "\n") {
-        // Emitting LF or CRLF on IE8 or earlier results in an incorrect display.
-        // Emitting a carriage return makes everything ok.
-        node.appendChild(document.createTextNode(ie_lt9 ? "\r" : text));
+        if (lineNums) {
+          lineNumber++; //increment line number
+          var lineNum = document.createElement("span");
+          lineNum.addClass("cm-linenumber");
+          var content = document.createTextNode(leftFillNum(lineNumber, 2) + " ");
+          lineNum.appendChild(content);
+          node.appendChild(document.createTextNode(text));
+          node.appendChild(lineNum);
+        } else {
+          node.appendChild(document.createTextNode(text));
+        }
         col = 0;
         return;
       }
@@ -49,13 +60,21 @@ CodeMirror.runMode = function (string, modespec, callback, options) {
 
   var lines = CodeMirror.splitLines(string),
     state = (options && options.state) || CodeMirror.startState(mode);
-  for (var i = 0, e = lines.length; i < e; ++i) {
+  for (var i = 0, e = lines.length - 1; i < e; ++i) {
     if (i) callback("\n");
     var stream = new CodeMirror.StringStream(lines[i]);
     while (!stream.eol()) {
       var style = mode.token(stream, state);
-      callback(stream.current(), style, i, stream.start, state);
+      callback(stream.current(), style, i, stream.start);
       stream.start = stream.pos;
     }
+  }
+  if (lineNums) {
+    var outputDiv = document.querySelector("pre[class*=language-]:not(.cm-s-obsidian)");
+    var firstLine = document.createElement("span");
+    firstLine.addClass("cm-linenumber");
+    var content = document.createTextNode(leftFillNum(1, 2) + " ");
+    firstLine.appendChild(content);
+    outputDiv.insertBefore(firstLine, outputDiv.firstChild);
   }
 };

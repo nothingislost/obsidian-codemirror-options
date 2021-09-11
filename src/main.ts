@@ -42,7 +42,7 @@ declare module "codemirror" {
      */
     styleActiveLine?: StyleActiveLine | boolean | undefined;
   }
-  function colorize(collection?: ArrayLike<Element>, defaultMode?: string): void;
+  function colorize(collection?: ArrayLike<Element>, defaultMode?: string, showLineNums?: boolean): void;
 }
 
 export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
@@ -58,6 +58,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       this.applyCodeMirrorOptions();
       this.toggleHighlighting();
+      this.toggleLineNums();
 
       if (this.settings.enableCMinPreview) {
         this.toggleHighlighting();
@@ -97,14 +98,47 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         });
       });
       //@ts-ignore
-      CodeMirror.colorize(elements);
+      CodeMirror.colorize(elements, null, this.settings.showLineNums);
+      if (this.settings.copyButton) {
+        const codeBlocks = document.querySelectorAll("pre");
+        codeBlocks.forEach(function (codeBlock) {
+          const copyButton = document.createElement("button");
+          copyButton.className = "copy";
+          copyButton.type = "button";
+          // copyButton.ariaLabel = 'Copy code to clipboard';
+          copyButton.innerText = "Copy";
+          codeBlock.append(copyButton);
+          copyButton.addEventListener("click", function () {
+            const code = codeBlock.querySelector("code");
+            const clone = code.cloneNode(true) as HTMLElement;
+            clone.findAll("span.cm-linenumber").forEach(e => e.remove());
+            const codeText = clone.textContent;
+            window.navigator.clipboard.writeText(codeText);
+            copyButton.innerText = "Copied";
+            const fourSeconds = 4000;
+            setTimeout(function () {
+              copyButton.innerText = "Copy";
+            }, fourSeconds);
+          });
+        });
+      }
+    }
+  }
+
+  toggleLineNums() {
+    if (this.settings.showLineNums) {
+      document.body.addClass("cm-show-line-nums");
+      this.refreshPanes();
+    } else {
+      document.body.removeClass("cm-show-line-nums");
+      this.refreshPanes();
     }
   }
 
   toggleHighlighting() {
     if (this.settings.enableCMinPreview) {
       document.body.addClass("unified-cm-highlighting");
-      this.registerMarkdownPostProcessor(this.mdProcessor);
+      this.registerMarkdownPostProcessor(el => this.mdProcessor(el));
       this.refreshPanes();
     } else {
       document.body.removeClass("unified-cm-highlighting");
@@ -142,14 +176,14 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("styleSelectedText", false);
       cm.setOption("singleCursorHeightPerLine", true);
       cm.setOption("styleActiveLine", true);
-      cm.setOption('hmdHideToken', false);
-      cm.setOption('hmdClick', false);
+      cm.setOption("hmdHideToken", false);
+      cm.setOption("hmdClick", false);
     });
   }
 
   refreshPanes() {
     this.app.workspace.getLeavesOfType("markdown").forEach(leaf => {
-      if (leaf.view instanceof MarkdownView && leaf.view.getMode() === 'preview') {
+      if (leaf.view instanceof MarkdownView && leaf.view.getMode() === "preview") {
         leaf.view.previewMode.rerender(true);
       }
     });

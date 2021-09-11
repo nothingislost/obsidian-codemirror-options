@@ -12,7 +12,7 @@ CodeMirror.colorize = (function () {
     }
   }
 
-  return function (collection, defaultMode) {
+  return function (collection, defaultMode, showLineNums = false) {
     if (!collection) collection = document.body.getElementsByTagName("pre");
 
     for (var i = 0; i < collection.length; ++i) {
@@ -23,9 +23,13 @@ CodeMirror.colorize = (function () {
       var text = [];
       textContent(node, text);
       node.innerHTML = "";
-      CodeMirror.runMode(text.join(""), mode, node);
-
+      CodeMirror.runMode(text.join(""), mode, node, { lineNums: showLineNums });
       node.className += " cm-s-obsidian";
+      const innerHTML = node.innerHTML;
+      node.empty();
+      const codeEl = node.createEl("code");
+      codeEl.innerHTML = innerHTML;
+      codeEl.addClass("language-" + node.getAttribute("data-lang"));
     }
   };
 })();

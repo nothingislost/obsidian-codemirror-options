@@ -10,6 +10,8 @@ export class ObsidianCodeMirrorOptionsSettings {
   enablePrismJSStyling = false;
   editModeHideTokens = false;
   editModeClickHandler = false;
+  showLineNums = false;
+  copyButton = false;
 }
 
 export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
@@ -109,8 +111,28 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           toggle.setValue(this.plugin.settings.enableCMinPreview).onChange(value => {
             this.plugin.settings.enableCMinPreview = value;
             this.plugin.saveData(this.plugin.settings);
-            // TODO: make this toggle styling properly
             this.plugin.toggleHighlighting();
+          })
+        );
+      new Setting(containerEl)
+        .setName("Experimental: Show line numbers for code blocks in preview mode")
+        .setDesc(`This setting will add line numbers to code blocks in preview mode.`)
+        .addToggle(toggle =>
+          toggle.setValue(this.plugin.settings.showLineNums).onChange(value => {
+            this.plugin.settings.showLineNums = value;
+            this.plugin.saveData(this.plugin.settings);
+            this.plugin.toggleLineNums();
+          })
+        );
+      new Setting(containerEl)
+        .setName("Experimental: Enable copy button for code blocks in preview")
+        .setDesc(
+          `This setting will add a copy button to the bottom left corner of code blocks in preview mode. The button will show up on code block hover.`
+        )
+        .addToggle(toggle =>
+          toggle.setValue(this.plugin.settings.copyButton).onChange(value => {
+            this.plugin.settings.copyButton = value;
+            this.plugin.saveData(this.plugin.settings);
           })
         );
     } else {

@@ -294,7 +294,7 @@ settings:
 
 :root {
   --cm-font-weight: 500;
-  --cm-font-size: 18px;
+  --cm-font-size: 16px;
   --cm-font-monospace: Jetbrains Mono, SFMono-Regular, Consolas, "Roboto Mono", monospace;
   --cm-wrap-lines: pre-wrap;
   --cm-line-height: 1.5;
@@ -490,6 +490,66 @@ body.style-active-selection .CodeMirror-selected {
   background: transparent !important;
 }
 
+/* START Setting: Show Line Numbers === true */
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] {
+  position: relative;
+}
+
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] code {
+  position: static !important;
+}
+
+body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .cm-linenumber {
+  position: absolute;
+  left: 0.5em;
+  user-select: none;
+  color: var(--cm-comment);
+}
+
+body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-preview-view pre {
+  padding-left: 3em !important;
+}
+
+/* END Setting: Show Line Numbers === true */
+
+/* START Copy button */
+body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-preview-view button.copy {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: var(--cm-foreground-color);
+  text-align: center;
+  font-size: 11px !important;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase !important;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid var(--cm-foreground-color);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-preview-view button.copy {
+  color: var(--cm-foreground-color);
+  position: absolute;
+  right: 0rem;
+  bottom: .6rem;
+  opacity: 0;
+  z-index: 1;
+}
+
+body.unified-cm-highlighting[class*="theme-"]
+  .markdown-preview-view
+  pre.cm-s-obsidian[class*="language-"]:hover
+  button.copy {
+  background: var(--cm-background-color);
+  opacity: 1;
+}
+/* END Copy button */
+
 /* body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock,
 body.fallback-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock {
     --code-bg: var(--cm-background-color);
@@ -524,7 +584,8 @@ body.codeview-mode.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .Code
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian div.HyperMD-codeblock-bg, /* code block in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.CodeMirror-linebackground, /* frontmatter block in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.CodeMirror-linebackground, /* math block in edit mode */
-body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] /* code block in preview mode */ {
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"],
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] code /* code block in preview mode */ {
   background: var(--cm-background-color);
   background-color: var(--cm-background-color);
   text-shadow: none; /* just no */
@@ -549,6 +610,7 @@ body.unified-cm-highlighting[class*="theme-"] .cm-hmd-codeblock {
 
 /* preview modes */
 body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"],
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view code[class*="language-"],
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view .HyperMD-codeblock,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view .cm-hmd-codeblock {
   --font-monospace: var(--cm-font-monospace);
