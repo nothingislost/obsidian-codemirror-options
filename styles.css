@@ -294,7 +294,7 @@ settings:
 
 :root {
   --cm-font-weight: 500;
-  --cm-font-size: 16px;
+  --cm-font-size: var(--editor-font-size);
   --cm-font-monospace: Jetbrains Mono, SFMono-Regular, Consolas, "Roboto Mono", monospace;
   --cm-wrap-lines: pre-wrap;
   --cm-line-height: 1.5;
@@ -490,7 +490,7 @@ body.style-active-selection .CodeMirror-selected {
   background: transparent !important;
 }
 
-/* START Setting: Show Line Numbers === true */
+/* these two styles are needed for line nums and copy blocks to position properly */
 body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] {
   position: relative;
 }
@@ -499,6 +499,7 @@ body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-ob
   position: static !important;
 }
 
+/* START Setting: Show Line Numbers === true */
 body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .cm-linenumber {
   position: absolute;
   left: 0.5em;
@@ -513,7 +514,7 @@ body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-previe
 /* END Setting: Show Line Numbers === true */
 
 /* START Copy button */
-body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-preview-view button.copy {
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view button.copy {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
@@ -532,7 +533,7 @@ body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-previe
   cursor: pointer;
   box-sizing: border-box;
 }
-body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-preview-view button.copy {
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view button.copy {
   color: var(--cm-foreground-color);
   position: absolute;
   right: 0rem;

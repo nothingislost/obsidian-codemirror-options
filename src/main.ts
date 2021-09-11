@@ -58,7 +58,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       this.applyCodeMirrorOptions();
       this.toggleHighlighting();
-      this.toggleLineNums();
+      this.toggleCodeBlockSettings();
 
       if (this.settings.enableCMinPreview) {
         this.toggleHighlighting();
@@ -93,14 +93,26 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         element.classList.forEach((className: string) => {
           if (className.startsWith("language-")) {
             // set data-lang to the code block language for easier colorize usage
-            element.setAttribute("data-lang", className.replace("language-", ""));
+            let language = className.replace("language-", "")
+            switch (language) {
+              case 'html':
+                language = 'htmlmixed'
+                break;
+              case 'js':
+                language = 'javascript'
+                break;
+              case 'json':
+                language = 'javascript'
+                break;
+            }
+            element.setAttribute("data-lang", language);
           }
         });
       });
       //@ts-ignore
       CodeMirror.colorize(elements, null, this.settings.showLineNums);
       if (this.settings.copyButton) {
-        const codeBlocks = document.querySelectorAll("pre");
+        const codeBlocks = elements;
         codeBlocks.forEach(function (codeBlock) {
           const copyButton = document.createElement("button");
           copyButton.className = "copy";
@@ -125,12 +137,17 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     }
   }
 
-  toggleLineNums() {
+  toggleCodeBlockSettings() {
     if (this.settings.showLineNums) {
       document.body.addClass("cm-show-line-nums");
       this.refreshPanes();
     } else {
       document.body.removeClass("cm-show-line-nums");
+      this.refreshPanes();
+    }
+    if (this.settings.copyButton) {
+      this.refreshPanes();
+    } else {
       this.refreshPanes();
     }
   }
@@ -183,7 +200,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
 
   refreshPanes() {
     this.app.workspace.getLeavesOfType("markdown").forEach(leaf => {
-      if (leaf.view instanceof MarkdownView && leaf.view.getMode() === "preview") {
+      if (leaf.view instanceof MarkdownView) {
         leaf.view.previewMode.rerender(true);
       }
     });

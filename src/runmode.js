@@ -60,7 +60,8 @@ CodeMirror.runMode = function (string, modespec, callback, options) {
 
   var lines = CodeMirror.splitLines(string),
     state = (options && options.state) || CodeMirror.startState(mode);
-  for (var i = 0, e = lines.length - 1; i < e; ++i) {
+  var lineLength = lineNums ? lines.length - 1 : lines.length
+  for (var i = 0, e = lineLength; i < e; ++i) {
     if (i) callback("\n");
     var stream = new CodeMirror.StringStream(lines[i]);
     while (!stream.eol()) {
@@ -75,6 +76,6 @@ CodeMirror.runMode = function (string, modespec, callback, options) {
     firstLine.addClass("cm-linenumber");
     var content = document.createTextNode(leftFillNum(1, 2) + " ");
     firstLine.appendChild(content);
-    outputDiv.insertBefore(firstLine, outputDiv.firstChild);
+    outputDiv?.insertBefore(firstLine, outputDiv.firstChild);
   }
 };

@@ -121,7 +121,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           toggle.setValue(this.plugin.settings.showLineNums).onChange(value => {
             this.plugin.settings.showLineNums = value;
             this.plugin.saveData(this.plugin.settings);
-            this.plugin.toggleLineNums();
+            this.plugin.toggleCodeBlockSettings();
           })
         );
       new Setting(containerEl)
@@ -133,6 +133,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           toggle.setValue(this.plugin.settings.copyButton).onChange(value => {
             this.plugin.settings.copyButton = value;
             this.plugin.saveData(this.plugin.settings);
+            this.plugin.toggleCodeBlockSettings();
           })
         );
     } else {

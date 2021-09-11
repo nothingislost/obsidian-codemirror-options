@@ -128,6 +128,11 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.1.1
+
+- Bug fixes to the line number and copy button handling
+- Add highlighting support for `js` `html` and `json`
+
 ### 0.1.0
 
 - Add an option to show line numbers in preview mode
