@@ -61,13 +61,10 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       this.toggleCodeBlockSettings();
 
       if (this.settings.enableCMinPreview) {
-        this.toggleHighlighting();
         setTimeout(() => {
           // we wait 1 second here since the prism.js rendering of code blocks is delayed on load
           // this will force the CM injection after 1 second, only on startup
-          this.app.workspace.iterateRootLeaves(leaf => {
-            this.injectCM(leaf.view.containerEl);
-          });
+          this.refreshPanes();
         }, 1000);
       }
     });
@@ -79,61 +76,59 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     );
   } // close onload
 
-  mdProcessor = (el: HTMLElement) => {
+  mdProcessor = async (el: HTMLElement) => {
     setTimeout(() => {
       this.injectCM(el);
-    });
+    }, 0);
   };
 
   injectCM(el: HTMLElement) {
     // only get code block elements with a language but not any that have already been colorized
-    const elements = el.querySelectorAll("pre[class*=language-]:not(.cm-s-obsidian)");
-    if (elements.length) {
-      elements.forEach((element: HTMLElement) => {
-        element.classList.forEach((className: string) => {
-          if (className.startsWith("language-")) {
-            // set data-lang to the code block language for easier colorize usage
-            let language = className.replace("language-", "")
-            switch (language) {
-              case 'html':
-                language = 'htmlmixed'
-                break;
-              case 'js':
-                language = 'javascript'
-                break;
-              case 'json':
-                language = 'javascript'
-                break;
-            }
-            element.setAttribute("data-lang", language);
-          }
-        });
-      });
-      //@ts-ignore
-      CodeMirror.colorize(elements, null, this.settings.showLineNums);
-      if (this.settings.copyButton) {
-        const codeBlocks = elements;
-        codeBlocks.forEach(function (codeBlock) {
-          const copyButton = document.createElement("button");
-          copyButton.className = "copy";
-          copyButton.type = "button";
-          // copyButton.ariaLabel = 'Copy code to clipboard';
-          copyButton.innerText = "Copy";
-          codeBlock.append(copyButton);
-          copyButton.addEventListener("click", function () {
-            const code = codeBlock.querySelector("code");
-            const clone = code.cloneNode(true) as HTMLElement;
-            clone.findAll("span.cm-linenumber").forEach(e => e.remove());
-            const codeText = clone.textContent;
-            window.navigator.clipboard.writeText(codeText);
-            copyButton.innerText = "Copied";
-            const fourSeconds = 4000;
-            setTimeout(function () {
-              copyButton.innerText = "Copy";
-            }, fourSeconds);
-          });
-        });
+    const element = el.firstChild as HTMLElement;
+    if (!element) return;
+    if (element.tagName !== "PRE") return;
+    if (!element.classList.value.includes("language-")) return;
+    if (element.classList.value.includes("cm-s-obsidian")) return;
+    element.classList.forEach((className: string) => {
+      if (className.startsWith("language-")) {
+        // set data-lang to the code block language for easier colorize usage
+        let language = className.replace("language-", "");
+        switch (language) {
+          case "html":
+            language = "htmlmixed";
+            break;
+          case "js":
+            language = "javascript";
+            break;
+          case "json":
+            language = "javascript";
+            break;
+        }
+        element.setAttribute("data-lang", language);
       }
+    });
+    //@ts-ignore
+    CodeMirror.colorize([element], null, this.settings.showLineNums);
+    if (this.settings.copyButton) {
+      const codeBlock = element;
+      const copyButton = document.createElement("button");
+      copyButton.className = "copy";
+      copyButton.type = "button";
+      // copyButton.ariaLabel = 'Copy code to clipboard';
+      copyButton.innerText = "Copy";
+      codeBlock.append(copyButton);
+      copyButton.addEventListener("click", function () {
+        // exclude line numbers when copying code to clipboard
+        const code = codeBlock.querySelector("code");
+        const clone = code.cloneNode(true) as HTMLElement;
+        clone.findAll("span.cm-linenumber").forEach(e => e.remove());
+        const codeText = clone.textContent;
+        window.navigator.clipboard.writeText(codeText);
+        copyButton.innerText = "Copied";
+        setTimeout(function () {
+          copyButton.innerText = "Copy";
+        }, 4000);
+      });
     }
   }
 
@@ -155,7 +150,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   toggleHighlighting() {
     if (this.settings.enableCMinPreview) {
       document.body.addClass("unified-cm-highlighting");
-      this.registerMarkdownPostProcessor(el => this.mdProcessor(el));
+      this.registerMarkdownPostProcessor(this.mdProcessor);
       this.refreshPanes();
     } else {
       document.body.removeClass("unified-cm-highlighting");
