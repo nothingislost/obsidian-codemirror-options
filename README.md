@@ -128,6 +128,10 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.1.2
+
+- More bug fixes to syntax highlighting logic
+
 ### 0.1.1
 
 - Bug fixes to the line number and copy button handling
