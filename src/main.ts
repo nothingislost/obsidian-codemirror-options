@@ -86,10 +86,9 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     // only get code block elements with a language but not any that have already been colorized
     const element = el.firstChild as HTMLElement;
     if (!element) return;
-    console.log(element)
     if (element.tagName !== "PRE") return;
     if (!element.classList.value.includes("language-")) {
-      if (this.settings.copyButtonOnPRE) this.addCopyButton(element); 
+      if (this.settings.copyButtonOnPRE) this.addCopyButton(element);
       return;
     }
     if (element.classList.value.includes("cm-s-obsidian")) return;
@@ -113,7 +112,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     });
     //@ts-ignore
     CodeMirror.colorize([element], null, this.settings.showLineNums);
-    this.addCopyButton(element)
+    this.addCopyButton(element);
   }
 
   addCopyButton(element: HTMLElement) {
