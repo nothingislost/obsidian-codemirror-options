@@ -12,6 +12,7 @@ export class ObsidianCodeMirrorOptionsSettings {
   editModeClickHandler = false;
   showLineNums = false;
   copyButton = false;
+  copyButtonOnPRE = false;
 }
 
 export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
@@ -125,13 +126,25 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           })
         );
       new Setting(containerEl)
-        .setName("Experimental: Enable copy button for code blocks in preview")
+        .setName("Experimental: Enable copy button to code blocks in preview mode")
         .setDesc(
           `This setting will add a copy button to the bottom left corner of code blocks in preview mode. The button will show up on code block hover.`
         )
         .addToggle(toggle =>
           toggle.setValue(this.plugin.settings.copyButton).onChange(value => {
             this.plugin.settings.copyButton = value;
+            this.plugin.saveData(this.plugin.settings);
+            this.plugin.toggleCodeBlockSettings();
+          })
+        );
+      new Setting(containerEl)
+        .setName("Experimental: Enable copy button to all PRE blocks in preview mode")
+        .setDesc(
+          `This setting will add a copy button to any PRE element. This could negatively impact certain plugins that render PRE blocks.`
+        )
+        .addToggle(toggle =>
+          toggle.setValue(this.plugin.settings.copyButtonOnPRE).onChange(value => {
+            this.plugin.settings.copyButtonOnPRE = value;
             this.plugin.saveData(this.plugin.settings);
             this.plugin.toggleCodeBlockSettings();
           })

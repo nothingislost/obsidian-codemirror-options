@@ -128,6 +128,12 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.1.3
+
+- Move copy button to top right and reduce size
+- Remove trailing line breaks from copied text
+- Add option to include copy button on all PRE blocks in preview
+
 ### 0.1.2
 
 - More bug fixes to syntax highlighting logic

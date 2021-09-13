@@ -491,11 +491,13 @@ body.style-active-selection .CodeMirror-selected {
 }
 
 /* these two styles are needed for line nums and copy blocks to position properly */
-body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] {
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"],
+body.unified-cm-highlighting.cm-show-copy-button-on-pre[class*="theme-"] .markdown-preview-view pre {
   position: relative;
 }
 
-body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] code {
+body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] code,
+body.unified-cm-highlighting.cm-show-copy-button-on-pre[class*="theme-"] .markdown-preview-view pre code {
   position: static !important;
 }
 
@@ -516,13 +518,13 @@ body.unified-cm-highlighting.cm-show-line-nums[class*="theme-"] .markdown-previe
 /* START Copy button */
 body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view button.copy {
   display: inline-block;
-  height: 38px;
-  padding: 0 30px;
+  height: 30px;
+  padding: 0 12px;
   color: var(--cm-foreground-color);
   text-align: center;
   font-size: 11px !important;
   font-weight: 600;
-  line-height: 38px;
+  line-height: 30px;
   letter-spacing: 0.1rem;
   text-transform: uppercase !important;
   text-decoration: none;
@@ -537,14 +539,14 @@ body.unified-cm-highlighting[class*="theme-"] .markdown-preview-view button.copy
   color: var(--cm-foreground-color);
   position: absolute;
   right: 0rem;
-  bottom: .6rem;
+  top: .6rem;
   opacity: 0;
   z-index: 1;
 }
 
 body.unified-cm-highlighting[class*="theme-"]
   .markdown-preview-view
-  pre.cm-s-obsidian[class*="language-"]:hover
+  pre:hover
   button.copy {
   background: var(--cm-background-color);
   opacity: 1;

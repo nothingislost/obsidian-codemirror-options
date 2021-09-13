@@ -86,8 +86,12 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     // only get code block elements with a language but not any that have already been colorized
     const element = el.firstChild as HTMLElement;
     if (!element) return;
+    console.log(element)
     if (element.tagName !== "PRE") return;
-    if (!element.classList.value.includes("language-")) return;
+    if (!element.classList.value.includes("language-")) {
+      if (this.settings.copyButtonOnPRE) this.addCopyButton(element); 
+      return;
+    }
     if (element.classList.value.includes("cm-s-obsidian")) return;
     element.classList.forEach((className: string) => {
       if (className.startsWith("language-")) {
@@ -109,6 +113,10 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     });
     //@ts-ignore
     CodeMirror.colorize([element], null, this.settings.showLineNums);
+    this.addCopyButton(element)
+  }
+
+  addCopyButton(element: HTMLElement) {
     if (this.settings.copyButton) {
       const codeBlock = element;
       const copyButton = document.createElement("button");
@@ -122,7 +130,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         const code = codeBlock.querySelector("code");
         const clone = code.cloneNode(true) as HTMLElement;
         clone.findAll("span.cm-linenumber").forEach(e => e.remove());
-        const codeText = clone.textContent;
+        const codeText = clone.textContent.trim();
         window.navigator.clipboard.writeText(codeText);
         copyButton.innerText = "Copied";
         setTimeout(function () {
@@ -135,16 +143,15 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   toggleCodeBlockSettings() {
     if (this.settings.showLineNums) {
       document.body.addClass("cm-show-line-nums");
-      this.refreshPanes();
     } else {
       document.body.removeClass("cm-show-line-nums");
-      this.refreshPanes();
     }
-    if (this.settings.copyButton) {
-      this.refreshPanes();
+    if (this.settings.copyButtonOnPRE) {
+      document.body.addClass("cm-show-copy-button-on-pre");
     } else {
-      this.refreshPanes();
+      document.body.removeClass("cm-show-copy-button-on-pre");
     }
+    this.refreshPanes();
   }
 
   toggleHighlighting() {
