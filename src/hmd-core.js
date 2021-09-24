@@ -1089,6 +1089,19 @@
     return inst;
   }
 
+  function updateCursorDisplay(cm, skipCacheCleaning) {
+    if (!skipCacheCleaning) {
+      var lvs = cm.display.view // LineView s
+      for (var lineView of lvs) {
+        if (lineView.measure) lineView.measure.cache = {}
+      }
+    }
+  
+    setTimeout(function () {
+      cm.display.input.showSelection(cm.display.input.prepareSelection())
+    }, 60) // wait for css style
+  }
+
   /**
    * Utils for HyperMD addons
    *
@@ -1140,6 +1153,7 @@
   exports.cm_internal = cm_internal;
   exports.contains = contains;
   exports.debounce = debounce;
+  exports.updateCursorDisplay = updateCursorDisplay
   exports.expandRange = expandRange;
   exports.fromTextArea = fromTextArea;
   exports.getEveryCharToken = getEveryCharToken;

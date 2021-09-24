@@ -110,7 +110,7 @@ var __importStar =
       };
       this.cursorActivityHandler = function (/*doc: CodeMirror.Doc*/) {
         // _this.update();
-        _this.updateImmediately();
+        core_1.updateCursorDisplay(cm, false);
       };
       this.update = core_1.debounce(function () {
         return _this.updateImmediately();
@@ -277,45 +277,39 @@ var __importStar =
       }
       this._rangesInLine = activedLines;
       if (DEBUG) console.log("======= OP START " + Object.keys(activedLines));
-      let procResult = false
+      let procResult = false;
       cm.operation(function () {
         // adding "inactive" class
         for (var line in lastActivedLines) {
-          if (DEBUG) console.log("line in lastActivedLines")
-          if (activedLines[line]) { 
-              if (DEBUG) console.log("line in lastActivedLines: continue")
-              continue; // line is still active. do nothing
+          if (DEBUG) console.log("line in lastActivedLines");
+          if (activedLines[line]) {
+            if (DEBUG) console.log("line in lastActivedLines: continue");
+            continue; // line is still active. do nothing
           }
-          if (DEBUG) console.log('procLine', ~~line)
+          if (DEBUG) console.log("procLine", ~~line);
           _this.procLine(~~line); // or, try adding "inactive" class to the <pre>s
         }
         var caretLineChanged = false;
         var caretLineNo;
         // process active lines
-        if (DEBUG) console.log('active lines', activedLines)
+        if (DEBUG) console.log("active lines", activedLines);
         for (var line in activedLines) {
           var lineChanged = procResult ? procResult : _this.procLine(~~line);
-          if (DEBUG) console.log('lineChanged && caretAtLines[line]', lineChanged, caretAtLines[line])
+          if (DEBUG) console.log("lineChanged && caretAtLines[line]", lineChanged, caretAtLines[line]);
           if (lineChanged && caretAtLines[line]) caretLineChanged = true;
           caretLineNo = caretAtLines[line];
           if (DEBUG) console.log("caret line", line, caretLineChanged);
         }
         // refresh cursor position if needed
         if (caretLineChanged) {
-          // if (DEBUG)
           var lineHandle = cm.getLineHandle(line);
           if (DEBUG) console.log("caretLineChanged", caretLineChanged, caretLineNo, lineHandle);
           if (lineHandle.height === 0) {
             // edited by nothingislost as this was causing an infinite refresh loop on folded sections
-            if (DEBUG) console.log("not refreshing due to 0 height"); 
+            if (DEBUG) console.log("not refreshing due to 0 height");
           } else {
-            if (DEBUG) console.log("refreshed")
-            // cm.doc.children[0].height -= 10;
-            cm.height -= 10;
-            cm.refresh();
+            core_1.updateCursorDisplay(cm, false);
           }
-
-          // this refresh fixes the cursor placement issues but is expensive
         }
       });
       if (DEBUG) console.log("======= OP END ");

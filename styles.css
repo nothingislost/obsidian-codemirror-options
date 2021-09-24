@@ -453,6 +453,9 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAQAAAAziH6sAAAADklEQVR42mOc+Z9x5n8ACTkDM4ikM1IAAAAASUVORK5CYII=)
     repeat-x 0 center;
 }
+.hide-tokens .hmd-inactive-line.CodeMirror-line span.cm-formatting-highlight {
+  display: none;
+}
 .hide-tokens .cm-s-obsidian pre.hmd-inactive-line span.cm-formatting-quote {
   color: transparent;
 }

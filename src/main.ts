@@ -79,20 +79,23 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   mdProcessor = async (el: HTMLElement) => {
     setTimeout(() => {
       this.injectCM(el);
-    }, 0);
+    }, 100);
   };
 
   injectCM(el: HTMLElement) {
     // only get code block elements with a language but not any that have already been colorized
-    const element = el.firstChild as HTMLElement;
-    if (!element) return;
-    if (element.tagName !== "PRE") return;
-    if (!element.classList.value.includes("language-")) {
-      if (this.settings.copyButtonOnPRE) this.addCopyButton(element);
+    const preElement = el.firstChild as HTMLElement;
+    const codeElement = el.firstChild.firstChild as HTMLElement;
+    if (!codeElement) return;
+    if (codeElement.tagName !== "CODE") return;
+    if (!codeElement.classList.value.includes("language-")) {
+      if (this.settings.copyButtonOnPRE) {
+        this.addCopyButton(preElement);
+      }
       return;
     }
-    if (element.classList.value.includes("cm-s-obsidian")) return;
-    element.classList.forEach((className: string) => {
+    if (preElement.classList.value.includes("cm-s-obsidian")) return;
+    codeElement.classList.forEach((className: string) => {
       if (className.startsWith("language-")) {
         // set data-lang to the code block language for easier colorize usage
         let language = className.replace("language-", "");
@@ -107,12 +110,13 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
             language = "javascript";
             break;
         }
-        element.setAttribute("data-lang", language);
+        codeElement.setAttribute("data-lang", language);
       }
     });
     //@ts-ignore
-    CodeMirror.colorize([element], null, this.settings.showLineNums);
-    this.addCopyButton(element);
+    CodeMirror.colorize([codeElement], null, this.settings.showLineNums);
+    preElement.querySelector(".copy-code-button").remove();
+    this.addCopyButton(preElement);
   }
 
   addCopyButton(element: HTMLElement) {
@@ -166,11 +170,13 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   }
 
   applyCodeMirrorOptions() {
-    this.setCodeMirrorOption("styleSelectedText", this.settings.markSelection);
-    this.setCodeMirrorOption("singleCursorHeightPerLine", this.settings.dynamicCursor);
-    this.setCodeMirrorOption("styleActiveLine", this.settings.activeLineOnSelect);
-    this.setCodeMirrorOption("hmdHideToken", this.settings.editModeHideTokens);
-    this.setCodeMirrorOption("hmdClick", this.settings.editModeClickHandler);
+    this.app.workspace.iterateCodeMirrors(cm => {
+      this.setCodeMirrorOption(cm, "styleSelectedText", this.settings.markSelection);
+      this.setCodeMirrorOption(cm, "singleCursorHeightPerLine", this.settings.dynamicCursor);
+      this.setCodeMirrorOption(cm, "styleActiveLine", this.settings.activeLineOnSelect);
+      this.setCodeMirrorOption(cm, "hmdHideToken", this.settings.editModeHideTokens);
+      this.setCodeMirrorOption(cm, "hmdClick", this.settings.editModeClickHandler);
+    });
     if (this.settings.editModeHideTokens) {
       document.body.addClass("hide-tokens");
     } else {
@@ -207,20 +213,23 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     });
   }
 
-  getCmEditor(): codemirror.Editor {
+  getActiveCmEditor(): codemirror.Editor {
     const view = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (view) return view.sourceMode?.cmEditor;
     return null;
   }
 
-  setCodeMirrorOption(optionKey: keyof EditorConfiguration, optionValue: boolean | Record<string, unknown>) {
-    const cmEditor = this.getCmEditor();
+  setCodeMirrorOption(
+    cm: CodeMirror.Editor,
+    optionKey: keyof EditorConfiguration,
+    optionValue: boolean | Record<string, unknown>
+  ) {
     // styleActiveLine requires an object to set the behavior we want
     if (optionKey === "styleActiveLine") optionValue = optionValue === true ? { nonEmpty: true } : true;
     // we want to pass the opposite boolean to what is chosen in settings
     if (optionKey === "singleCursorHeightPerLine") optionValue = !optionValue;
-    if (cmEditor && cmEditor.getOption(optionKey) != optionValue) {
-      cmEditor.setOption(optionKey, optionValue);
+    if (cm && cm.getOption(optionKey) != optionValue) {
+      cm.setOption(optionKey, optionValue);
     }
   }
 

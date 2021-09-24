@@ -24,12 +24,7 @@ CodeMirror.colorize = (function () {
       textContent(node, text);
       node.innerHTML = "";
       CodeMirror.runMode(text.join(""), mode, node, { lineNums: showLineNums });
-      node.className += " cm-s-obsidian";
-      const innerHTML = node.innerHTML;
-      node.empty();
-      const codeEl = node.createEl("code");
-      codeEl.innerHTML = innerHTML;
-      codeEl.addClass("language-" + node.getAttribute("data-lang"));
+      node.parentElement.className += " cm-s-obsidian";
     }
   };
 })();
