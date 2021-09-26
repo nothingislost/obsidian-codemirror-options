@@ -128,6 +128,18 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.1.4
+
+- Fixed a bug which would cause "can't read property 'length' of undefined" randomly, when opening files
+- Changed the code block copy button handling to account for the new default Obsidian copy button
+- Fixed a bug which would prevent CodeMirror options from applying to all open panes
+- Fixed a bug which would cause syntax highlighting to not apply sometimes in preview mode
+- Added highlight tokens (==) to the list of tokens hidden by the "Hide Tokens" feature
+- Stabilize Hide Markdown Tokens
+  - The cursor placement logic has been replaced with a hopefully more stable method which prevents the scroll position from jumping up and down on click
+  - The only outstanding cursor bug that I'm aware of is when placing the cursor to the right of the fold widget on a folded line
+- 
+
 ### 0.1.3
 
 - Move copy button to top right and reduce size
