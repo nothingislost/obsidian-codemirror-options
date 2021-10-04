@@ -173,6 +173,7 @@ var __importStar =
         var type = null;
         var text, url;
         if (styles.match(/\sformatting-task\s/)) {
+          ev.preventDefault(); // prevent the cursor from moving into the checkbox
           // TO-DO checkbox
           type = "todo";
           range = core_1.expandRange(cm, pos, "formatting-task");
