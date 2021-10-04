@@ -316,6 +316,10 @@ var __importStar =
         if (DEBUG) console.log("active lines", activedLines);
         for (var line in activedLines) {
           var lineChanged = procResult ? procResult : _this.procLine(~~line);
+          if (!lineChanged) {
+            // always force a cursor placement refresh if the cursor changed lines
+            lastActivedLines.hasOwnProperty(line) ? lineChanged = false : lineChanged = true;
+          }
           if (DEBUG) console.log("lineChanged && caretAtLines[line]", lineChanged, caretAtLines[line]);
           if (lineChanged && caretAtLines[line]) caretLineChanged = true;
           caretLineNo = caretAtLines[line];
@@ -325,13 +329,7 @@ var __importStar =
         if (caretLineChanged) {
           var lineHandle = cm.getLineHandle(line);
           if (DEBUG) console.log("caretLineChanged", caretLineChanged, caretLineNo, lineHandle);
-          if (lineHandle.height === 0) {
-            // edited by nothingislost as this was causing an infinite refresh loop on folded sections
-            if (DEBUG) console.log("not refreshing due to 0 height");
-          } else {
-            core_1.updateCursorDisplay(cm, true);
-            // cm.refresh();
-          }
+          core_1.updateCursorDisplay(cm, false);
         }
       });
       if (DEBUG) console.log("======= OP END ");

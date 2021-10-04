@@ -948,7 +948,11 @@
         // strong
         strong: state.strong ? 1 /* IS_THIS_TYPE */ : prevState.strong ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // mark
-        mark: state.highlight ? 1 /* IS_THIS_TYPE */ : prevState.highlight ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
+        mark: state.highlight
+          ? 1 /* IS_THIS_TYPE */
+          : prevState.highlight
+          ? 2 /* LEAVING_THIS_TYPE */
+          : 0 /* NOTHING */,
         // ins
         ins: state.ins ? 1 /* IS_THIS_TYPE */ : prevState.ins ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // sub
@@ -994,7 +998,7 @@
           ? 2 /* LEAVING_THIS_TYPE */
           : 0 /* NOTHING */,
       };
-      ans["highlight"] = ans["mark"] // create a token alias
+      ans["highlight"] = ans["mark"]; // create a token alias
       return ans;
     };
     /** get spans from a line and update the cache */
@@ -1102,10 +1106,12 @@
     if (!skipCacheCleaning) {
       var lvs = cm.display.view; // LineView s
       for (var lineView of lvs) {
-        if (lineView.measure) lineView.measure.cache = {};
+        if (lineView.measure) {
+          lineView.measure.cache = {};
+          lineView.measure.caches = [{}];
+        }
       }
     }
-
     setTimeout(function () {
       cm.display.input.showSelection(cm.display.input.prepareSelection());
     }, 60); // wait for css style
