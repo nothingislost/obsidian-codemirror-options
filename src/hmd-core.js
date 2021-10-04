@@ -936,7 +936,6 @@
       var prevState = prevToken ? prevToken.state : {};
       var state = token.state;
       var styles = " " + token.type + " ";
-
       var ans = {
         // em
         em: state.em ? 1 /* IS_THIS_TYPE */ : prevState.em ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
@@ -949,14 +948,7 @@
         // strong
         strong: state.strong ? 1 /* IS_THIS_TYPE */ : prevState.strong ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // mark
-        // mark: state.mark ? 1 /* IS_THIS_TYPE */ : prevState.mark ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
-        mark:
-          (token && token.type?.includes("formatting-highlight") && token.string === "==" && (!prevToken || (prevToken && prevToken.type !== "highlight")) ||
-          (token && token.type === "highlight"))
-            ? 1
-            : token && token.type && token.type?.includes("formatting-highlight") && token.string === "==" && prevToken && prevToken.type === "highlight"
-            ? 2
-            : 0,
+        mark: state.highlight ? 1 /* IS_THIS_TYPE */ : prevState.highlight ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // ins
         ins: state.ins ? 1 /* IS_THIS_TYPE */ : prevState.ins ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // sub
