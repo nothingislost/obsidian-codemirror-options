@@ -169,7 +169,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("hmdFold", this.settings.foldLinks ? { link: true } : false);
       cm.setOption("hmdClick", this.settings.editModeClickHandler);
       cm.setOption("cursorBlinkRate", this.settings.cursorBlinkRate);
-      if (this.settings.containerAttributes) cm.on("renderLine", onRenderLine);
+      if (this.settings.containerAttributes) this.updateCodeMirrorHandlers("renderLine", onRenderLine, true, true);
     });
   }
 
@@ -264,7 +264,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         if (refresh) cm.refresh();
       });
     },
-    1000,
+    0,
     true
   );
 
