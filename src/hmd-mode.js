@@ -360,7 +360,7 @@ var __importStar =
         }
         if (wasInCodeFence || inCodeFence) {
           if (!state.localMode || !wasInCodeFence) ans = ans.replace("inline-code", "");
-          ans += " line-HyperMD-codeblock line-background-HyperMD-codeblock-bg";
+          ans += " line-HyperMD-codeblock line-background-HyperMD-codeblock-bg hmd-codeblock";
           if (inCodeFence !== wasInCodeFence) {
             if (!inCodeFence) ans += " line-HyperMD-codeblock-end line-background-HyperMD-codeblock-end-bg";
             else if (!wasInCodeFence) ans += " line-HyperMD-codeblock-begin line-background-HyperMD-codeblock-begin-bg";
