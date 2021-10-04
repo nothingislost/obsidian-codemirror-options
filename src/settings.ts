@@ -142,7 +142,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       text: "Visual Styling",
     });
     new Setting(containerEl)
-      .setName("Enable Container Attributes")
+      .setName("Container Attributes")
       .setDesc(
         `Apply data attributes to the CodeMirror line div elements that describe the contained child elements. Think of
       this like Contextual Typography for Edit Mode.`
@@ -180,6 +180,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.settings.markSelection = value;
           this.plugin.saveData(this.plugin.settings);
           this.plugin.updateCodeMirrorOption("styleSelectedText", this.plugin.settings.markSelection);
+          this.plugin.applyBodyClasses();
         })
       );
 
