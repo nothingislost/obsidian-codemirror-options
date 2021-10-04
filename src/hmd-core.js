@@ -936,6 +936,7 @@
       var prevState = prevToken ? prevToken.state : {};
       var state = token.state;
       var styles = " " + token.type + " ";
+
       var ans = {
         // em
         em: state.em ? 1 /* IS_THIS_TYPE */ : prevState.em ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
@@ -948,7 +949,14 @@
         // strong
         strong: state.strong ? 1 /* IS_THIS_TYPE */ : prevState.strong ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // mark
-        mark: state.mark ? 1 /* IS_THIS_TYPE */ : prevState.mark ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
+        // mark: state.mark ? 1 /* IS_THIS_TYPE */ : prevState.mark ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
+        mark:
+          (token && token.type?.includes("formatting-highlight") && token.string === "==" && (!prevToken || (prevToken && prevToken.type !== "highlight")) ||
+          (token && token.type === "highlight"))
+            ? 1
+            : token && token.type && token.type?.includes("formatting-highlight") && token.string === "==" && prevToken && prevToken.type === "highlight"
+            ? 2
+            : 0,
         // ins
         ins: state.ins ? 1 /* IS_THIS_TYPE */ : prevState.ins ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // sub
@@ -957,6 +965,14 @@
         sup: state.sup ? 1 /* IS_THIS_TYPE */ : prevState.sup ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // code
         code: state.code ? 1 /* IS_THIS_TYPE */ : prevState.code ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
+        // obsidian internal link
+        internalLink:
+          (token && token.type === "formatting-link" && token.string === "[[") ||
+          (token && token.type === "hmd-internal-link")
+            ? 1
+            : token && token.type && token.type === "formatting-link" && token.string === "]]"
+            ? 2
+            : 0,
         // linkText
         linkText: state.linkText
           ? state.hmdLinkType === 3 /* NORMAL */ ||
@@ -986,6 +1002,7 @@
           ? 2 /* LEAVING_THIS_TYPE */
           : 0 /* NOTHING */,
       };
+      ans["highlight"] = ans["mark"] // create a token alias
       return ans;
     };
     /** get spans from a line and update the cache */
@@ -1091,15 +1108,15 @@
 
   function updateCursorDisplay(cm, skipCacheCleaning) {
     if (!skipCacheCleaning) {
-      var lvs = cm.display.view // LineView s
+      var lvs = cm.display.view; // LineView s
       for (var lineView of lvs) {
-        if (lineView.measure) lineView.measure.cache = {}
+        if (lineView.measure) lineView.measure.cache = {};
       }
     }
-  
+
     setTimeout(function () {
-      cm.display.input.showSelection(cm.display.input.prepareSelection())
-    }, 60) // wait for css style
+      cm.display.input.showSelection(cm.display.input.prepareSelection());
+    }, 60); // wait for css style
   }
 
   /**
@@ -1153,7 +1170,7 @@
   exports.cm_internal = cm_internal;
   exports.contains = contains;
   exports.debounce = debounce;
-  exports.updateCursorDisplay = updateCursorDisplay
+  exports.updateCursorDisplay = updateCursorDisplay;
   exports.expandRange = expandRange;
   exports.fromTextArea = fromTextArea;
   exports.getEveryCharToken = getEveryCharToken;

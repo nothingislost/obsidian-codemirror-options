@@ -1,15 +1,15 @@
 {
     "name": "obsidian-codemirror-options",
-    "version": "0.1.4",
-    "description": "Enable/Disable certain CodeMirror options",
+    "version": "0.2.0",
+    "description": "Customize the functionality of Obsidian's edit mode",
     "main": "main.js",
     "scripts": {
         "dev": "rollup --config rollup.config.js -w",
-        "build": "rollup --config rollup.config.js",
+        "build": "rollup --config rollup.config.js --environment BUILD:production",
         "lint": "eslint . --ext .ts"
     },
     "keywords": [],
-    "author": "",
+    "author": "NothingIslost <[@nothingislost](https://github.com/nothingislost)>",
     "license": "MIT",
     "devDependencies": {
         "@giotramu/prettier-config": "^1.1.2",
@@ -20,7 +20,6 @@
         "@typescript-eslint/eslint-plugin": "^4.29.3",
         "@typescript-eslint/parser": "^4.29.3",
         "@rollup/plugin-json": "^4.1.0",
-        "@0xgg/echomd": "^1.0.4",
         "codemirror": "^5.62.2",
         "eslint": "^7.32.0",
         "eslint-config-airbnb-base": "^14.2.1",

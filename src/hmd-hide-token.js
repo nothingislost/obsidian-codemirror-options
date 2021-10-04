@@ -71,7 +71,8 @@ var __importStar =
   exports.defaultOption = {
     enabled: false,
     line: true,
-    tokenTypes: "em|strong|mark|ins|sub|sup|strikethrough|code|linkText|task".split("|"),
+    // does not yet support ins, sub, sup
+    tokenTypes: "em|strong|strikethrough|code|linkText|task|mark|internalLink|highlight".split("|"),
   };
   exports.suggestedOption = {
     enabled: true,
@@ -109,8 +110,7 @@ var __importStar =
         if (DEBUG) console.log("renderLine return " + changed);
       };
       this.cursorActivityHandler = function (/*doc: CodeMirror.Doc*/) {
-        // _this.update();
-        core_1.updateCursorDisplay(cm, false);
+        _this.update();
       };
       this.update = core_1.debounce(function () {
         return _this.updateImmediately();
@@ -121,7 +121,7 @@ var __importStar =
         /* ON  */ function () {
           cm.on("cursorActivity", _this.cursorActivityHandler);
           cm.on("renderLine", _this.renderLineHandler);
-          cm.on("update", _this.update);
+          // cm.on("update", _this.update);
           _this.update();
           cm.refresh();
         },
@@ -165,6 +165,7 @@ var __importStar =
        * @returns if there are Span Nodes changed
        */
       function changeVisibilityForSpan(span, shallHideTokens, iNodeHint) {
+        if (DEBUG) console.log("changeVis start");
         var changed = false;
         iNodeHint = iNodeHint || 0;
         // iterate the map
@@ -172,24 +173,39 @@ var __importStar =
           var begin = map[i * 3],
             end = map[i * 3 + 1];
           var domNode = map[i * 3 + 2];
+          if (DEBUG) console.log("DOMTEST", span.head, begin);
           if (begin === span.head.start) {
             // find the leading token!
             if (/formatting-/.test(span.head.type) && domNode.nodeType === Node.TEXT_NODE) {
-              // if (DEBUG) console.log("DOMNODE", shallHideTokens, domNode, begin, span)
+              if (DEBUG) console.log("DOMNODE", shallHideTokens, domNode, begin, span);
               // good. this token can be changed
               var domParent = domNode.parentElement;
               if (shallHideTokens ? addClass(domParent, hideClassName) : rmClass(domParent, hideClassName)) {
-                // if (DEBUG) console.log("HEAD DOM CHANGED")
+                if (DEBUG) console.log("HEAD DOM CHANGED");
                 changed = true;
               }
               // Yiyi: Wikilink
-              if (domParent.nextElementSibling && domParent.nextElementSibling.classList.contains("cm-wikilink-url")) {
+              if (
+                domParent.nextElementSibling && domParent.nextElementSibling.classList.contains("cm-internal-link-url")
+              ) {
                 if (
                   shallHideTokens
                     ? addClass(domParent.nextElementSibling, hideClassName)
                     : rmClass(domParent.nextElementSibling, hideClassName)
                 ) {
-                  // if (DEBUG) console.log("HEAD DOM CHANGED")
+                  if (DEBUG) console.log("HEAD DOM CHANGED");
+                  changed = true;
+                }
+              }
+              if (
+                domParent.nextElementSibling && domParent.nextElementSibling.nextElementSibling && domParent.nextElementSibling.nextElementSibling.classList.contains("cm-internal-link-ref")
+              ) {
+                if (
+                  shallHideTokens
+                    ? addClass(domParent.nextElementSibling.nextElementSibling, hideClassName)
+                    : rmClass(domParent.nextElementSibling.nextElementSibling, hideClassName)
+                ) {
+                  if (DEBUG) console.log("HEAD DOM CHANGED");
                   changed = true;
                 }
               }
@@ -222,10 +238,14 @@ var __importStar =
         return changed;
       }
       var spans = core_1.getLineSpanExtractor(cm).extract(lineNo);
+      // console.log('spans: ', spans)
       var iNodeHint = 0;
       for (var iSpan = 0; iSpan < spans.length; iSpan++) {
         var span = spans[iSpan];
-        if (this.tokenTypes.indexOf(span.type) === -1) continue; // not-interested span type
+
+        if (this.tokenTypes.indexOf(span.type) === -1) {
+          continue; // not-interested span type
+        }
         /* TODO: Use AST, instead of crafted Position */
         var spanRange = [
           { line: lineNo, ch: span.begin },
@@ -242,6 +262,7 @@ var __importStar =
             break;
           }
         }
+        // console.log('changeVis', span, shallHideTokens)
         if (changeVisibilityForSpan(span, shallHideTokens, iNodeHint)) {
           changed = true;
         }
@@ -308,7 +329,8 @@ var __importStar =
             // edited by nothingislost as this was causing an infinite refresh loop on folded sections
             if (DEBUG) console.log("not refreshing due to 0 height");
           } else {
-            core_1.updateCursorDisplay(cm, false);
+            core_1.updateCursorDisplay(cm, true);
+            // cm.refresh();
           }
         }
       });

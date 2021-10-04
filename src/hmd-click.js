@@ -44,8 +44,8 @@ var __importStar =
 
 (function (mod) {
   //[HyperMD] UMD patched!
-  /*plain env*/ mod(null, (HyperMD.Click = HyperMD.Click || {}), CodeMirror, HyperMD, HyperMD.ReadLink);
-})(function (require, exports, CodeMirror, core_1, read_link_1) {
+  /*plain env*/ mod(null, (HyperMD.Click = HyperMD.Click || {}), CodeMirror, HyperMD);
+})(function (require, exports, CodeMirror, core_1) {
   "use strict";
   Object.defineProperty(exports, "__esModule", { value: true });
   exports.getAddon =
@@ -108,6 +108,7 @@ var __importStar =
         var el = _this.el;
         var className = el.className,
           newClassName = className;
+        var metaClass = "HyperMD-with-meta";
         var altClass = "HyperMD-with-alt";
         var ctrlClass = "HyperMD-with-ctrl";
         if (!ev.altKey && className.indexOf(altClass) >= 0) {
@@ -116,7 +117,10 @@ var __importStar =
         if (!ev.ctrlKey && className.indexOf(ctrlClass) >= 0) {
           newClassName = className.replace(ctrlClass, "");
         }
-        if (!ev.altKey && !ev.ctrlKey) {
+        if (!ev.metaKey && className.indexOf(metaClass) >= 0) {
+          newClassName = className.replace(metaClass, "");
+        }
+        if (!ev.altKey && !ev.ctrlKey && !ev.metaKey) {
           _this._KeyDetectorActive = false;
           el.removeEventListener("mousemove", _this._mouseMove_keyDetect, false);
         }
@@ -126,6 +130,7 @@ var __importStar =
       this._keyDown = function (ev) {
         var kc = ev.keyCode || ev.which;
         var className = "";
+        if (kc == 91 || kc == 92 || kc == 224) className = "HyperMD-with-meta";
         if (kc == 17) className = "HyperMD-with-ctrl";
         if (kc == 18) className = "HyperMD-with-alt";
         var el = _this.el;

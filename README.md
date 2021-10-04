@@ -128,6 +128,41 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.2.0
+
+- This is a major release which adds/changes quite a few things
+- **Updated:** Hide Markdown Tokens
+  - Further stabilization improvements
+    - Removed all usage of `display: none` in edit mode due to the fact that this hiding method breaks cursor placement
+    - All token hiding should be done with `font-family: monospace;font-size: 1px !important; letter-spacing: -1ch;color: transparent;`
+    - If you have a theme or CSS snippet that is using `display:none` on elements inside of a CodeMirror block, it is advised to disable those styles in favor of the token hiding provided by this plugin.
+  - Added the ability to enable/disable each token type individually
+  - Added hiding support for additional token types
+    - Highlight/Mark
+    - Internal link URL & Ref
+- **New:** Container Attributes
+  - This new option applies data attributes to all CodeMirror line divs that describe the child elements contained within the line
+  - Think of this like Contextual Typography for Edit Mode
+  - This option currently applies the following attributes to each CodeMirror line
+    - [data-tag-name="<html_element_type>"]
+      - Currently supported HTML tags: ol, ul, h1-h6, code, frontmatter
+    - [data-heading="<the_full_text_of_any_heading_found>"]
+    - [data-hashtags="<space_delimited_list_of_all_tags_found>"]
+- **New:** OpenMD Mode
+  - This new option replaces Obsidian's HyperMD mode with a modified version which enables new functionality
+  - The new mode is forked from [official HyperMD mode](https://github.com/laobubu/HyperMD/blob/master/src/mode/hypermd.ts) and tries to replicate any Obsidian specific customizations
+  - **Warning:** This new mode could have missing features or differences in parsing behavior when compared to the default Obsidian mode. Please raise an issue for any regressions or bugs encountered.
+  - New functionality provided by this mode:
+    - Enhanced parsing of internal links to split up file name, reference, and alias into distinct spans. This allows for proper hiding of internal link tokens when using the "Hide Markdown Tokens" feature
+    - Fixed the handling of hashtags that include underscores
+- **New:** Collapse External Links
+  - This features collapses external links (in edit mode) so that they only show the link name. The full link text will expand when clicking into the link.
+- **Updated:** Edit Mode Click Handler
+  - This option has been updated to add a class to the div.cm-s-obsidian element whenever a modifier key is pressed
+    - Currently supports ctrl (.HyperMD-with-ctrl), alt (.HyperMD-with-alt), meta (.HyperMD-with-meta)
+    - This feature allows you to apply conditional CSS like changing the cursor to a pointer when hovering a link and also pressing ctrl/cmd
+- **New:** Set cursor blink rate
+  
 ### 0.1.4
 
 - Fixed a bug which would cause "can't read property 'length' of undefined" randomly, when opening files
@@ -138,7 +173,6 @@ This setting is a fallback option if you do not want to inject CM into preview m
 - Stabilize Hide Markdown Tokens
   - The cursor placement logic has been replaced with a hopefully more stable method which prevents the scroll position from jumping up and down on click
   - The only outstanding cursor bug that I'm aware of is when placing the cursor to the right of the fold widget on a folded line
-- 
 
 ### 0.1.3
 
