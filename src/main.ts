@@ -84,10 +84,133 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.app.workspace.trigger("css-change");
       }, 100);
     });
+    this.registerCommands();
   }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+
+  registerCommands() {
+    this.addCommand({
+      id: "toggle-openmd",
+      name: "Toggle OpenMD Mode",
+      callback: () => {
+        this.settings.enableOpenMD = !this.settings.enableOpenMD;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("mode", this.settings.enableOpenMD ? "openmd" : "hypermd");
+      },
+    });
+    this.addCommand({
+      id: "toggle-hide-tokens",
+      name: "Toggle Hide Markdown Tokens",
+      callback: () => {
+        this.settings.editModeHideTokens = !this.settings.editModeHideTokens;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("hmdHideToken", this.settings.editModeHideTokens ? this.settings.tokenList : false);
+        this.applyBodyClasses();
+      },
+    });
+    this.addCommand({
+      id: "toggle-click-handler",
+      name: "Toggle Edit Mode Click Handler",
+      callback: () => {
+        this.settings.editModeClickHandler = !this.settings.editModeClickHandler;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("hmdClick", this.settings.editModeClickHandler);
+      },
+    });
+    this.addCommand({
+      id: "toggle-collapse-links",
+      name: "Toggle Collapse External Links",
+      callback: () => {
+        this.settings.foldLinks = !this.settings.foldLinks;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("hmdFold", this.settings.foldLinks ? { link: true } : false);
+      },
+    });
+    this.addCommand({
+      id: "toggle-container-attributes",
+      name: "Toggle Container Attributes",
+      callback: () => {
+        this.settings.containerAttributes = !this.settings.containerAttributes;
+        this.saveData(this.settings);
+        this.updateCodeMirrorHandlers("renderLine", onRenderLine, this.settings.containerAttributes, true);
+      },
+    });
+    this.addCommand({
+      id: "toggle-dynamic-cursor-size",
+      name: "Toggle Dynamic Cursor Size",
+      callback: () => {
+        this.settings.dynamicCursor = !this.settings.dynamicCursor;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("singleCursorHeightPerLine", !this.settings.dynamicCursor);
+      },
+    });
+    this.addCommand({
+      id: "toggle-style-active-selection",
+      name: "Toggle Style Active Selection",
+      callback: () => {
+        this.settings.markSelection = !this.settings.markSelection;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("styleSelectedText", this.settings.markSelection);
+        this.applyBodyClasses();
+      },
+    });
+    this.addCommand({
+      id: "toggle-retain-active-line",
+      name: "Toggle Retain Active Line on Selection",
+      callback: () => {
+        this.settings.activeLineOnSelect = !this.settings.activeLineOnSelect;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("styleActiveLine", this.settings.activeLineOnSelect ? { nonEmpty: true } : true);
+      },
+    });
+    this.addCommand({
+      id: "toggle-edit-mode-syntax",
+      name: "Toggle Edit Mode Syntax Highlighting",
+      callback: () => {
+        this.settings.syntaxHighlighting = !this.settings.syntaxHighlighting;
+        this.saveData(this.settings);
+        this.applyBodyClasses(true);
+      },
+    });
+    this.addCommand({
+      id: "toggle-preview-mode-syntax",
+      name: "Toggle Preview Mode Syntax Highlighting",
+      callback: () => {
+        this.settings.enablePrismJSStyling = !this.settings.enablePrismJSStyling;
+        this.saveData(this.settings);
+        this.applyBodyClasses(true);
+      },
+    });
+    this.addCommand({
+      id: "toggle-codemirror-in-preview-mode",
+      name: "Toggle CodeMirror in Preview Mode",
+      callback: () => {
+        this.settings.enableCMinPreview = !this.settings.enableCMinPreview;
+        this.saveData(this.settings);
+        this.applyBodyClasses(true);
+      },
+    });
+    this.addCommand({
+      id: "toggle-cm-line-numbers-in-preview-mode",
+      name: "Toggle CM Line Numbers in Preview Mode",
+      callback: () => {
+        this.settings.showLineNums = !this.settings.showLineNums;
+        this.saveData(this.settings);
+        this.applyBodyClasses(true);
+      },
+    });
+    this.addCommand({
+      id: "toggle-cm-copy-button-in-preview-mode",
+      name: "Toggle Copy Button in Preview Mode",
+      callback: () => {
+        this.settings.copyButton = !this.settings.copyButton;
+        this.saveData(this.settings);
+        this.applyBodyClasses(true);
+      },
+    });
   }
 
   mdProcessor = async (el: HTMLElement) => {
@@ -252,7 +375,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         }
       });
     },
-    1000,
+    400,
     true
   );
 
