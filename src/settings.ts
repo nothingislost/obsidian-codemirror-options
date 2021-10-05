@@ -71,6 +71,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             "hmdHideToken",
             this.plugin.settings.editModeHideTokens ? this.plugin.settings.tokenList : false
           );
+          this.plugin.applyBodyClasses();
           // hide the token list if the hide tokens setting is disabled
           this.plugin.settings.editModeHideTokens
             ? tokenSettings.settingEl.removeClass("setting-disabled")
