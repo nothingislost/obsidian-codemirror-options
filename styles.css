@@ -516,10 +516,12 @@ body .cm-s-obsidian span.hmd-link-icon {
 
 .cm-s-obsidian.HyperMD-with-meta span.cm-url,
 .cm-s-obsidian.HyperMD-with-meta span.cm-link,
+.cm-s-obsidian.HyperMD-with-meta span.cm-hmd-internal-link,
 .cm-s-obsidian.HyperMD-with-meta .cm-link + .CodeMirror-widget,
 .cm-s-obsidian.HyperMD-with-meta span.cm-hashtag,
 .cm-s-obsidian.HyperMD-with-ctrl span.cm-url,
 .cm-s-obsidian.HyperMD-with-ctrl span.cm-link,
+.cm-s-obsidian.HyperMD-with-ctrl span.cm-hmd-internal-link,
 .cm-s-obsidian.HyperMD-with-ctrl .cm-link + .CodeMirror-widget,
 .cm-s-obsidian.HyperMD-with-ctrl span.cm-hashtag {
   cursor: pointer;
