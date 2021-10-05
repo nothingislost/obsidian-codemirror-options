@@ -128,6 +128,10 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.2.1
+
+- Bug fixes related to the 0.2.0 release
+
 ### 0.2.0
 
 - This is a major release which adds/changes quite a few things
