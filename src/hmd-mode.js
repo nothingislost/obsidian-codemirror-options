@@ -77,7 +77,7 @@ var __importStar =
   var url2RE = /^\.{0,2}\/[^\>\s]+/;
   var SimpleTableRE = /^\s*[^\|].*?\|.*[^|]\s*$/;
   var SimpleTableLooseRE = /^\s*[^\|].*\|/; // unfinished | row
-  var NormalTableRE = /^\s*\|[^\|]+\|.+\|\s*$/;
+  var NormalTableRE = /^\s*\|[^\|]+\|(.+\|)?\s*$/;
   var NormalTableLooseRE = /^\s*\|/; // | unfinished row
   var linkStyle =
     ((_a = {}),
@@ -148,6 +148,7 @@ var __importStar =
         ans.hmdNextState = null;
         ans.hmdNextStyle = null;
         ans.hmdNextPos = null;
+        ans.templater = 0;
         ans.hmdHashtag = 0 /* NONE */;
         return ans;
       };
@@ -168,6 +169,7 @@ var __importStar =
           "hmdNextState",
           "hmdNextStyle",
           "hmdHashtag",
+          "templater",
           "comment",
         ];
         for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
@@ -190,6 +192,9 @@ var __importStar =
         if (state.code === -1) {
           ans += " line-HyperMD-codeblock line-background-HyperMD-codeblock-bg";
         }
+        if (state.templater === 1) {
+          ans += " line-background-templater-command-bg";
+        }
         resetTable(state);
         return ans.trim() || null;
       };
@@ -205,6 +210,40 @@ var __importStar =
       };
       newMode.token = function (stream, state) {
         if (state.hmdOverride) return state.hmdOverride(stream, state);
+        if (true) {
+          // Only appears once for each Doc
+          if (stream.string === "<%*") {
+            state.templater = 1 /* FRONT_MATTER_END */;
+            stream.skipToEnd();
+            return "templater-opening-tag formatting formatting-templater line-background-templater-start line-background-templater-command-bg";
+          }
+          if (state.templater === 1) {
+            if (stream.string === "") { return ans = "line-background-templater-command-bg"; }
+            return enterMode(stream, state, "javascript", {
+              style: "templater-command line-background-templater-command-bg",
+              skipFirstToken: false,
+              fallbackMode: function () {
+                return createDummyMode("<%*");
+              },
+              exitChecker: function (stream, state) {
+                if (stream.string === "%>") {
+                  // found the endline of front_matter
+                  state.templater = -1 /* NONE */;
+                  stream.backUp(1);
+                  return { endPos: 0 };
+                } else {
+                  return null;
+                }
+              },
+            });
+          } if (state.templater === -1) {
+            state.templater = 0 /* NONE */;
+            stream.skipToEnd();
+            return "templater-closing-tag formatting formatting-templater line-background-templater-end line-background-templater-command-bg";
+          } else {
+            state.templater = 0 /* NONE */;
+          }
+        }
         if (state.hmdNextMaybe === 1 /* FRONT_MATTER */) {
           // Only appears once for each Doc
           if (stream.string === "---") {
@@ -448,11 +487,11 @@ var __importStar =
           //#region Link, BareLink, Footnote, Wikilink etc
           if (stream.current() === "[" && stream.eat("[")) {
             current = "[[";
-            // ans += " internal-link-begin";
+            // ans += " formatting-link";
           }
           if (stream.current() === "]" && stream.eat("]")) {
             current = "]]";
-            // ans += " internal-link-end";
+            // ans += " formatting-link";
           }
           if (wasLinkText !== state.linkText) {
             if (!wasLinkText) {
@@ -634,14 +673,17 @@ var __importStar =
               }
               // then
               if (tableType) {
+                var _dummy = false;
                 var colUbound = state.hmdTableColumns.length - 1;
                 if (
                   tableType === 2 /* NORMAL */ &&
                   ((state.hmdTableCol === 0 && /^\s*\|$/.test(stream.string.slice(0, stream.pos))) ||
                     stream.match(/^\s*$/, false))
                 ) {
+                  _dummy = true
                   ans += " hmd-table-sep hmd-table-sep-dummy";
-                } else if (state.hmdTableCol < colUbound) {
+                }  
+                if (state.hmdTableCol <= colUbound) {
                   var row = state.hmdTableRow;
                   var col = state.hmdTableCol++;
                   if (col == 0) {
@@ -653,7 +695,7 @@ var __importStar =
                       " line-HyperMD-table-row line-HyperMD-table-row-" +
                       row;
                   }
-                  ans += " hmd-table-sep hmd-table-sep-" + col;
+                  if (!_dummy) ans += " hmd-table-sep hmd-table-sep-" + col;
                 }
               }
             }
