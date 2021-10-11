@@ -187,6 +187,7 @@ var __importStar =
       if (!pre) return false;
       if (DEBUG) if (!pre.isSameNode(lv.text)) console.warn("procLine got different node... " + lineNo);
       var mapInfo = core_1.cm_internal.mapFromLineView(lv, line, lineNo);
+      if (!mapInfo) return;
       var map = mapInfo.map;
       var nodeCount = map.length / 3;
       var changed = false;

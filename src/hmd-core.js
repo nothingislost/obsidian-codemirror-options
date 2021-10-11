@@ -512,6 +512,7 @@
         before: false,
       };
     }
+    if (!lineView.rest) return;
     for (var i = 0; i < lineView.rest.length; i++) {
       if (lineView.rest[i] == line) {
         return {
