@@ -11,6 +11,8 @@ import "./hmd-hide-token";
 import "./hmd-mode";
 import "./hmd-fold";
 import "./hmd-fold-link";
+import "./hmd-fold-image";
+import "./hmd-table-align";
 
 import { onRenderLine } from "./container-attributes";
 import { DEFAULT_SETTINGS } from "./settings";
@@ -53,6 +55,7 @@ declare module "codemirror" {
     hmdClick?: boolean | string | undefined;
     hmdFold?: any;
     hmdHideToken?: boolean | string | undefined;
+    hmdTableAlign?: boolean | string | undefined;
     /**
      * When enabled gives the wrapper of the line that contains the cursor the class CodeMirror-activeline,
      * adds a background with the class CodeMirror-activeline-background, and adds the class CodeMirror-activeline-gutter to the line's gutter space is enabled.
@@ -61,6 +64,9 @@ declare module "codemirror" {
   }
   interface Editor extends Doc {
     foldCode(pos: EditorPosition, options, force: string): void;
+    breakMark(cm: CodeMirror.Editor, marker: CodeMirror.MarkerRange, chOffset?: number): void;
+    editor: CodeMirror.Editor;
+    marker: CodeMirror.MarkerRange;
   }
   function colorize(collection?: ArrayLike<Element>, defaultMode?: string, showLineNums?: boolean): void;
 }
@@ -82,7 +88,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       setTimeout(() => {
         // workaround to ensure our plugin registers properly with Style Settings
         this.app.workspace.trigger("css-change");
-      }, 100);
+      }, 1000);
     });
     this.registerCommands();
   }
@@ -211,6 +217,15 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.applyBodyClasses(true);
       },
     });
+    this.addCommand({
+      id: "toggle-auto-align-table",
+      name: "Toggle Auto Align Tables",
+      callback: () => {
+        this.settings.autoAlignTables = !this.settings.autoAlignTables;
+        this.saveData(this.settings);
+        this.updateCodeMirrorOption("hmdTableAlign", this.settings.autoAlignTables);
+      },
+    });
   }
 
   mdProcessor = async (el: HTMLElement) => {
@@ -287,14 +302,21 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("styleSelectedText", this.settings.markSelection);
       cm.setOption("singleCursorHeightPerLine", !this.settings.dynamicCursor);
       cm.setOption("styleActiveLine", this.settings.activeLineOnSelect ? { nonEmpty: true } : true);
-      cm.setOption("mode", this.settings.enableOpenMD ? "openmd" : "hypermd");
+      if (this.settings.enableOpenMD) cm.setOption("mode", "openmd");
       cm.setOption("hmdHideToken", this.settings.editModeHideTokens ? this.settings.tokenList : false);
-      cm.setOption("hmdFold", this.settings.foldLinks ? { link: true } : false);
+      cm.setOption("hmdFold", this.settings.foldLinks ? { link: true, image: true } : false);
       cm.setOption("hmdClick", this.settings.editModeClickHandler);
+      cm.setOption("hmdTableAlign", this.settings.autoAlignTables);
       cm.setOption("cursorBlinkRate", this.settings.cursorBlinkRate);
+      cm.on("imageClicked", this.onImageClick);
       if (this.settings.containerAttributes) this.updateCodeMirrorHandlers("renderLine", onRenderLine, true, true);
     });
   }
+
+  onImageClick = args => {
+    console.log("image click");
+    args.breakMark(args.editor, args.marker);
+  };
 
   applyBodyClasses(refresh = false) {
     this.settings.editModeHideTokens
@@ -342,9 +364,11 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("mode", "hypermd");
       cm.setOption("hmdHideToken", false);
       cm.setOption("hmdFold", false);
+      cm.setOption("hmdTableAlign", false);
       cm.setOption("hmdClick", false);
       cm.setOption("cursorBlinkRate", 530);
       cm.off("renderLine", onRenderLine);
+      cm.off("imageClicked", this.onImageClick);
       cm.refresh();
     });
     document.body.removeClass("style-active-selection");
