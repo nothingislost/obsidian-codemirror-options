@@ -963,10 +963,10 @@
         code: state.code ? 1 /* IS_THIS_TYPE */ : prevState.code ? 2 /* LEAVING_THIS_TYPE */ : 0 /* NOTHING */,
         // obsidian internal link
         internalLink:
-          (token && token.type === "formatting-link" && token.string === "[[") ||
-          (token && token.type === "hmd-internal-link")
+          (token && token.type && token.type.contains("formatting-link-start")) ||
+          (token && token.type && token.type.contains("hmd-internal-link"))
             ? 1
-            : token && token.type && token.type === "formatting-link" && token.string === "]]"
+            : token && token.type && token.type.contains("formatting-link-end")
             ? 2
             : 0,
         // linkText
