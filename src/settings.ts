@@ -20,6 +20,7 @@ export class ObsidianCodeMirrorOptionsSettings {
   tokenList: string;
   containerAttributes: boolean;
   syntaxHighlighting: boolean;
+  autoAlignTables: boolean;
 }
 
 export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
@@ -38,6 +39,7 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   foldLinks: false,
   containerAttributes: false,
   syntaxHighlighting: false,
+  autoAlignTables: false,
   tokenList: "em|strong|strikethrough|code|linkText|task|internalLink|highlight",
 };
 
@@ -85,6 +87,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         `These markdown token types will be hidden. The default value will hide all currently supported tokens.
          Values must be pipe delimted with no spaces. Available options are: em|strong|strikethrough|code|linkText|task|internalLink|highlight`
       )
+      .setClass('token-list-setting')
       .addText(textfield => {
         textfield.setPlaceholder(String("em|strong|strikethrough|code|linkText|task|internalLink|highlight"));
         textfield.inputEl.type = "text";
@@ -153,6 +156,18 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.settings.containerAttributes = value;
           this.plugin.saveData(this.plugin.settings);
           this.plugin.updateCodeMirrorHandlers("renderLine", onRenderLine, value, true);
+        })
+      );
+      new Setting(containerEl)
+      .setName("Auto Align Tables")
+      .setDesc(
+        `Automatically align markdown tables as they are being built.`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.autoAlignTables).onChange(value => {
+          this.plugin.settings.autoAlignTables = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdTableAlign", this.plugin.settings.autoAlignTables);
         })
       );
 
