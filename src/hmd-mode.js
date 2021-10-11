@@ -87,6 +87,7 @@ var __importStar =
     (_a[2 /* FOOTREF */] = "hmd-barelink footref"),
     (_a[5 /* FOOTNOTE */] = "hmd-footnote line-HyperMD-footnote"),
     (_a[8 /* FOOTREF2 */] = "hmd-footref2"),
+    (_a[9 /* FOOTREF2 */] = "hmd-embed hmd-internal-link"),
     _a);
   function resetTable(state) {
     state.hmdTable = 0 /* NONE */;
@@ -193,7 +194,7 @@ var __importStar =
           ans += " line-HyperMD-codeblock line-background-HyperMD-codeblock-bg";
         }
         if (state.templater === 1) {
-          ans += " line-background-templater-command-bg";
+          ans += " line-background-templater-command-bg line-HyperMD-codeblock line-background-HyperMD-codeblock-bg";
         }
         resetTable(state);
         return ans.trim() || null;
@@ -212,21 +213,21 @@ var __importStar =
         if (state.hmdOverride) return state.hmdOverride(stream, state);
         if (true) {
           // Only appears once for each Doc
-          if (stream.string === "<%*") {
-            state.templater = 1 /* FRONT_MATTER_END */;
-            stream.skipToEnd();
-            return "templater-opening-tag formatting formatting-templater line-background-templater-start line-background-templater-command-bg";
+          if (/^<%(.){0,1}$/.test(stream.string) && stream.peek() === "<") {
+            state.templater = 1;
+            stream.match(/^<%[^\s]*/, true);
+            return "templater-opening-tag templater-command formatting line-HyperMD-codeblock formatting-templater line-background-HyperMD-codeblock-bg line-background-HyperMD-codeblock-begin-bg line-background-templater-start line-background-templater-command-bg";
           }
           if (state.templater === 1) {
-            if (stream.string === "") { return ans = "line-background-templater-command-bg"; }
             return enterMode(stream, state, "javascript", {
-              style: "templater-command line-background-templater-command-bg",
+              style:
+                "templater-command line-HyperMD-codeblock line-background-HyperMD-codeblock-bg line-background-templater-command-bg",
               skipFirstToken: false,
               fallbackMode: function () {
-                return createDummyMode("<%*");
+                return createDummyMode("<%");
               },
               exitChecker: function (stream, state) {
-                if (stream.string === "%>") {
+                if (/%>$/.test(stream.string)) {
                   // found the endline of front_matter
                   state.templater = -1 /* NONE */;
                   stream.backUp(1);
@@ -236,10 +237,11 @@ var __importStar =
                 }
               },
             });
-          } if (state.templater === -1) {
+          }
+          if (state.templater === -1) {
             state.templater = 0 /* NONE */;
             stream.skipToEnd();
-            return "templater-closing-tag formatting formatting-templater line-background-templater-end line-background-templater-command-bg";
+            return "templater-closing-tag formatting formatting-templater templater-command line-HyperMD-codeblock line-background-HyperMD-codeblock-bg line-background-HyperMD-codeblock-end-bg line-background-templater-end line-background-templater-command-bg";
           } else {
             state.templater = 0 /* NONE */;
           }
@@ -267,6 +269,7 @@ var __importStar =
             state.hmdNextMaybe = 0 /* NONE */;
           }
         }
+        var inInternalLink;
         var wasInHTML = state.f === rawClosure.htmlBlock;
         var wasInCodeFence = state.code === -1;
         var bol = stream.start === 0;
@@ -280,6 +283,41 @@ var __importStar =
         var tmpPOS = -1;
         if (inMarkdown) {
           // now implement some extra features that require higher priority than CodeMirror's markdown
+          // add support for headers in list items
+          if (/#/.test(stream.peek())) {
+            if (state.list && /- (#+)(?: |$)/.test(stream.string)) {
+              state.list = false;
+              var level = stream.match(/(#+)(?: |$)/, true);
+              var depth = level && level.length > 0 ? level[1].length : 0;
+              state.header = depth;
+              return (ans += "formatting formatting-header formatting-header-" + depth + " header header-" + depth);
+            }
+          }
+          // add support for templater code block syntax
+          if ((tmp = stream.match(/^<%/, true))) {
+            var endTag_1 = "%>";
+            if (stream.string.slice(stream.pos).match(/%>/)) {
+              ans = enterMode(stream, state, "javascript", {
+                style: "templater-command",
+                skipFirstToken: false,
+                fallbackMode: function () {
+                  return createDummyMode(endTag_1);
+                },
+                exitChecker: function (stream, state) {
+                  const retInfo = {};
+                  const endTag = "%>";
+                  retInfo.style = "templater-closing-tag formatting formatting-templater line-templater-inline";
+                  if (stream.string.substr(stream.start, endTag.length) === endTag) {
+                    retInfo.endPos = stream.start + endTag.length;
+                    return retInfo;
+                  }
+                  return null;
+                },
+              });
+              ans += " templater-opening-tag templater-command formatting formatting-templater";
+              return ans;
+            }
+          }
           //#region Math
           if (modeCfg.math && inMarkdownInline && (tmp = stream.match(/^\${1,2}/, false))) {
             var endTag_1 = tmp[0];
@@ -329,6 +367,25 @@ var __importStar =
             // transform unformatted URL into link
             if (!state.hmdLinkType && (stream.match(urlRE) || stream.match(emailRE))) {
               return "url";
+            }
+            if (state.internalLink) {
+              state.hmdLinkType = 4 /* INTERNAL */;
+              state.internalLink = false;
+            } else if (state.internalEmbed) {
+              state.hmdLinkType = 9 /* EMBED */;
+              state.internalEmbed = false;
+            } else if ((inInternalLink = stream.match(/^(!?\[\[).+\]\]/, false))) {
+              "!" === inInternalLink[1].charAt(0)
+                ? ((ans += " formatting-link formatting-link-start formatting-embed"), (state.internalEmbed = true))
+                : ((ans += " formatting-link formatting-link-start"), (state.internalLink = true)),
+                (tmpPOS = stream.pos + inInternalLink[1].length);
+            } else {
+              (state.hmdLinkType !== 4 /* INTERNAL */ && state.hmdLinkType !== 9) /* EMBED */ ||
+                !stream.match(/^\]\]/, false) ||
+                ((state.hmdLinkType = 0) /* NONE */,
+                (state.linkText = false),
+                (tmpPOS = stream.pos + 2),
+                (ans += " formatting-link formatting-link-end"));
             }
             // block refs
             if (stream.match(/^\^([a-zA-Z0-9\-]+)$/)) {
@@ -556,13 +613,24 @@ var __importStar =
                 ans += " " + linkStyle[state.hmdLinkType];
               }
             }
-            if (state.hmdLinkType === 4 /* WIKILINK */ && current !== "[[" && current !== "]]") {
+            if (
+              (state.hmdLinkType === 4 || state.hmdLinkType === 9) /* WIKILINK */ &&
+              current !== "[[" &&
+              current !== "]]"
+            ) {
               var eaten = false;
-              while (stream.eat(/[^|\]#]/)) {
+              // break out of link if templater syntax found
+              if (stream.match(/^<%/, false)) {
+                return;
+              }
+              while (stream.eat(/[^<|\]#]/)) {
                 eaten = true;
               }
+              if (stream.eat("%")) {
+                stream.backUp(2);
+                return;
+              }
               if (eaten || (stream.peek() || "").match(/[\|\]#]/)) {
-                // console.log("stream", stream, "current", stream.current(), "peek", stream.peek());
                 if (stream.peek() === "#") {
                   // link has a ref
                   if (stream.match(/[^|\]]+\|[^\]]+\]\]/, false)) {
@@ -680,9 +748,9 @@ var __importStar =
                   ((state.hmdTableCol === 0 && /^\s*\|$/.test(stream.string.slice(0, stream.pos))) ||
                     stream.match(/^\s*$/, false))
                 ) {
-                  _dummy = true
+                  _dummy = true;
                   ans += " hmd-table-sep hmd-table-sep-dummy";
-                }  
+                }
                 if (state.hmdTableCol <= colUbound) {
                   var row = state.hmdTableRow;
                   var col = state.hmdTableCol++;
