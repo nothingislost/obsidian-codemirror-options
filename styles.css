@@ -445,6 +445,14 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   color: var(--text-accent);
 }
 
+.token-list-setting .setting-item-description {
+  user-select: text !important;
+}
+
+.token-list-setting .setting-item-description {
+  max-width: 24em;
+}
+
 /* Hide Tokens Styling */
 /* Note: Most of the token hiding styling is already in the base Obsidian theme */
 
@@ -457,6 +465,87 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   right: 0;
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAQAAAAziH6sAAAADklEQVR42mOc+Z9x5n8ACTkDM4ikM1IAAAAASUVORK5CYII=)
     repeat-x 0 center;
+}
+
+/* Table Styling */
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row span.cm-hmd-table-sep:before {
+  content: "|";
+  color: transparent;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOc+R8AAjcBmvywMWoAAAAASUVORK5CYII=)
+    repeat-y center 0;
+  pointer-events: none;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row > span {
+  display: inline-block;
+  border-top: 1px solid #999;
+  margin-right: 50px;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-0 > span,
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-1 > span,
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-2 > span {
+  border-top: 0;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row span.cm-hmd-table-sep {
+  width: 15px;
+  text-align: center;
+  box-sizing: content-box;
+  font-weight: 400;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row span.cm-hmd-table-sep.cm-hmd-table-sep-dummy {
+  width: 1em;
+}
+.cm-s-obsidian .HyperMD-table-row > :last-child {
+  padding-right: 0px !important;
+}
+.hide-tokens
+  .cm-s-obsidian
+  pre.hmd-inactive-line.HyperMD-table-row
+  span.cm-hmd-table-sep.cm-hmd-table-sep-dummy:before {
+  display: none;
+}
+.hide-tokens .cm-s-obsidian pre.hmd-inactive-line.HyperMD-table-row-1 > span {
+  color: transparent !important;
+  text-shadow: none;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row span.cm-hmd-table-sep:before {
+  content: "|";
+  color: transparent;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOc+R8AAjcBmvywMWoAAAAASUVORK5CYII=)
+    repeat-y center 0;
+  pointer-events: none;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-0 {
+  font-weight: 600;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-0 span.cm-strong {
+  font-weight: 800;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row .hmd-table-column-content {
+  padding: 4px 1px;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-1 {
+  line-height: 8px;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-1 > span {
+  border-bottom: 0;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-1 .hmd-table-column-content {
+  padding: 1px;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-0 > span {
+  border-bottom: 0;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-0 span.hmd-table-column-content {
+  padding-bottom: 1px;
+}
+.hide-tokens .cm-s-obsidian pre.HyperMD-table-row.HyperMD-table-row-2 span.hmd-table-column-content {
+  padding-top: 1px;
 }
 
 .cm-s-obsidian span.hmd-hidden-token.cm-formatting-link,
@@ -472,29 +561,7 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 .hide-tokens .cm-s-obsidian pre.hmd-inactive-line span.cm-formatting-quote {
   color: transparent;
 }
-.hide-tokens .cm-s-obsidian span.cm-formatting-task {
-  white-space: pre;
-  display: inline-block;
-  height: 1em;
-  line-height: 1em;
-  min-width: 1em;
-  text-align: center;
-  vertical-align: middle;
-  background-repeat: no-repeat;
-  background-position: center 0;
-  cursor: pointer;
-  color: rgba(0, 0, 0, 0.2);
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAMAAAA8VkqRAAAAclBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACa4vOeAAAAJXRSTlMADcjpDswcLZOzsvOYBvWdbtvTX0D69+ORa1dRJCDtuaF7ZDkoQyuUXgAAAMhJREFUOMvt0reywjAUhOFjKxmcrgMZboL//V8Rm6GwkNUx0LClvhkVZ1fEZoqHqMwO7wuUSb0YxcJKxtLpxIt2SzJRykkQp5RgdAjaIKRJCEn6gWdA9OzRoqLVRscQnc9bdtXX/eyurOF7N3erLVDPwCGHxoVwamH1LwGUBfBbhrCvoLlMitL9DY8trLtJg7qoCj18VAN1OYE/YJBuDe1RJtBVo5wbqPb+GL5yWG1GLX0YZYw5iQ93yQ/yAHfZzu5qt/mxr97VFS15JGSVM0C6AAAAAElFTkSuQmCC");
-  background-size: 1em;
-}
 
-.theme-dark.hide-tokens .cm-s-obsidian span.cm-formatting-task {
-  filter: invert(1);
-}
-
-.hide-tokens .cm-s-obsidian span.cm-formatting-task.cm-property {
-  background-position-y: -1em;
-}
 /* fold links */
 .cm-s-obsidian .hmd-link-icon::after {
   content: " " !important;
@@ -626,11 +693,18 @@ body.unified-cm-highlighting[class*="theme-"] .CodeMirror-cursor {
   border-color: var(--cursor-color);
 }
 
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-opening-tag,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-closing-tag {
+  color: var(--cm-comment) !important;
+}
+
 body.unified-cm-highlighting[class*="theme-"] .CodeView,
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian,
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-gutter,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian div.HyperMD-codeblock-bg, /* code block in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.CodeMirror-linebackground, /* frontmatter block in edit mode */
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .templater-command-bg, /* templater block in edit mode */
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .templater-inline .cm-templater-command, /* templater inline in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.CodeMirror-linebackground, /* math block in edit mode */
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"],
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] code /* code block in preview mode */ {
@@ -642,6 +716,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 /* edit modes */
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter,
+body.unified-cm-highlighting[class*="theme-"] .cm-templater-command,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math,
 body.unified-cm-highlighting[class*="theme-"] .HyperMD-codeblock,
@@ -672,6 +747,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view .cm-hmd-codeb
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-keyword,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-keyword,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-keyword,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-keyword,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-keyword,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-keyword {
@@ -681,6 +757,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-atom,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-atom,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-atom,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-atom,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-atom,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-atom {
@@ -689,6 +766,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-number,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-number,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-number,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-number,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-number,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-number {
@@ -697,6 +775,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines span.cm-type,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-hmd-frontmatter.cm-type,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-templater-command.cm-type,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-math.cm-type,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock span.cm-type,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian span.cm-type {
@@ -705,6 +784,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-def,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-def,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-def,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-def,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-def,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-def {
@@ -713,6 +793,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines span.cm-property,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-hmd-frontmatter.cm-property,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-templater-command.cm-property,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-math.cm-property,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock span.cm-property,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian span.cm-property {
@@ -721,6 +802,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines span.cm-variable,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-hmd-frontmatter.cm-variable,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-templater-command.cm-variable,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-math.cm-variable,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock span.cm-variable,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian span.cm-variable {
@@ -729,6 +811,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines span.cm-variable-2,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-hmd-frontmatter.cm-variable-2,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-templater-command.cm-variable-2,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-math.cm-variable-2,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock span.cm-variable-2,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian span.cm-variable-2 {
@@ -737,6 +820,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines span.cm-variable-3,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-hmd-frontmatter.cm-variable-3,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-templater-command.cm-variable-3,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian span.cm-math.cm-variable-3,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock span.cm-variable-3,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian span.cm-variable-3 {
@@ -745,6 +829,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-type.cm-def,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-type.cm-def,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-type.cm-def,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-type.cm-def,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-type.cm-def,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-type.cm-def {
@@ -753,6 +838,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-callee,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-callee,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-callee,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-callee,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-callee,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-callee {
@@ -761,6 +847,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-operator,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-operator,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-operator,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-operator,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-operator,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-operator {
@@ -769,6 +856,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-qualifier,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-qualifier,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-qualifier,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-qualifier,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-qualifier,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-qualifier {
@@ -777,6 +865,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-tag,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-tag,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-tag,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-tag,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-tag,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-tag {
@@ -785,6 +874,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-tag.cm-bracket,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-tag.cm-bracket,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-tag.cm-bracket,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-tag.cm-bracket,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-tag.cm-bracket,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-tag.cm-bracket {
@@ -793,6 +883,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-attribute,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-attribute,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-attribute,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-attribute,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-attribute,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-attribute {
@@ -801,6 +892,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-comment,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-comment,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-comment,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-comment,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-comment,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-comment {
@@ -809,6 +901,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-comment.cm-attribute,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-comment.cm-attribute,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-comment.cm-attribute,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-comment.cm-attribute,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-comment.cm-attribute,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-comment.cm-attribute {
@@ -817,6 +910,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-comment.cm-tag,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-comment.cm-tag,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-comment.cm-tag,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-comment.cm-tag,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-comment.cm-tag,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-comment.cm-tag {
@@ -825,6 +919,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-string,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-string,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-string,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-string,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-string,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-string {
@@ -833,6 +928,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-string-2,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-string-2,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-string-2,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-string-2,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-string-2,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-string-2 {
@@ -841,15 +937,17 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-meta,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-meta,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-meta,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-meta,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-meta,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-meta {
   color: var(--cm-meta);
-  background: inherit;
+  /* background: var(--cm-background-color); */
 }
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-builtin,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-builtin,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-builtin,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-builtin,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-builtin,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-builtin {
@@ -858,6 +956,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-header,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-header,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-header,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-header,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-header,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-header {
@@ -866,6 +965,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-hr,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-hr,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-hr,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-hr,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-hr,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-hr {
@@ -874,6 +974,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-link,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-link,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-link,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-link,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-link,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-link {
@@ -882,6 +983,7 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsi
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .cm-error,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.cm-error,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.cm-error,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.cm-error,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .cm-error,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .cm-error {
@@ -895,6 +997,7 @@ body.unified-cm-highlighting[class*="theme-"]
   .CodeMirror-lines
   .CodeMirror-activeline-background,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.CodeMirror-activeline-background,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.CodeMirror-activeline-background,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.CodeMirror-activeline-background,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .HyperMD-codeblock-bg.CodeMirror-activeline-background,
 body.unified-cm-highlighting[class*="theme-"]
@@ -906,6 +1009,7 @@ body.unified-cm-highlighting[class*="theme-"]
 
 body.unified-cm-highlighting[class*="theme-"] .CodeView .cm-s-obsidian .CodeMirror-lines .CodeMirror-matchingbracket,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter.CodeMirror-matchingbracket,
+body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-templater-command.CodeMirror-matchingbracket,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.CodeMirror-matchingbracket,
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian pre.HyperMD-codeblock .CodeMirror-matchingbracket,
 body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian .CodeMirror-matchingbracket {
