@@ -104,6 +104,40 @@ var __importStar =
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       var _this = this;
       this.cm = cm;
+      this.styleEl = document.createElement("style");
+      /**
+       * Remeasure visible columns, update CSS style to make columns aligned
+       *
+       * (This is a debounced function)
+       */
+      this.updateStyle = core_1.debounce(function () {
+        if (!_this.enabled) return;
+        var css;
+        if (_this.tokenTypes.indexOf("task") === -1) css = "";
+        else
+          css = `.hide-tokens .cm-s-obsidian span.cm-formatting-task {
+          white-space: pre;
+          display: inline-block;
+          height: 1em;
+          line-height: 1em;
+          min-width: 1em;
+          text-align: center;
+          vertical-align: middle;
+          background-repeat: no-repeat;
+          background-position: center 0;
+          cursor: pointer;
+          color: rgba(0, 0, 0, 0.2);
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAMAAAA8VkqRAAAAclBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACa4vOeAAAAJXRSTlMADcjpDswcLZOzsvOYBvWdbtvTX0D69+ORa1dRJCDtuaF7ZDkoQyuUXgAAAMhJREFUOMvt0reywjAUhOFjKxmcrgMZboL//V8Rm6GwkNUx0LClvhkVZ1fEZoqHqMwO7wuUSb0YxcJKxtLpxIt2SzJRykkQp5RgdAjaIKRJCEn6gWdA9OzRoqLVRscQnc9bdtXX/eyurOF7N3erLVDPwCGHxoVwamH1LwGUBfBbhrCvoLlMitL9DY8trLtJg7qoCj18VAN1OYE/YJBuDe1RJtBVo5wbqPb+GL5yWG1GLX0YZYw5iQ93yQ/yAHfZzu5qt/mxr97VFS15JGSVM0C6AAAAAElFTkSuQmCC");
+          background-size: 1em;
+        }
+        .theme-dark.hide-tokens .cm-s-obsidian span.cm-formatting-task {
+          filter: invert(1);
+        }
+        .hide-tokens .cm-s-obsidian span.cm-formatting-task.cm-property {
+          background-position-y: -1em;
+        }`;
+        _this.styleEl.textContent = _this._lastCSS = css;
+      }, 100);
       this.renderLineHandler = function (cm, line, el) {
         // TODO: if we procLine now, we can only get the outdated lineView, lineViewMeasure and lineViewMap. Calling procLine will be wasteful!
         var changed = _this.procLine(line, el);
@@ -121,15 +155,19 @@ var __importStar =
         /* ON  */ function () {
           cm.on("cursorActivity", _this.cursorActivityHandler);
           cm.on("renderLine", _this.renderLineHandler);
+          cm.on("update", _this.updateStyle);
           // cm.on("update", _this.update);
           _this.update();
           cm.refresh();
+          document.head.appendChild(_this.styleEl);
         },
         /* OFF */ function () {
           cm.off("cursorActivity", _this.cursorActivityHandler);
           cm.off("renderLine", _this.renderLineHandler);
-          cm.off("update", _this.update);
+          cm.off("update", _this.updateStyle);
+          // cm.off("update", _this.update);
           _this.update.stop();
+          document.head.removeChild(_this.styleEl);
           cm.refresh();
         }
       ).bind(this, "enabled", true);
@@ -184,9 +222,9 @@ var __importStar =
                 if (DEBUG) console.log("HEAD DOM CHANGED");
                 changed = true;
               }
-              // Yiyi: Wikilink
               if (
-                domParent.nextElementSibling && domParent.nextElementSibling.classList.contains("cm-internal-link-url")
+                domParent.nextElementSibling &&
+                domParent.nextElementSibling.classList.contains("cm-internal-link-url")
               ) {
                 if (
                   shallHideTokens
@@ -198,7 +236,9 @@ var __importStar =
                 }
               }
               if (
-                domParent.nextElementSibling && domParent.nextElementSibling.nextElementSibling && domParent.nextElementSibling.nextElementSibling.classList.contains("cm-internal-link-ref")
+                domParent.nextElementSibling &&
+                domParent.nextElementSibling.nextElementSibling &&
+                domParent.nextElementSibling.nextElementSibling.classList.contains("cm-internal-link-ref")
               ) {
                 if (
                   shallHideTokens
@@ -318,7 +358,7 @@ var __importStar =
           var lineChanged = procResult ? procResult : _this.procLine(~~line);
           if (!lineChanged) {
             // always force a cursor placement refresh if the cursor changed lines
-            lastActivedLines.hasOwnProperty(line) ? lineChanged = false : lineChanged = true;
+            lastActivedLines.hasOwnProperty(line) ? (lineChanged = false) : (lineChanged = true);
           }
           if (DEBUG) console.log("lineChanged && caretAtLines[line]", lineChanged, caretAtLines[line]);
           if (lineChanged && caretAtLines[line]) caretLineChanged = true;
