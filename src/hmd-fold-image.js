@@ -57,7 +57,8 @@ var __importStar =
     if (imgRE.test(token.type) && (token.string === "!" || token.string === "![[")) {
       var lineNo = stream.lineNo;
       // find the begin and end of url part
-      var url_begin = stream.findNext(urlRE, 0);
+      var since = { line: lineNo, ch: token.start };
+      var url_begin = stream.findNext(urlRE, 0, since);
       if (!url_begin) {
         return null;
       }
@@ -70,6 +71,7 @@ var __importStar =
         var url = void 0;
         var alt = void 0;
         var title = void 0;
+        var dimensions = void 0;
         {
           // extract the URL
           var rawurl = cm.getRange(
@@ -86,6 +88,11 @@ var __importStar =
           var split = splitLink(rawurl);
           url = split.url;
           title = split.title;
+          var _matches;
+          if (_matches = url.match(/^([^|]+)\|(.*)$/)) {
+            url = _matches[1]
+            dimensions = _matches[2]
+          }
         }
         {
           // extract the alt
@@ -117,32 +124,42 @@ var __importStar =
           false
         );
         img.className = "hmd-image hmd-image-loading";
-        // Disable unsafe http URL
-        if (url.match(/^http:\/\//)) {
-          url = "";
-          title = "";
-          alt = "Unsafe http image is not allowed";
-        }
-        // Disable the break
-        img.addEventListener("click", () => breakMark(cm, marker));
         img.addEventListener(
           "click",
           function () {
-            CodeMirror.signal(cm, "imageClicked", {
-              editor: cm,
-              marker: marker,
-              breakMark: fold_1.breakMark,
-              element: img,
-            });
+            return fold_1.breakMark(cm, marker);
+            // CodeMirror.signal(cm, "imageClicked", {
+            //   editor: cm,
+            //   marker: marker,
+            //   breakMark: fold_1.breakMark,
+            //   element: img,
+            // });
           },
           false
         );
         img.alt = alt;
         img.title = title;
-        var _resolvedUrl = window.app.metadataCache.getFirstLinkpathDest(decodeURIComponent(rawurl), "");
-        let _url = window.app.vault.getResourcePath(_resolvedUrl);
+        var _url, _resolvedUrl;
+        if (/^(app|https):\/\//.test(url)) {
+          _url = url;
+        } else {
+          _resolvedUrl = window.app.metadataCache.getFirstLinkpathDest(decodeURIComponent(url), "");
+          if (_resolvedUrl) {
+            _url = window.app.vault.getResourcePath(_resolvedUrl);
+          } else {
+            _url = "";
+            img.alt = "⚠️"
+          }
+        }
+
         img.setAttribute("data-src", _url);
         img.setAttribute("src", _url);
+        if (dimensions) {
+          var _dims = dimensions.match(/^([0-9]+)x?([0-9]+)?$/)
+          var width = _dims[1] ? `width: ${_dims[1]}px;` : "";
+          var height = _dims[2] ? `height: ${_dims[2]}px;` : "";
+          img.setAttribute("style", `${width} ${height}`);
+        }
         CodeMirror.signal(cm, "imageReadyToLoad", {
           editor: cm,
           marker: marker,
@@ -159,14 +176,15 @@ var __importStar =
     return null;
   };
   function splitLink(content) {
+    // support ![Alt](/path/to/img.jpg “image title”) syntax
     // remove title part (if exists)
     content = content.trim();
     var url = content,
       title = "";
-    var mat = content.match(/^(\S+)\s+("(?:[^"\\]+|\\.)+"|[^"\s].*)/);
+    var mat = content.match(/^([^"]+)("(?:[^"\\]+|\\.)+"|[^"\s].*)?/);
     if (mat) {
       url = mat[1];
-      title = mat[2];
+      title = mat[2] ? mat[2] : "";
       if (title.charAt(0) === '"') title = title.substr(1, title.length - 2).replace(/\\"/g, '"');
     }
     return { url: url, title: title };
