@@ -453,6 +453,19 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   max-width: 24em;
 }
 
+/* Inline Images */
+.cm-render-images-inline .oz-image-widget {
+  display: none;
+}
+
+.cm-render-images-inline .cm-s-obsidian .HyperMD-list-list img.hmd-image {
+  max-width: 98%;
+}
+
+.cm-render-images-inline .cm-s-obsidian img.hmd-image {
+  vertical-align: baseline;
+}
+
 /* Hide Tokens Styling */
 /* Note: Most of the token hiding styling is already in the base Obsidian theme */
 

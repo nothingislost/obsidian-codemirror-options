@@ -17,6 +17,7 @@ export class ObsidianCodeMirrorOptionsSettings {
   enableOpenMD: boolean;
   cursorBlinkRate: number;
   foldLinks: boolean;
+  foldImages: boolean;
   tokenList: string;
   containerAttributes: boolean;
   syntaxHighlighting: boolean;
@@ -37,6 +38,7 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   enableOpenMD: false,
   cursorBlinkRate: 530,
   foldLinks: false,
+  foldImages: false,
   containerAttributes: false,
   syntaxHighlighting: false,
   autoAlignTables: false,
@@ -87,7 +89,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         `These markdown token types will be hidden. The default value will hide all currently supported tokens.
          Values must be pipe delimted with no spaces. Available options are: em|strong|strikethrough|code|linkText|task|internalLink|highlight`
       )
-      .setClass('token-list-setting')
+      .setClass("token-list-setting")
       .addText(textfield => {
         textfield.setPlaceholder(String("em|strong|strikethrough|code|linkText|task|internalLink|highlight"));
         textfield.inputEl.type = "text";
@@ -128,7 +130,37 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.foldLinks).onChange(value => {
           this.plugin.settings.foldLinks = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateCodeMirrorOption("hmdFold", this.plugin.settings.foldLinks ? { link: true } : false);
+          this.plugin.updateCodeMirrorOption(
+            "hmdFold",
+            !this.plugin.settings.foldImages && !this.plugin.settings.foldLinks
+              ? false
+              : {
+                  image: this.plugin.settings.foldImages,
+                  link: this.plugin.settings.foldLinks,
+                }
+          );
+        })
+      );
+
+    new Setting(containerEl)
+      .setName("⚠️ Render Images Inline")
+      .setDesc(
+        `This will render images in edit mode inline. Clicking on the image will collapse the image down to its source view.`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.foldImages).onChange(value => {
+          this.plugin.settings.foldImages = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses();
+          this.plugin.updateCodeMirrorOption(
+            "hmdFold",
+            !this.plugin.settings.foldImages && !this.plugin.settings.foldLinks
+              ? false
+              : {
+                  image: this.plugin.settings.foldImages,
+                  link: this.plugin.settings.foldLinks,
+                }
+          );
         })
       );
 
@@ -158,11 +190,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.updateCodeMirrorHandlers("renderLine", onRenderLine, value, true);
         })
       );
-      new Setting(containerEl)
+    new Setting(containerEl)
       .setName("Auto Align Tables")
-      .setDesc(
-        `Automatically align markdown tables as they are being built.`
-      )
+      .setDesc(`Automatically align markdown tables as they are being built.`)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.autoAlignTables).onChange(value => {
           this.plugin.settings.autoAlignTables = value;

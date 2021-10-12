@@ -132,7 +132,33 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       callback: () => {
         this.settings.foldLinks = !this.settings.foldLinks;
         this.saveData(this.settings);
-        this.updateCodeMirrorOption("hmdFold", this.settings.foldLinks ? { link: true } : false);
+        this.updateCodeMirrorOption(
+          "hmdFold",
+          !this.settings.foldImages && !this.settings.foldLinks
+            ? false
+            : {
+                image: this.settings.foldImages,
+                link: this.settings.foldLinks,
+              }
+        );
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-images-inline",
+      name: "Toggle Render Images Inline",
+      callback: () => {
+        this.settings.foldImages = !this.settings.foldImages;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption(
+          "hmdFold",
+          !this.settings.foldImages && !this.settings.foldLinks
+            ? false
+            : {
+                image: this.settings.foldImages,
+                link: this.settings.foldLinks,
+              }
+        );
       },
     });
     this.addCommand({
@@ -304,17 +330,20 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("styleActiveLine", this.settings.activeLineOnSelect ? { nonEmpty: true } : true);
       if (this.settings.enableOpenMD) cm.setOption("mode", "openmd");
       cm.setOption("hmdHideToken", this.settings.editModeHideTokens ? this.settings.tokenList : false);
-      cm.setOption("hmdFold", this.settings.foldLinks ? { link: true, image: true } : false);
       cm.setOption("hmdClick", this.settings.editModeClickHandler);
       cm.setOption("hmdTableAlign", this.settings.autoAlignTables);
       cm.setOption("cursorBlinkRate", this.settings.cursorBlinkRate);
-      cm.on("imageClicked", this.onImageClick);
+      cm.setOption(
+        "hmdFold",
+        !this.settings.foldImages && !this.settings.foldLinks
+          ? false
+          : { image: this.settings.foldImages, link: this.settings.foldLinks }
+      );
       if (this.settings.containerAttributes) this.updateCodeMirrorHandlers("renderLine", onRenderLine, true, true);
     });
   }
 
   onImageClick = args => {
-    console.log("image click");
     args.breakMark(args.editor, args.marker);
   };
 
@@ -349,6 +378,11 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         ? document.body.addClass("unified-cm-highlighting")
         : null
       : document.body.removeClass("unified-cm-highlighting");
+    this.settings.foldImages
+      ? !document.body.hasClass("cm-render-images-inline")
+        ? document.body.addClass("cm-render-images-inline")
+        : null
+      : document.body.removeClass("cm-render-images-inline");
     this.settings.enableCMinPreview
       ? this.registerMarkdownPostProcessor(this.mdProcessor)
       : MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessor);
@@ -368,7 +402,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("hmdClick", false);
       cm.setOption("cursorBlinkRate", 530);
       cm.off("renderLine", onRenderLine);
-      cm.off("imageClicked", this.onImageClick);
+      // cm.off("imageClicked", this.onImageClick);
       cm.refresh();
     });
     document.body.removeClass("style-active-selection");
