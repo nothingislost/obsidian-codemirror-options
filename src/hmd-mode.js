@@ -150,6 +150,7 @@ var __importStar =
         ans.hmdNextStyle = null;
         ans.hmdNextPos = null;
         ans.templater = 0;
+        ans.hmdImage = 0;
         ans.hmdHashtag = 0 /* NONE */;
         return ans;
       };
@@ -170,6 +171,7 @@ var __importStar =
           "hmdNextState",
           "hmdNextStyle",
           "hmdHashtag",
+          "hmdImage",
           "templater",
           "comment",
         ];
@@ -446,6 +448,7 @@ var __importStar =
           stream.pos = stream.start + tmp.index + 1; // rewind
         }
         var current = stream.current();
+        var isImage = false;
         if (inHTML != wasInHTML) {
           if (inHTML) {
             ans += " hmd-html-begin";
@@ -645,9 +648,20 @@ var __importStar =
                   ans += " " + "internal-link-ref";
                 } else if (stream.peek() === "|") {
                   stream.eat("|");
-                  ans += " " + "internal-link-url";
+                  // console.log(current);
+                  if (/\.(jpe?g|png|gif|svg|bmp)/.test(stream.current())) {
+                    state.hmdImage = 1
+                    ans += " " + "internal-link-name hmd-image";
+                  } else {
+                    ans += " " + "internal-link-url";
+                  }
                 } else if (!stream.current().startsWith("#")) {
+                  if (state.hmdImage === 1) {
+                    state.hmdImage = 0;
+                    ans += " " + "internal-link-url";
+                  } else {
                   ans += " " + "internal-link-name";
+                  }
                 } else {
                   // ans += " " + "internal-link-ref";
                 }
