@@ -136,25 +136,29 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 ## Changelog
 
+### 0.3.1
+
+- Further improved the performance of Collapse External Links and Render Images Inline
+- Fixed a bug which was preventing images from rendering when initially inserted into the document
+
 ### 0.3.0
 
-# CodeMirror Options 0.3.0 Demo
-- **Shiny new things**
-	- OpenMD
-		- Added [Single Column Table Support
-		- Added native Templater Syntax Support
-		- Added support for Headers in Lists
-	- Added the Auto Align Tables feature
-	- Added the Render Images Inline feature
-- **Improvements**
-	- Removing "task" from the Token List option will now properly remove the CSS styled check box
-	- The [[Token List]] setting to allows text selection
-		- This is to allow copy/pasting the default token list
-  - Fixed a performance related issue with [[Collapse External Links]] & [[Render Images Inline]]
-		- These settings were doing way more work than needed which caused noticeable lag when working on large documents. In addition, turning the settings off did not properly unload the CodeMirror event handlers.
-		- These settings may be unstable as the performance tweaks are ironed out. If you notice lag, disable both of these options and see if things improve.
-- **Known Issues**:
-  - Selecting inline images can cause an image to not render after the selection is cleared. Making a change anywhere in the editor will fix this for now.
+#### Shiny new things
+- OpenMD
+	- Added Single Column Table Support
+	- Added native Templater Syntax Support
+	- Added support for Headers in Lists
+- Added the Auto Align Tables feature
+- Added the Render Images Inline feature
+#### Improvements
+- Removing "task" from the Token List option will now properly remove the CSS styled check box
+- The Token List setting to allows text selection
+	- This is to allow copy/pasting the default token list
+- Fixed a performance related issue with Collapse External Links & Render Images Inline
+	- These settings were doing way more work than needed which caused noticeable lag when working on large documents. In addition, turning the settings off did not properly unload the CodeMirror event handlers.
+	- These settings may be unstable as the performance tweaks are ironed out. If you notice lag, disable both of these options and see if things improve.
+#### Known Issues
+- Selecting inline images can cause an image to not render after the selection is cleared. Making a change anywhere in the editor will fix this for now.
 
 ### 0.2.1
 
@@ -228,7 +232,7 @@ This setting is a fallback option if you do not want to inject CM into preview m
 - Fix the default font size for code blocks to 16px. This can be overridden using Style Settings
 - In preview mode, wrap code blocks in a `<code>` element to better mimic the original prism.js DOM structure.
   - The structure is now `<div><pre><code></code></pre></div>`
-  - This change should hopefully be transparent for most use csses
+  - This change should hopefully be transparent for most use cases
 
 ### 0.0.8
 
@@ -236,7 +240,7 @@ This setting is a fallback option if you do not want to inject CM into preview m
 - This release adds two HyperMD features
   - Hide Markdown Syntax
   - Click Handling for Checkboxes
-- Adds syntax highlighting support for plugins like Obisdian Plaintext & CodeView
+- Adds syntax highlighting support for plugins like Obsidian Plaintext & CodeView
 
 ### 0.0.7 (pre-release)
 
@@ -248,7 +252,7 @@ This setting is a fallback option if you do not want to inject CM into preview m
 
 - Changed the method used for marking multiple lines with .active-line which should resolve a few bugs
 - Previously .active-line would start behaving strangely after having 8 lines selected
-- The previous method was also not effecient and applied the .active-lines class too often
+- The previous method was also not efficient and applied the .active-lines class too often
 - Previously, the "Style Active Selection" and "Mark Active Lines" settings were too intermingled. You can now set each feature on or off without impacting each other.
 
 ### 0.0.5
