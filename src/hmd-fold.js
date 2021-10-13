@@ -175,19 +175,22 @@ var __importStar =
       /**
        * Fold everything! (This is a debounced, and `this`-binded version)
        */
-      _this.startFold = core_1.debounce(_this.startFoldImmediately.bind(_this), 500);
+      _this.startFold = core_1.debounce(_this.startFoldImmediately.bind(_this), 200);
       /** stores every affected lineNo */
       _this._quickFoldHint = [];
       this.registerEvents = function (enable) {
         if (enable) {
-          // cm.on("changes", _this.onChange);
-          cm.on("refresh", _this.startFold);
+          cm.on("changes", _this.onChange);
+          cm.on("viewportChange", _this.onViewportChange);
           cm.on("cursorActivity", _this.onCursorActivity);
         } else {
-          // cm.off("changes", _this.onChange);
-          cm.off("refresh", _this.startFold);
+          cm.off("changes", _this.onChange);
+          cm.off("viewportChange", _this.onViewportChange);
           cm.off("cursorActivity", _this.onCursorActivity);
         }
+      };
+      this.onViewportChange = function (cm, from, to) {
+        _this.startFold(from, to);
       };
       this.onChange = function (cm, changes) {
         var changedMarkers = [];
@@ -212,7 +215,16 @@ var __importStar =
             m.clear(); // TODO: add "changed" handler for FolderFunc
           }
         }
-        _this.startFold();
+        var fromLine = 0,
+          toLine = 0;
+        var _changes = changes.map(change => {
+          return { fromLine: change.from.line, toLine: change.to.line };
+        });
+        _changes.forEach(change => {
+          fromLine = change.fromLine > fromLine ? change.fromLine : fromLine;
+          toLine = change.toLine > toLine ? change.toLine : toLine;
+        });
+        _this.startFold(fromLine, toLine);
       };
       this.onCursorActivity = function (cm) {
         if (DEBUG) console.time("CA");
@@ -337,8 +349,9 @@ var __importStar =
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       var _this = this;
       var cm = this.cm;
-      fromLine = fromLine || cm.firstLine();
-      toLine = (toLine || cm.lastLine()) + 1;
+      var viewPort = cm.getViewport();
+      fromLine = fromLine || viewPort.from; // cm.firstLine();
+      toLine = (toLine || viewPort.to) + 1; // cm.lastLine()) + 1;
       this._quickFoldHint = [];
       this.setPos(fromLine, 0, true);
       if (DEBUG) {
