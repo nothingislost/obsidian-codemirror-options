@@ -1,8 +1,12 @@
 # Obsidian CodeMirror Options
 
-This plugin adds configurable options to customize the behavior of CodeMirror.
+This plugin adds configurable options to customize the behavior of Obsidian's edit mode.
 
 ## Installation
+
+### Obsidian Community Plugin Browser
+
+This plugin is available directly within the Obsidian app by navigating to Settings->Community Plugins->Browse
 
 ### Manual Installation
 To manually install
@@ -14,6 +18,10 @@ To manually install
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Features
+
+### WYSIWYG Functionality
+
+Documentation pending. See the changelog below for more details.
 
 ### Syntax Highlighting
 
@@ -127,6 +135,26 @@ This setting is a fallback option if you do not want to inject CM into preview m
 - This plugin leverages the CM5 API directly which is a deprecated option. Obsidian will be moving to CM6 soon and this plugin will break. I'm not sure yet if I'll be able to make these same tweaks on CM6.
 
 ## Changelog
+
+### 0.3.0
+
+# CodeMirror Options 0.3.0 Demo
+- **Shiny new things**
+	- OpenMD
+		- Added [Single Column Table Support
+		- Added native Templater Syntax Support
+		- Added support for Headers in Lists
+	- Added the Auto Align Tables feature
+	- Added the Render Images Inline feature
+- **Improvements**
+	- Removing "task" from the Token List option will now properly remove the CSS styled check box
+	- The [[Token List]] setting to allows text selection
+		- This is to allow copy/pasting the default token list
+  - Fixed a performance related issue with [[Collapse External Links]] & [[Render Images Inline]]
+		- These settings were doing way more work than needed which caused noticeable lag when working on large documents. In addition, turning the settings off did not properly unload the CodeMirror event handlers.
+		- These settings may be unstable as the performance tweaks are ironed out. If you notice lag, disable both of these options and see if things improve.
+- **Known Issues**:
+  - Selecting inline images can cause an image to not render after the selection is cleared. Making a change anywhere in the editor will fix this for now.
 
 ### 0.2.1
 
