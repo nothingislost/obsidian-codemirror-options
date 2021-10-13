@@ -333,12 +333,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("hmdClick", this.settings.editModeClickHandler);
       cm.setOption("hmdTableAlign", this.settings.autoAlignTables);
       cm.setOption("cursorBlinkRate", this.settings.cursorBlinkRate);
-      cm.setOption(
-        "hmdFold",
-        !this.settings.foldImages && !this.settings.foldLinks
-          ? false
-          : { image: this.settings.foldImages, link: this.settings.foldLinks }
-      );
+      cm.setOption("hmdFold", { image: this.settings.foldImages, link: this.settings.foldLinks });
       if (this.settings.containerAttributes) this.updateCodeMirrorHandlers("renderLine", onRenderLine, true, true);
     });
   }

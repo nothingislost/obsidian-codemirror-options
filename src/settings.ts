@@ -130,15 +130,10 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.foldLinks).onChange(value => {
           this.plugin.settings.foldLinks = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateCodeMirrorOption(
-            "hmdFold",
-            !this.plugin.settings.foldImages && !this.plugin.settings.foldLinks
-              ? false
-              : {
-                  image: this.plugin.settings.foldImages,
-                  link: this.plugin.settings.foldLinks,
-                }
-          );
+          this.plugin.updateCodeMirrorOption("hmdFold", {
+            image: this.plugin.settings.foldImages,
+            link: this.plugin.settings.foldLinks,
+          });
         })
       );
 
@@ -152,15 +147,10 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.settings.foldImages = value;
           this.plugin.saveData(this.plugin.settings);
           this.plugin.applyBodyClasses();
-          this.plugin.updateCodeMirrorOption(
-            "hmdFold",
-            !this.plugin.settings.foldImages && !this.plugin.settings.foldLinks
-              ? false
-              : {
-                  image: this.plugin.settings.foldImages,
-                  link: this.plugin.settings.foldLinks,
-                }
-          );
+          this.plugin.updateCodeMirrorOption("hmdFold", {
+            image: this.plugin.settings.foldImages,
+            link: this.plugin.settings.foldLinks,
+          });
         })
       );
 
