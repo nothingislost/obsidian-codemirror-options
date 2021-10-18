@@ -324,7 +324,7 @@ var __importStar =
           if (modeCfg.math && inMarkdownInline && (tmp = stream.match(/^\${1,2}/, false))) {
             var endTag_1 = tmp[0];
             var mathLevel = endTag_1.length;
-            if (mathLevel === 2 || stream.string.slice(stream.pos).match(/[^\\]\$/)) {
+            if (mathLevel === 2 || stream.string.slice(stream.pos).match(/[^\\\s-]\$(?![0-9])/)) {
               // $$ may span lines, $ must be paired
               var texMode = CodeMirror.getMode(cmCfg, {
                 name: "stex",
@@ -448,7 +448,6 @@ var __importStar =
           stream.pos = stream.start + tmp.index + 1; // rewind
         }
         var current = stream.current();
-        var isImage = false;
         if (inHTML != wasInHTML) {
           if (inHTML) {
             ans += " hmd-html-begin";
