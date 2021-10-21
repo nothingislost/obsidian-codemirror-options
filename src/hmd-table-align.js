@@ -98,6 +98,7 @@ var __importStar =
         var lineSpanChildren = Array.prototype.slice.call(lineSpan.childNodes, 0);
         var eolState = cm.getStateAfter(line.lineNo());
         var columnStyles = eolState.hmdTableColumns;
+        if (!columnStyles.length) return;
         var tableID = eolState.hmdTableID;
         var columnIdx = eolState.hmdTable === 2 /* NORMAL */ ? -1 : 0;
         var columnSpan = _this.makeColumn(columnIdx, columnStyles[columnIdx] || "dummy", tableID);
