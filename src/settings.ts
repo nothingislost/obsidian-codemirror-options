@@ -142,6 +142,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.foldLinks).onChange(value => {
           this.plugin.settings.foldLinks = value;
           this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses();
           this.plugin.updateCodeMirrorOption("hmdFold", {
             image: this.plugin.settings.foldImages,
             link: this.plugin.settings.foldLinks,
@@ -177,11 +178,26 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         })
       );
     containerEl.createEl("h3", {
-      text: "Code Rendering",
+      text: "Edit Mode Code Rendering",
     });
     new Setting(containerEl)
-      .setName("Render Code")
-      .setDesc(``)
+    .setName("Render HTML")
+    .setDesc(``)
+    .addToggle(toggle =>
+      toggle.setValue(this.plugin.settings.renderHTML).onChange(value => {
+        this.plugin.settings.renderHTML = value;
+        this.plugin.saveData(this.plugin.settings);
+        this.plugin.updateCodeMirrorOption("hmdFold", {
+          image: this.plugin.settings.foldImages,
+          link: this.plugin.settings.foldLinks,
+          html: this.plugin.settings.renderHTML,
+          code: this.plugin.settings.renderCode,
+        });
+      })
+    );
+    new Setting(containerEl)
+      .setName("Render Code Blocks")
+      .setDesc(`If this is disabled, none of the options below will do anything`)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.renderCode).onChange(value => {
           this.plugin.settings.renderCode = value;
@@ -194,23 +210,8 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           });
         })
       );
-    new Setting(containerEl)
-      .setName("Render HTML")
-      .setDesc(``)
-      .addToggle(toggle =>
-        toggle.setValue(this.plugin.settings.renderHTML).onChange(value => {
-          this.plugin.settings.renderHTML = value;
-          this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateCodeMirrorOption("hmdFold", {
-            image: this.plugin.settings.foldImages,
-            link: this.plugin.settings.foldLinks,
-            html: this.plugin.settings.renderHTML,
-            code: this.plugin.settings.renderCode,
-          });
-        })
-      );
       new Setting(containerEl)
-      .setName("Render Admonition")
+      .setName("Render Admonitions")
       .setDesc(
         ``
       )
@@ -296,7 +297,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       );
     new Setting(containerEl)
       .setName("Auto Align Tables")
-      .setDesc(`Automatically align markdown tables as they are being built.`)
+      .setDesc(`Automatically align markdown tables as they are being built. Note: This setting currently requires that OpenMD Mode be enabled.`)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.autoAlignTables).onChange(value => {
           this.plugin.settings.autoAlignTables = value;
