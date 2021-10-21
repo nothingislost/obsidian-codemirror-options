@@ -453,13 +453,106 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   max-width: 24em;
 }
 
-/* Inline Images */
-.cm-render-images-inline .oz-image-widget {
+/* START: Style rendered code blocks */
+
+/* This element causes top padding and isn't needed, so we hide it */
+.rendered-code-block-wrapper span[cm-text] {
   display: none;
 }
 
-.cm-render-images-inline .cm-s-obsidian .HyperMD-list-list img.hmd-image {
-  max-width: 98%;
+/* Allow text selection */
+.rendered-code-block-wrapper {
+  user-select: text;
+}
+
+.cm-s-obsidian .rendered-code-block-wrapper pre.HyperMD-codeblock-begin {
+  padding: 0;
+}
+
+/* .rendered-code-block-wrapper .CodeMirror-linebackground {
+  background: none !important;
+}
+
+.rendered-code-block-wrapper .HyperMD-codeblock {
+  border: none !important;
+} */
+
+/* Make sure the <CODE> button is on top of the rendered element */
+.cm-s-obsidian .rendered-code-block-wrapper .CodeMirror-linewidget,
+.cm-s-obsidian .rendered-code-block-wrapper pre.CodeMirror-line {
+  z-index: unset !important;
+}
+
+/* Remove the default code block background and let the rendered element set it */
+.rendered-code-block-wrapper .HyperMD-codeblock-bg {
+  opacity: 0;
+}
+/* Admonitions have margins by default. We don't need these in edit mode */
+/* You can add the margins back in, if you want, but you'll need to adjust the <CODE> button positioning */
+.rendered-code-block-wrapper .admonition {
+  margin: 0.2em;
+}
+
+/* END: Style rendered code blocks */
+
+/* START: Reset default theme styling of rendered tables */
+
+.cm-s-obsidian .CodeMirror-linewidget table.dataview td,
+.cm-s-obsidian .CodeMirror-linewidget table.dataview th,
+.cm-s-obsidian .hmd-fold-html table.dataview td,
+.cm-s-obsidian .hmd-fold-html table.dataview th {
+  border: unset;
+  padding: 4px 10px;
+}
+
+.cm-s-obsidian .CodeMirror-linewidget .table-view-table.dataview > thead > tr > th {
+  font-weight: 700;
+  font-size: larger;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid;
+  max-width: 100%;
+  padding: 0px;
+}
+
+/* START: Reset default theme styling of rendered tables */
+
+/* START: Rendered code block <CODE> button styling and placement */
+
+.rendered-code-block-wrapper .CodeMirror-line .CodeMirror-widget {
+  position: absolute;
+  right: 2em;
+  top: 0.85em;
+  z-index: 3 !important;
+}
+
+.rendered-code-block-wrapper.rendered-query-wrapper .CodeMirror-line .CodeMirror-widget {
+  right: .1em;
+  top: .1em;
+}
+
+.rendered-code-block-wrapper.rendered-dataview-wrapper .CodeMirror-line .CodeMirror-widget {
+  right: 0;
+  top: .2em;
+}
+
+.rendered-code-block-wrapper.rendered-chart-wrapper .CodeMirror-line .CodeMirror-widget {
+  right: 0.2em;
+  top: 0.2em;
+}
+
+/* END: Rendered code block <CODE> button styling and placement */
+
+/* Ozan doesn't have a setting to only disable image rendering 
+   so here we try and hide them if the "render images" setting is on */
+.cm-render-images-inline .oz-image-widget img:where([src*=".png"],[src*=".gif"],[src*=".svg"],[src*=".bmp"],[src*=".jpg"],[src*=".jpeg"]) {
+  display: none;
+}
+
+/* prevent images from wrapping when embedded in list items */
+.cm-render-images-inline .cm-s-obsidian .HyperMD-list-line img.hmd-image {
+  max-width: 99%;
 }
 
 .cm-render-images-inline .cm-s-obsidian img.hmd-image {

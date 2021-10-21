@@ -5,65 +5,6 @@
 //
 // You may set `hmdFold.customFolders` option to fold more, where `customFolders` is Array<FolderFunc>
 //
-var __extends =
-  (this && this.__extends) ||
-  (function () {
-    var extendStatics = function (d, b) {
-      extendStatics =
-        Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array &&
-          function (d, b) {
-            d.__proto__ = b;
-          }) ||
-        function (d, b) {
-          for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
-        };
-      return extendStatics(d, b);
-    };
-    return function (d, b) {
-      extendStatics(d, b);
-      function __() {
-        this.constructor = d;
-      }
-      d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
-    };
-  })();
-var __createBinding =
-  (this && this.__createBinding) ||
-  (Object.create
-    ? function (o, m, k, k2) {
-        if (k2 === undefined) k2 = k;
-        Object.defineProperty(o, k2, {
-          enumerable: true,
-          get: function () {
-            return m[k];
-          },
-        });
-      }
-    : function (o, m, k, k2) {
-        if (k2 === undefined) k2 = k;
-        o[k2] = m[k];
-      });
-var __setModuleDefault =
-  (this && this.__setModuleDefault) ||
-  (Object.create
-    ? function (o, v) {
-        Object.defineProperty(o, "default", { enumerable: true, value: v });
-      }
-    : function (o, v) {
-        o["default"] = v;
-      });
-var __importStar =
-  (this && this.__importStar) ||
-  function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null)
-      for (var k in mod)
-        if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-  };
 
 (function (mod) {
   //[HyperMD] UMD patched!
@@ -117,10 +58,14 @@ var __importStar =
   //#region Utils
   /** break a TextMarker, move cursor to where marker is */
   function breakMark(cm, marker, chOffset) {
+    // TODO: update this to support making a selection rather than placing the cursor
     cm.operation(function () {
-      var pos = marker.find().from;
-      pos = { line: pos.line, ch: pos.ch + ~~chOffset };
-      cm.setCursor(pos);
+      var fromPos = marker.find().from;
+      fromPos = { line: fromPos.line, ch: fromPos.ch + ~~chOffset };
+      var toPos = marker.find().to;
+      toPos = { line: toPos.line, ch: toPos.ch + ~~chOffset };
+      cm.setCursor(fromPos);
+      // cm.setSelection(fromPos, toPos);
       cm.focus();
       marker.clear();
     });
@@ -281,6 +226,7 @@ var __importStar =
     }
     /** enable/disable one kind of folder, in current editor */
     Fold.prototype.setStatus = function (cm, type, enabled) {
+      // this logic will disable hmdFold completely if no folders are found in the registry
       var prevStatus;
       for (var _type in this._enabled) {
         if (this._enabled[_type]) {
@@ -325,8 +271,15 @@ var __importStar =
       if (!cfrom) cfrom = from;
       var cm = this.cm;
       var markers = cm.findMarks(from, to);
-      if (markers.length !== 0) return RequestRangeResult.HAS_MARKERS;
+      // nil: filter out any text selection markers so that we don't bug out the entire fold logic, ugh
+      markers = markers.filter(marker => marker.className != "CodeMirror-selectedtext");
+      if (DEBUG) console.log(`checking for marks from ${from.line}.${from.ch} -> ${to.line}.${to.ch}`);
+      if (markers.length !== 0) {
+        if (DEBUG) console.log("markers found, abort requestRange");
+        return RequestRangeResult.HAS_MARKERS;
+      }
       this._quickFoldHint.push(from.line);
+      if (DEBUG) console.log("range quick pushed from line: " + from.line + "| " + this._quickFoldHint);
       // store "crange" for the coming marker
       this._lastCRange = [cfrom, cto];
       var selections = cm.listSelections();
@@ -338,6 +291,7 @@ var __importStar =
         }
       }
       this._quickFoldHint.push(cfrom.line);
+      if (DEBUG) console.log("range quick pushed cfrom line: " + cfrom.line + " => " + this._quickFoldHint);
       return RequestRangeResult.OK;
     };
     /**
@@ -350,13 +304,13 @@ var __importStar =
       var _this = this;
       var cm = this.cm;
       var viewPort = cm.getViewport();
-      fromLine = fromLine || viewPort.from; // cm.firstLine();
-      toLine = (toLine || viewPort.to) + 1; // cm.lastLine()) + 1;
+      // nil: if no from/to is passed, only scan the visible viewport, rather than the entire file
+      fromLine = fromLine >= 0 ? fromLine : viewPort.from; // cm.firstLine();
+      toLine = (toLine >= 0 ? toLine : viewPort.to) + 1; // cm.lastLine()) + 1;
+      if (DEBUG) console.log("fold immediate func reset quickFold");
       this._quickFoldHint = [];
       this.setPos(fromLine, 0, true);
-      if (DEBUG) {
-        console.log("start fold! ", fromLine, toLine);
-      }
+      if (DEBUG) console.log("start fold! ", fromLine, toLine);
       cm.operation(function () {
         return cm.eachLine(fromLine, toLine, function (line) {
           var lineNo = line.lineNo();
@@ -370,6 +324,8 @@ var __importStar =
             // @see CodeMirror's findMarksAt
             var lineMarkers = line.markedSpans;
             if (lineMarkers) {
+              // nil: filter out any text selection markers so that we don't bug out the entire fold logic, ugh
+              lineMarkers = lineMarkers.filter(markedSpan => markedSpan.marker.className !== "CodeMirror-selectedtext");
               for (var i = 0; i < lineMarkers.length; ++i) {
                 var span = lineMarkers[i];
                 var spanFrom = span.from == null ? 0 : span.from;
@@ -414,10 +370,9 @@ var __importStar =
                 var idx;
                 if (markers && (idx = markers.indexOf(marker)) !== -1) markers.splice(idx, 1);
                 _this._quickFoldHint.push(from.line);
+                if (DEBUG) console.log("on clear quick pushed from line: " + from.line + "| " + _this._quickFoldHint);
               });
-              if (DEBUG) {
-                console.log("[FOLD] New marker ", type, from, to, marker);
-              }
+              if (DEBUG) console.log("[FOLD] New marker ", type, from, to, marker);
               // now let's update the pointer position
               if (from.line > lineNo || from.ch > token.start) {
                 // there are some not-marked chars after current token, before the new marker

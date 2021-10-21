@@ -22,6 +22,12 @@ export class ObsidianCodeMirrorOptionsSettings {
   containerAttributes: boolean;
   syntaxHighlighting: boolean;
   autoAlignTables: boolean;
+  renderHTML: boolean;
+  renderCode: boolean;
+  renderChart: boolean;
+  renderAdmonition: boolean;
+  renderQuery: boolean;
+  renderDataview: boolean;
 }
 
 export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
@@ -42,6 +48,12 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   containerAttributes: false,
   syntaxHighlighting: false,
   autoAlignTables: false,
+  renderCode: false,
+  renderHTML: false,
+  renderChart: false,
+  renderAdmonition: false,
+  renderQuery: false,
+  renderDataview: false,
   tokenList: "em|strong|strikethrough|code|linkText|task|internalLink|highlight",
 };
 
@@ -164,6 +176,108 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.updateCodeMirrorOption("hmdClick", this.plugin.settings.editModeClickHandler);
         })
       );
+    containerEl.createEl("h3", {
+      text: "Code Rendering",
+    });
+    new Setting(containerEl)
+      .setName("Render Code")
+      .setDesc(``)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderCode).onChange(value => {
+          this.plugin.settings.renderCode = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFold", {
+            image: this.plugin.settings.foldImages,
+            link: this.plugin.settings.foldLinks,
+            html: this.plugin.settings.renderHTML,
+            code: this.plugin.settings.renderCode,
+          });
+        })
+      );
+    new Setting(containerEl)
+      .setName("Render HTML")
+      .setDesc(``)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderHTML).onChange(value => {
+          this.plugin.settings.renderHTML = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFold", {
+            image: this.plugin.settings.foldImages,
+            link: this.plugin.settings.foldLinks,
+            html: this.plugin.settings.renderHTML,
+            code: this.plugin.settings.renderCode,
+          });
+        })
+      );
+      new Setting(containerEl)
+      .setName("Render Admonition")
+      .setDesc(
+        ``
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderAdmonition).onChange(value => {
+          this.plugin.settings.renderAdmonition = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFoldCode", {
+            admonition: this.plugin.settings.renderAdmonition,
+            chart: this.plugin.settings.renderChart,
+            query: this.plugin.settings.renderQuery,
+            dataview: this.plugin.settings.renderDataview,
+          });
+        })
+      );
+      new Setting(containerEl)
+      .setName("Render Charts")
+      .setDesc(
+        ``
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderChart).onChange(value => {
+          this.plugin.settings.renderChart = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFoldCode", {
+            admonition: this.plugin.settings.renderAdmonition,
+            chart: this.plugin.settings.renderChart,
+            query: this.plugin.settings.renderQuery,
+            dataview: this.plugin.settings.renderDataview,
+          });
+        })
+      );
+      new Setting(containerEl)
+      .setName("Render Embedded Search")
+      .setDesc(
+        ``
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderQuery).onChange(value => {
+          this.plugin.settings.renderQuery = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFoldCode", {
+            admonition: this.plugin.settings.renderAdmonition,
+            chart: this.plugin.settings.renderChart,
+            query: this.plugin.settings.renderQuery,
+            dataview: this.plugin.settings.renderDataview,
+          });
+        })
+      );
+      new Setting(containerEl)
+      .setName("Render Dataview")
+      .setDesc(
+        ``
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderDataview).onChange(value => {
+          this.plugin.settings.renderDataview = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFoldCode", {
+            admonition: this.plugin.settings.renderAdmonition,
+            chart: this.plugin.settings.renderChart,
+            query: this.plugin.settings.renderQuery,
+            dataview: this.plugin.settings.renderDataview,
+          });
+        })
+      );
+
     containerEl.createEl("h3", {
       text: "Visual Styling",
     });

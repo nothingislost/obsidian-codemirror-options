@@ -12,13 +12,36 @@ import "./hmd-mode";
 import "./hmd-fold";
 import "./hmd-fold-link";
 import "./hmd-fold-image";
+import "./hmd-fold-code";
+import "./hmd-fold-html";
+// import * as flowchart from "flowchart.js";
+import "./hmd-fold-code-with-admonition";
+import "./hmd-fold-code-with-chart";
+import "./hmd-fold-code-with-query";
+import "./hmd-fold-code-with-dataview";
 import "./hmd-table-align";
 
 import { onRenderLine } from "./container-attributes";
 import { DEFAULT_SETTINGS } from "./settings";
-import { MarkdownView, MarkdownPreviewRenderer, Plugin, EditorPosition, debounce } from "obsidian";
+import {
+  MarkdownView,
+  MarkdownPreviewRenderer,
+  Plugin,
+  EditorPosition,
+  debounce,
+  TextFileView,
+  MarkdownSourceView,
+} from "obsidian";
+
 import type codemirror from "codemirror";
 import { EditorConfiguration } from "codemirror";
+import { around } from "monkey-around";
+
+declare module "obsidian" {
+  interface MarkdownSourceView {
+    attachDomEvents(): void;
+  }
+}
 
 declare module "codemirror" {
   // These typescript definitions were pulled from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/codemirror
@@ -56,6 +79,7 @@ declare module "codemirror" {
     hmdFold?: any;
     hmdHideToken?: boolean | string | undefined;
     hmdTableAlign?: boolean | string | undefined;
+    hmdFoldCode?: any;
     /**
      * When enabled gives the wrapper of the line that contains the cursor the class CodeMirror-activeline,
      * adds a background with the class CodeMirror-activeline-background, and adds the class CodeMirror-activeline-gutter to the line's gutter space is enabled.
@@ -75,6 +99,9 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   settings: ObsidianCodeMirrorOptionsSettings;
 
   async onload() {
+    // patch the default Obsidian methods, ASAP
+    this.applyMonkeyPatches();
+
     // load settings
     await this.loadSettings();
 
@@ -84,17 +111,115 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       this.registerCodeMirrorSettings();
       this.applyBodyClasses();
+      this.registerCommands();
 
       setTimeout(() => {
         // workaround to ensure our plugin registers properly with Style Settings
         this.app.workspace.trigger("css-change");
       }, 1000);
     });
-    this.registerCommands();
   }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+  
+  applyMonkeyPatches() {
+    // patching onLoadFile to clear CM specific state in order to avoid fold related memory leaks
+    // we also add the current file name to the CM state so that CM native actions have a reference
+    const patchOnLoadFile = around(TextFileView.prototype, {
+      onLoadFile(old) {
+        // old is the original onLoadFile function
+        return function (file) {
+          // onLoadFile takes one argument, file
+          const cm = this.sourceMode.editor.cm;
+          cm.state.fileName = file.path;
+          cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
+          cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
+          return old.call(this, file); // call the orignal function and bind the current scope to it
+        };
+      },
+    });
+    this.register(patchOnLoadFile);
+
+    // patch the preview mode click handlers so that we get preview context menus on edit mode rendered widgets
+    const patchSourceView = around(MarkdownSourceView.prototype, {
+      attachDomEvents(old) {
+        return function () {
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
+          const _this = this,
+            editorEl = this.editorEl;
+          editorEl.addEventListener("mousedown", this.onCodeMirrorMousedown.bind(this)),
+            editorEl.addEventListener(
+              "contextmenu",
+              function (event) {
+                if (
+                  event &&
+                  event.path &&
+                  event.path.filter(el => el && el.hasClass && el.hasClass("rendered-widget")).length
+                ) {
+                  return;
+                }
+                return _this.clipboardManager.onContextMenu(event);
+              },
+              { capture: true }
+            ),
+            editorEl.on("mouseover", ".cm-hmd-internal-link", this.onInternalLinkMouseover.bind(this));
+        };
+      },
+    });
+    this.register(patchSourceView);
+    const patchRenderer = around(MarkdownPreviewRenderer.prototype, {
+      onInternalLinkContextMenu(old) {
+        return function (event, el) {
+          const href = this.getInternalLinkHref(el);
+          href && this.owner.onInternalLinkRightClick(event, el, href);
+        };
+      },
+      onResize(old) {
+        return function () {
+          setTimeout(() => {
+            const editor = this.owner.app.workspace.activeLeaf?.view.sourceMode.editorEl;
+            if (editor && !this.widgetHandlersRegistered && this.owner.type === "preview") {
+              this.widgetHandlersRegistered = true;
+              editor.on("click", ".rendered-widget a.internal-link", this.onInternalLinkClick.bind(this));
+              editor.on("auxclick", ".rendered-widget a.internal-link", this.onInternalLinkClick.bind(this));
+              editor.on("contextmenu", ".rendered-widget a.internal-link", this.onInternalLinkContextMenu.bind(this));
+              // editor.on("mouseover", ".rendered-widget a.internal-link", this.onInternalLinkMouseover.bind(this));
+              editor.on("click", ".rendered-widget a.external-link", this.onExternalLinkClick.bind(this));
+              editor.on("click", ".rendered-widget a.footnote-link", this.onFootnoteLinkClick.bind(this));
+              editor.on("click", ".rendered-widget .task-list-item-checkbox", this.onCheckboxClick.bind(this));
+              editor.on("click", ".rendered-widget a.tag", this.onTagClick.bind(this));
+              editor.on("click", ".rendered-widget a.internal-query", this.onInternalQueryClick.bind(this));
+              editor.on(
+                "click",
+                ".rendered-widget .heading-collapse-indicator",
+                this.onHeadingCollapseClick.bind(this)
+              );
+              editor.on("click", ".rendered-widget li > .list-collapse-indicator", this.onListCollapseClick.bind(this));
+              editor.on("click", ".rendered-widget img", this.onImageClick.bind(this));
+            }
+          }, 100);
+          return old.call(this);
+        };
+      },
+      belongsToMe(old) {
+        return function (el) {
+          // save the original element so we can pass it to the original method
+          const _el = el;
+          // check to see if the element is a sibling of a rendered widget
+          for (; el; ) {
+            if (el.hasClass("rendered-widget")) {
+              return true;
+            }
+            const parentEl = el.parentElement;
+            if (!parentEl) return old.call(this, _el);
+            el = parentEl;
+          }
+        };
+      },
+    });
+    this.register(patchRenderer);
   }
 
   registerCommands() {
@@ -132,15 +257,13 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       callback: () => {
         this.settings.foldLinks = !this.settings.foldLinks;
         this.saveData(this.settings);
-        this.updateCodeMirrorOption(
-          "hmdFold",
-          !this.settings.foldImages && !this.settings.foldLinks
-            ? false
-            : {
-                image: this.settings.foldImages,
-                link: this.settings.foldLinks,
-              }
-        );
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFold", {
+          image: this.settings.foldImages,
+          link: this.settings.foldLinks,
+          html: this.settings.renderHTML,
+          code: this.settings.renderCode,
+        });
       },
     });
     this.addCommand({
@@ -150,15 +273,102 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.foldImages = !this.settings.foldImages;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption(
-          "hmdFold",
-          !this.settings.foldImages && !this.settings.foldLinks
-            ? false
-            : {
-                image: this.settings.foldImages,
-                link: this.settings.foldLinks,
-              }
-        );
+        this.updateCodeMirrorOption("hmdFold", {
+          image: this.settings.foldImages,
+          link: this.settings.foldLinks,
+          html: this.settings.renderHTML,
+          code: this.settings.renderCode,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-html",
+      name: "Toggle Render HTML",
+      callback: () => {
+        this.settings.renderHTML = !this.settings.renderHTML;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFold", {
+          image: this.settings.foldImages,
+          link: this.settings.foldLinks,
+          html: this.settings.renderHTML,
+          code: this.settings.renderCode,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-code",
+      name: "Toggle Render Code",
+      callback: () => {
+        this.settings.renderCode = !this.settings.renderCode;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFold", {
+          image: this.settings.foldImages,
+          link: this.settings.foldLinks,
+          html: this.settings.renderHTML,
+          code: this.settings.renderCode,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-dataview",
+      name: "Toggle Render Dataview",
+      callback: () => {
+        this.settings.renderDataview = !this.settings.renderDataview;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFoldCode", {
+          admonition: this.settings.renderAdmonition,
+          chart: this.settings.renderChart,
+          query: this.settings.renderQuery,
+          dataview: this.settings.renderDataview,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-chart",
+      name: "Toggle Render Charts",
+      callback: () => {
+        this.settings.renderChart = !this.settings.renderChart;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFoldCode", {
+          admonition: this.settings.renderAdmonition,
+          chart: this.settings.renderChart,
+          query: this.settings.renderQuery,
+          dataview: this.settings.renderDataview,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-admonition",
+      name: "Toggle Render Admonitions",
+      callback: () => {
+        this.settings.renderAdmonition = !this.settings.renderAdmonition;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFoldCode", {
+          admonition: this.settings.renderAdmonition,
+          chart: this.settings.renderChart,
+          query: this.settings.renderQuery,
+          dataview: this.settings.renderDataview,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-query",
+      name: "Toggle Render Search Queries",
+      callback: () => {
+        this.settings.renderQuery = !this.settings.renderQuery;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFoldCode", {
+          admonition: this.settings.renderAdmonition,
+          chart: this.settings.renderChart,
+          query: this.settings.renderQuery,
+          dataview: this.settings.renderDataview,
+        });
       },
     });
     this.addCommand({
@@ -333,7 +543,18 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("hmdClick", this.settings.editModeClickHandler);
       cm.setOption("hmdTableAlign", this.settings.autoAlignTables);
       cm.setOption("cursorBlinkRate", this.settings.cursorBlinkRate);
-      cm.setOption("hmdFold", { image: this.settings.foldImages, link: this.settings.foldLinks });
+      cm.setOption("hmdFold", {
+        image: this.settings.foldImages,
+        link: this.settings.foldLinks,
+        html: this.settings.renderHTML,
+        code: this.settings.renderCode,
+      });
+      cm.setOption("hmdFoldCode", {
+        admonition: this.settings.renderAdmonition,
+        chart: this.settings.renderChart,
+        query: this.settings.renderQuery,
+        dataview: this.settings.renderDataview,
+      });
       if (this.settings.containerAttributes) this.updateCodeMirrorHandlers("renderLine", onRenderLine, true, true);
     });
   }
@@ -378,6 +599,11 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         ? document.body.addClass("cm-render-images-inline")
         : null
       : document.body.removeClass("cm-render-images-inline");
+    this.settings.foldLinks
+      ? !document.body.hasClass("cm-collapse-external-links")
+        ? document.body.addClass("cm-collapse-external-links")
+        : null
+      : document.body.removeClass("cm-collapse-external-links");
     this.settings.enableCMinPreview
       ? this.registerMarkdownPostProcessor(this.mdProcessor)
       : MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessor);
@@ -392,7 +618,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("styleActiveLine", true);
       cm.setOption("mode", "hypermd");
       cm.setOption("hmdHideToken", false);
-      cm.setOption("hmdFold", false);
+      cm.setOption("hmdFold", { image: false, link: false, html: false });
       cm.setOption("hmdTableAlign", false);
       cm.setOption("hmdClick", false);
       cm.setOption("cursorBlinkRate", 530);
@@ -415,6 +641,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
 
   getActiveCmEditor(): codemirror.Editor {
     const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+    //@ts-ignore
     if (view) return view.sourceMode?.cmEditor;
     return null;
   }
