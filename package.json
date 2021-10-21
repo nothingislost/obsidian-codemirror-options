@@ -14,12 +14,12 @@
     "devDependencies": {
         "@giotramu/prettier-config": "^1.1.2",
         "@rollup/plugin-commonjs": "^15.1.0",
+        "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^9.0.0",
         "@rollup/plugin-typescript": "^6.1.0",
         "@types/node": "^14.14.2",
         "@typescript-eslint/eslint-plugin": "^4.29.3",
         "@typescript-eslint/parser": "^4.29.3",
-        "@rollup/plugin-json": "^4.1.0",
         "codemirror": "^5.62.2",
         "eslint": "^7.32.0",
         "eslint-config-airbnb-base": "^14.2.1",
@@ -34,5 +34,9 @@
         "rollup-plugin-postcss": "^4.0.1",
         "tslib": "^2.0.3",
         "typescript": "^4.0.5"
+    },
+    "dependencies": {
+        "monkey-around": "^2.2.0",
+        "semver": "^7.3.5"
     }
 }
