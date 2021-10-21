@@ -11,7 +11,6 @@
   "use strict";
   Object.defineProperty(exports, "__esModule", { value: true });
   exports.ChartRenderer = void 0;
-  CodeMirror = __importStar(CodeMirror);
   var dependencyCheck = function () {
     return window.app.plugins.getPlugin("obsidian-charts")?._loaded ? true : false;
   };

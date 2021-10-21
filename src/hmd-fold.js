@@ -5,6 +5,20 @@
 //
 // You may set `hmdFold.customFolders` option to fold more, where `customFolders` is Array<FolderFunc>
 //
+//
+var ___extends = (this && this.__extends) || (function () {
+  var extendStatics = function (d, b) {
+      extendStatics = Object.setPrototypeOf ||
+          ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+          function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+      return extendStatics(d, b);
+  };
+  return function (d, b) {
+      extendStatics(d, b);
+      function __() { this.constructor = d; }
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+})();
 
 (function (mod) {
   //[HyperMD] UMD patched!
@@ -22,7 +36,7 @@
     exports.folderRegistry =
     exports.RequestRangeResult =
       void 0;
-  CodeMirror = __importStar(CodeMirror);
+
   var DEBUG = false;
   var FlagArray = typeof Uint8Array === "undefined" ? Array : Uint8Array;
   var RequestRangeResult;
@@ -104,7 +118,7 @@
   /********************************************************************************** */
   //#region Addon Class
   var Fold = /** @class */ (function (_super) {
-    __extends(Fold, _super);
+    ___extends(Fold, _super);
     function Fold(cm) {
       var _this = _super.call(this, cm) || this;
       _this.cm = cm;

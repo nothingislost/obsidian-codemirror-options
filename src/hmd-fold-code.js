@@ -18,7 +18,6 @@
     exports.registerRenderer =
     exports.rendererRegistry =
       void 0;
-  CodeMirror = __importStar(CodeMirror);
   exports.rendererRegistry = {};
   /**
    * Add a CodeRenderer to the System CodeRenderer Registry

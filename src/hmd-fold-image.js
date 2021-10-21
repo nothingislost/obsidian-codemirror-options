@@ -10,7 +10,6 @@
   "use strict";
   Object.defineProperty(exports, "__esModule", { value: true });
   exports.ImageFolder = void 0;
-  CodeMirror = __importStar(CodeMirror);
   var DEBUG = false;
   var ImageFolder = function (stream, token) {
     var cm = stream.cm;

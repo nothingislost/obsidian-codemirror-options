@@ -525,7 +525,16 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   right: 2em;
   top: 0.85em;
   z-index: 3 !important;
+  line-height: 1.5;
 }
+
+.rendered-code-block-wrapper .CodeMirror-line .CodeMirror-widget .hmd-fold-code-stub {
+  height: 1.7em;
+  font-size: .7rem;
+  font-family: var(--font-monospace);
+  font-weight: 600;
+}
+
 
 .rendered-code-block-wrapper.rendered-query-wrapper .CodeMirror-line .CodeMirror-widget {
   right: .1em;

@@ -19,7 +19,6 @@ import { Keymap } from "obsidian";
     exports.defaultRenderer =
     exports.defaultChecker =
       void 0;
-  CodeMirror = __importStar(CodeMirror);
 
   const purifySettings = {
     ALLOW_UNKNOWN_PROTOCOLS: true,
