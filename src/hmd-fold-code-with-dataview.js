@@ -6,13 +6,15 @@
 // This module provides `DataviewRenderer` for FoldCode addon
 
 import { Component } from "obsidian";
+import gte from "semver/functions/gte";
 
 (function (mod) {
   mod(null, {}, CodeMirror, HyperMD.Fold, HyperMD.FoldCode);
 })(function (require, exports, CodeMirror, fold_1, fold_code_1) {
   "use strict";
   var dependencyCheck = function () {
-    return window.app.plugins.getPlugin("dataview")?._loaded;
+    const plugin = window.app.plugins.getPlugin("dataview");
+    return plugin?._loaded && gte(plugin?.manifest.version, "0.4.17") ? true : false;
   };
   var DataviewRenderer = function (code, info) {
     var el = document.createElement("div");
@@ -35,7 +37,7 @@ import { Component } from "obsidian";
         asyncRenderer: null,
       };
     } else {
-      el.innerText = "Error: Unable to find the Dataview plugin";
+      el.innerText = "Error: Unable to find the Dataview plugin or version not 0.4.17 or greater";
     }
 
     return {
