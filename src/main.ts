@@ -14,7 +14,6 @@ import "./hmd-fold-link";
 import "./hmd-fold-image";
 import "./hmd-fold-code";
 import "./hmd-fold-html";
-// import * as flowchart from "flowchart.js";
 import "./hmd-fold-code-with-admonition";
 import "./hmd-fold-code-with-chart";
 import "./hmd-fold-code-with-query";
@@ -27,6 +26,8 @@ import {
   MarkdownView,
   MarkdownPreviewRenderer,
   Plugin,
+  Menu,
+  TFile,
   EditorPosition,
   debounce,
   TextFileView,
@@ -118,12 +119,58 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.app.workspace.trigger("css-change");
       }, 1000);
     });
+    document.on("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);
+    document.on("contextmenu", `.rendered-widget img:not(.hmd-image)`, this.onImageContextMenu, false);
+    // this.registerEvent(this.app.workspace.on("editor-menu", this.handleHighlighterMenu));
   }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
-  
+
+  onImageContextMenu = (event: MouseEvent, target: HTMLElement) => {
+    // the "editor-menu" event does not include the MouseEvent or the target HTMLElement
+    // so instead, we create this stanadard context menu event handler and hook it into
+    // the "editor-menu" event temporarily
+    const boundFunc = this.onEditorMenu.bind(this, target);
+    this.app.workspace.on("editor-menu", boundFunc);
+    setTimeout(() => {
+      this.app.workspace.off("editor-menu", boundFunc);
+    }, 100);
+  };
+
+  onEditorMenu = (target: HTMLElement, menu: Menu) => {
+    let file;
+    if (target.dataset.path) {
+      file = this.app.vault.getAbstractFileByPath(target.dataset.path);
+      if (!(file instanceof TFile)) return;
+    } else if (/^https/i.test(target.getAttribute("src"))) {
+      file = target.getAttribute("src");
+    }
+    if (file) this.addContextMenuItem(menu, file);
+  };
+
+  addContextMenuItem = (menu: Menu, imageFile: TFile | string) => {
+    menu.addItem(menuItem => {
+      menuItem.setTitle("Copy Image to Clipboard");
+      menuItem.setIcon("image-file");
+      menuItem.onClick(async () => {
+        let blob: Blob;
+        if (imageFile instanceof TFile) {
+          const buffer = await this.app.vault.adapter.readBinary(imageFile.path);
+          const arr = new Uint8Array(buffer);
+          blob = new Blob([arr], { type: "image/png" });
+        } else {
+          blob = await (await fetch(imageFile)).blob();
+        }
+        //@ts-ignore
+        const item = new ClipboardItem({ "image/png": blob });
+        //@ts-ignore
+        window.navigator.clipboard.write([item]);
+      });
+    });
+  };
+
   applyMonkeyPatches() {
     // patching onLoadFile to clear CM specific state in order to avoid fold related memory leaks
     // we also add the current file name to the CM state so that CM native actions have a reference
@@ -131,7 +178,8 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       onLoadFile(old) {
         // old is the original onLoadFile function
         return function (file) {
-          // onLoadFile takes one argument, file
+          // NOTE: be careful with this code, if any part of it fails, it will block all other
+          // plugins from loading files.
           const cm = this.sourceMode?.editor.cm;
           if (cm) {
             cm.state.fileName = file.path;
@@ -157,8 +205,9 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
               function (event) {
                 if (
                   event &&
-                  event.path &&
-                  event.path.filter(el => el && el.hasClass && el.hasClass("rendered-widget")).length
+                  event.path.length &&
+                  event.path.filter(el => el.hasClass && el.hasClass("rendered-widget")).length &&
+                  event.path[0].tagName !== "IMG"
                 ) {
                   return;
                 }
@@ -199,7 +248,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
                 this.onHeadingCollapseClick.bind(this)
               );
               editor.on("click", ".rendered-widget li > .list-collapse-indicator", this.onListCollapseClick.bind(this));
-              editor.on("click", ".rendered-widget img", this.onImageClick.bind(this));
+              // editor.on("click", ".rendered-widget img", this.onImageClick.bind(this));
             }
           }, 100);
           return old.call(this);
@@ -211,7 +260,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           const _el = el;
           // check to see if the element is a sibling of a rendered widget
           for (; el; ) {
-            if (el.hasClass("rendered-widget")) {
+            if (el.hasClass("rendered-widget") && el.tagName !== "IMG") {
               return true;
             }
             const parentEl = el.parentElement;
@@ -677,5 +726,6 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.unsetCodeMirrorOptions();
     MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessor);
     this.refreshPanes();
+    document.off("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);
   }
 }

@@ -3,8 +3,6 @@
 //
 // DESCRIPTION: Fold and render embedded HTML snippets
 
-import { Keymap } from "obsidian";
-
 (function (mod) {
   //[HyperMD] UMD patched!
   /*plain env*/ mod(null, (HyperMD.FoldHTML = HyperMD.FoldHTML || {}), CodeMirror, HyperMD, HyperMD.Fold);
@@ -51,15 +49,6 @@ import { Keymap } from "obsidian";
   /**
    * Create HTMLElement from HTML string and do special process with HyperMD.ReadLink
    */
-  var onClickTransclusionLink = (event, target) => {
-    event.preventDefault();
-    event.stopPropagation();
-    window.app.workspace.openLinkText(
-      target.getAttr("href"),
-      "/",
-      Keymap.isModifier(event, "Mod") || 1 === event.button
-    );
-  };
   var defaultRenderer = function (html, pos, cm) {
     var tagBegin = /^<(\w+)\s*/.exec(html);
     if (!tagBegin) return null;

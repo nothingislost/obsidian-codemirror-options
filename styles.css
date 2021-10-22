@@ -553,6 +553,16 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 
 /* END: Rendered code block <CODE> button styling and placement */
 
+/* START: Render HTML Styling */
+
+.cm-s-obsidian .hmd-fold-html {
+  position: relative;
+  border: 1px solid transparent;
+}
+
+/* END: Render HTML Styling */
+
+
 /* Ozan doesn't have a setting to only disable image rendering 
    so here we try and hide them if the "render images" setting is on */
 .cm-render-images-inline .oz-image-widget img:where([src*=".png"],[src*=".gif"],[src*=".svg"],[src*=".bmp"],[src*=".jpg"],[src*=".jpeg"]) {
