@@ -132,10 +132,12 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         // old is the original onLoadFile function
         return function (file) {
           // onLoadFile takes one argument, file
-          const cm = this.sourceMode.editor.cm;
-          cm.state.fileName = file.path;
-          cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
-          cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
+          const cm = this.sourceMode?.editor.cm;
+          if (cm) {
+            cm.state.fileName = file.path;
+            cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
+            cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
+          }
           return old.call(this, file); // call the orignal function and bind the current scope to it
         };
       },
