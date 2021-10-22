@@ -113,8 +113,9 @@
             img.alt = "⚠️"
           }
         }
-
+        
         img.setAttribute("data-src", _url);
+        if (_resolvedUrl && _resolvedUrl.path) img.setAttribute("data-path", _resolvedUrl.path);
         img.setAttribute("src", _url);
         if (dimensions) {
           var _dims = dimensions.match(/^([0-9]+)x?([0-9]+)?$/)

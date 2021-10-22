@@ -2,26 +2,100 @@
 
 This plugin adds configurable options to customize the behavior of Obsidian's edit mode.
 
-## Installation
-
-### Obsidian Community Plugin Browser
-
-This plugin is available directly within the Obsidian app by navigating to Settings->Community Plugins->Browse
-
-### Manual Installation
-To manually install
- 1. download the latest `zip`from the [latest Github Release](https://github.com/nothingislost/obsidian-codemirror-options/releases/latest)
- 1. unzip the contents into the `.plugins/obsidian-codemirror-options` subdirectory of your vault.
- 1. reload obsidian
- 1. go into settings > third party plugins and activate obsidian-codemirror-options
-
-For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
+## Disclaimer
+- The features in this plugin all rely on CodeMirror 5 and will not be compatible with CodeMirror 6. Once Obsidian enables CodeMirror 6 and native WYSIWYG mode on desktop, this plugin will not be compatible with the new mode.
+- We do not have any word from the Obsidian devs regarding when we can expect CodeMirror 6 on desktop but once it happens, I will do my best to replicate any of these features that are not implemented natively by Obsidian WYSIWYG.
 
 ## Features
 
 ### WYSIWYG Functionality
+- Much of the WYSIWYG functionality is achieved by incorporating components from the open source HyperMD project. Obsidian only uses a subset of HyperMD by default and this plugin adds in many of the missing HyperMD features.
+- The WYSIWYG features in this plugin can be resource intensive in certain situations. If you notice performance issues, it it recommended to turn off the settings under the Code Rendering section and see if that improves things.
 
-Documentation pending. See the changelog below for more details.
+#### Markdown Parsing
+
+##### Hide Markdown Tokens
+
+This enables WYSIWYG like functionality in edit mode by hiding markdown tokens once you leave the marked up element
+
+Token hiding currently supports *em*, **strong**, ~~strikethrough~~, ==highlight==, `inline code`, 
+
+- [[internal link in list]]
+- ##### Headers in Lists
+- [x] checkboxes
+
+This feature also hides certain markup based on active line rather than active element such as: 
+
+###### Headers
+Tables:
+
+| left aligned | center aligned | right aligned |
+|:------------ |:--------------:| -------------:|
+| left         |     center     |         right |
+| left         |     center     |         right |
+| left         |     center     |         right |
+
+Horizontal Rule (HR)
+***
+
+> block quote
+>  > nested block quote
+
+#### Code Rendering
+##### HTML Rendering
+- HTML tags will be passed through DOMPurify and then rendered inline. You can click into the rendered element to see and edit the HTML source.
+- The stock Obsidian DOMPurify settings are enforced and this plugin should render the same subset of HTML that is supported, natively, by preview mode.
+##### Code Rendering
+###### Charts
+- Renders chart blocks in edit mode using the Obsidian Charts plugin
+###### Admonitions
+- Renders Admonition blocks in edit mode using the Admonitions plugin
+###### Dataview
+- Renders Dataview blocks in edit mode using the Admonitions plugin
+- **Limitations**
+  - Embedded query results are only calculated at initial render time. They will not continue to update over time like they do in preview mode. If you want to refresh a query, you can click into the query and back out to force a refresh.
+###### Embedded Search Queries
+- Renders
+- **Limitations**
+	- Embedded query results are only calculated at initial render time. They will not continue to update over time like they do in preview mode. If you want to refresh a query, you can click into the query and back out to force a refresh.
+
+#### Visual Styling
+### Inline Images
+This adds support for inline images in edit mode, similar to Ozan's Image in Editor plugin. The main difference with this implementation is that it renders the image inline, and hides the source text. When clicking on the image, the image will collapse back down to its source text.
+
+This implementation also allows for multiple images on a single line as well as support for Obsidian's image size syntax.
+
+### Templater Syntax Support
+OpenMD does not play nicely with Templater's built-in syntax highlighting. To work around this, OpenMD now supports Templater syntax natively. 
+
+You'll need to make sure you disable Templater's native syntax highlighting option to avoid any conflicts.
+
+The syntax highlighting theme can be changed or customized using Style Settings.
+
+### Headers in Lists
+The Markdown syntax supports headers inside of list items but the default edit mode parser does not render them. 
+
+- # h1
+	- ## h2
+		- ### h3
+			- #### h4
+				- ##### h5
+					- ###### h6
+
+### Table Improvements
+#### Single Column Support
+
+The default Obsidian Markdown parser does not support formatting single column tables in edit mode. Support for this has now been added to OpenMD.
+
+| single column support |
+|:---------------------:|
+|          row          |
+
+#### Auto Align Tables
+
+This feature is similar to the Advanced Tables plugin and will automatically align your tables as you type. The main difference is that this setting will auto align as you type where as Advances Tables will do a reformat on tab/enter.
+
+This setting can coexist nicely with Advanced Tables and it is recommended to use both since Advanced Tables adds additional features like tab/enter key handling and a number of other useful table features.
 
 ### Syntax Highlighting
 
@@ -133,8 +207,65 @@ This setting is a fallback option if you do not want to inject CM into preview m
 ## Known Issues
 
 - This plugin leverages the CM5 API directly which is a deprecated option. Obsidian will be moving to CM6 soon and this plugin will break. I'm not sure yet if I'll be able to make these same tweaks on CM6.
+- Multiple aspects of this plugin will break if the Templater plugin's "Syntax Highlighting" feature is turned on. It is recommended to disable Templater's "Syntax Highlighting" and enable "OpenMD Mode" within CodeMirror Options which enables support for Templater syntax.
+
+## Installation
+
+### Obsidian Community Plugin Browser
+
+This plugin is available directly within the Obsidian app by navigating to Settings->Community Plugins->Browse
+
+### Beta Installation
+Occasionally, pre-releases will be available for testing prior to official release. These can be installed using the [Obsidian42 BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin.
+
+To install a pre-release, download and enable the BRAT plugin, add the beta repository `nothingislost/obsidian-codemirror-options`, and then have BRAT check for updates.
+
+### Manual Installation
+To manually install
+ 1. download the latest `zip`from the [latest Github Release](https://github.com/nothingislost/obsidian-codemirror-options/releases/latest)
+ 1. unzip the contents into the `.plugins/obsidian-codemirror-options` subdirectory of your vault.
+ 1. reload obsidian
+ 1. go into settings > third party plugins and activate obsidian-codemirror-options
+
+For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
+
+### 0.4.2
+
+- Added "Copy Image to Clipboard" to the editor context menu, when clicking on inline rendered images. This only triggers if the IMG has the class "hmd-image", which is set on all inline rendered images by default.
+  - The "Copy Image to Clipboard" option will also show on any images displayed inside of a rendered code block
+  - "Copy Image to Clipboard" supports internal and external images
+
+### 0.4.1
+
+- Fix a bug that was causing custom views, like Kanban, to not be able to load files
+
+### 0.4.0
+
+# Shiny new things
+- HTML Rendering
+  - HTML tags will be passed through DOMPurify and then rendered inline. You can click into the rendered element to see and edit the HTML source.
+  - HTML tags at the beginning of a line will be treated as a full line block
+  - HTML tags placed inline will be treated as inline-blocks
+- Code Rendering
+  - Charts
+    - Renders chart blocks in edit mode using the Obisidian Charts plugin
+  - Admonitions
+    - Renders Admonition blocks in edit mode using the Admonitions plugin
+  - Dataview
+    - Renders Dataview blocks in edit mode using the Admonitions plugin
+    - Limitations
+      - Rendered Dataview content is only calculated at initial render time. They will not continue to update on an interval like they do in preview mode. If you want to refresh a view, you can click into the query and back out to force a refresh.
+  - Embedded Search Queries
+	  - Limitations
+		  - Embedded query results are only calculated at initial render time. They will not continue to update over time like they do in preview mode. If you want to refresh a query, you can click into the query and back out to force a refresh.
+# Improvements
+- Added `.cm-collapse-external-links` body class for Collapse External Links feature
+- Fixed overly aggressive inline latex regex in OpenMD Mode
+# Known Issues
+- Multiple aspects of this plugin will break if the Templater plugin's "Syntax Highlighting " feature is turned on. It is recommended to disable Templater's "Syntax Highlighting" and enable "OpenMD Mode" within CodeMirror Options which enables support for Templater syntax.
+- Some themes alter the z-index in a way that causes the `<CODE>` button widget to not display on top of the rendered element. The theme designers will need to address this but in the mean time, you can force the code to display by creating a selection into the element.
 
 ### 0.3.1
 
