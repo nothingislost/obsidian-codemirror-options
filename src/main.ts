@@ -18,8 +18,10 @@ import "./hmd-fold-code-with-admonition";
 import "./hmd-fold-code-with-chart";
 import "./hmd-fold-code-with-query";
 import "./hmd-fold-code-with-dataview";
+import "./hmd-fold-math";
 import "./hmd-table-align";
 
+import { init_math_preview, unload_math_preview } from "./math-preview";
 import { onRenderLine } from "./container-attributes";
 import { DEFAULT_SETTINGS } from "./settings";
 import {
@@ -174,12 +176,16 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   applyMonkeyPatches() {
     // patching onLoadFile to clear CM specific state in order to avoid fold related memory leaks
     // we also add the current file name to the CM state so that CM native actions have a reference
-    const patchOnLoadFile = around(TextFileView.prototype, {
+    const patchOnLoadFile = around(MarkdownView.prototype, {
       onLoadFile(old) {
         // old is the original onLoadFile function
         return function (file) {
           // NOTE: be careful with this code, if any part of it fails, it will block all other
           // plugins from loading files.
+          const previewEl = document.querySelector("#math-preview") as HTMLElement;
+          if (previewEl && !previewEl.hasClass("float-win-hidden")) {
+            previewEl.addClass("float-win-hidden");
+          }
           const cm = this.sourceMode?.editor.cm;
           if (cm) {
             cm.state.fileName = file.path;
@@ -187,6 +193,21 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
             cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
           }
           return old.call(this, file); // call the orignal function and bind the current scope to it
+        };
+      },
+      // @ts-ignore
+      onClose(old) {
+        return function () {
+          const cm = this.sourceMode?.editor.cm;
+          if (cm) {
+            cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
+            cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
+          }
+          const previewEl = document.querySelector("#math-preview") as HTMLElement;
+          if (previewEl && !previewEl.hasClass("float-win-hidden")) {
+            previewEl.addClass("float-win-hidden");
+          }
+          return old.call(this);
         };
       },
     });
@@ -314,6 +335,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
+          math: this.settings.renderCode,
         });
       },
     });
@@ -329,6 +351,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
+          math: this.settings.renderCode,
         });
       },
     });
@@ -344,7 +367,46 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
+          math: this.settings.renderCode,
         });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-math",
+      name: "Toggle Render Math",
+      callback: () => {
+        this.settings.renderMath = !this.settings.renderMath;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFold", {
+          image: this.settings.foldImages,
+          link: this.settings.foldLinks,
+          html: this.settings.renderHTML,
+          code: this.settings.renderCode,
+          math: this.settings.renderCode,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-math-preview",
+      name: "Toggle Render Math Preview",
+      callback: () => {
+        this.settings.renderMathPreview = !this.settings.renderMathPreview;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        if (this.settings.renderMathPreview) {
+          this.app.workspace.iterateCodeMirrors(cm => {
+            init_math_preview(cm);
+          });
+        } else {
+          const previewEl = document.querySelector("#math-preview");
+          if (previewEl) {
+            document.querySelector("#math-preview").detach();
+          }
+          this.app.workspace.iterateCodeMirrors(cm => {
+            unload_math_preview(cm);
+          });
+        }
       },
     });
     this.addCommand({
@@ -359,6 +421,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
+          math: this.settings.renderCode,
         });
       },
     });
@@ -599,6 +662,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         link: this.settings.foldLinks,
         html: this.settings.renderHTML,
         code: this.settings.renderCode,
+        math: this.settings.renderMath,
       });
       cm.setOption("hmdFoldCode", {
         admonition: this.settings.renderAdmonition,
@@ -606,6 +670,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         query: this.settings.renderQuery,
         dataview: this.settings.renderDataview,
       });
+      if (this.settings.renderMathPreview) init_math_preview(cm);
       if (this.settings.containerAttributes) this.updateCodeMirrorHandlers("renderLine", onRenderLine, true, true);
     });
   }
@@ -669,11 +734,12 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("styleActiveLine", true);
       cm.setOption("mode", "hypermd");
       cm.setOption("hmdHideToken", false);
-      cm.setOption("hmdFold", { image: false, link: false, html: false });
+      cm.setOption("hmdFold", { image: false, link: false, html: false, code: false, math: false });
       cm.setOption("hmdTableAlign", false);
       cm.setOption("hmdClick", false);
       cm.setOption("cursorBlinkRate", 530);
       cm.off("renderLine", onRenderLine);
+      unload_math_preview(cm);
       // cm.off("imageClicked", this.onImageClick);
       cm.refresh();
     });

@@ -2,6 +2,7 @@
 import ObsidianCodeMirrorOptionsPlugin from "./main";
 import { App, PluginSettingTab, Setting } from "obsidian";
 import { onRenderLine } from "./container-attributes";
+import { init_math_preview, unload_math_preview } from "./math-preview";
 
 export class ObsidianCodeMirrorOptionsSettings {
   dynamicCursor: boolean;
@@ -28,6 +29,8 @@ export class ObsidianCodeMirrorOptionsSettings {
   renderAdmonition: boolean;
   renderQuery: boolean;
   renderDataview: boolean;
+  renderMath: boolean;
+  renderMathPreview: boolean;
 }
 
 export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
@@ -54,6 +57,8 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   renderAdmonition: false,
   renderQuery: false,
   renderDataview: false,
+  renderMath: false,
+  renderMathPreview: false,
   tokenList: "em|strong|strikethrough|code|linkText|task|internalLink|highlight",
 };
 
@@ -146,6 +151,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.updateCodeMirrorOption("hmdFold", {
             image: this.plugin.settings.foldImages,
             link: this.plugin.settings.foldLinks,
+            html: this.plugin.settings.renderHTML,
+            code: this.plugin.settings.renderCode,
+            math: this.plugin.settings.renderMath,
           });
         })
       );
@@ -163,6 +171,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.updateCodeMirrorOption("hmdFold", {
             image: this.plugin.settings.foldImages,
             link: this.plugin.settings.foldLinks,
+            html: this.plugin.settings.renderHTML,
+            code: this.plugin.settings.renderCode,
+            math: this.plugin.settings.renderMath,
           });
         })
       );
@@ -181,20 +192,59 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       text: "Edit Mode Code Rendering",
     });
     new Setting(containerEl)
-    .setName("Render HTML")
-    .setDesc(``)
-    .addToggle(toggle =>
-      toggle.setValue(this.plugin.settings.renderHTML).onChange(value => {
-        this.plugin.settings.renderHTML = value;
-        this.plugin.saveData(this.plugin.settings);
-        this.plugin.updateCodeMirrorOption("hmdFold", {
-          image: this.plugin.settings.foldImages,
-          link: this.plugin.settings.foldLinks,
-          html: this.plugin.settings.renderHTML,
-          code: this.plugin.settings.renderCode,
-        });
-      })
-    );
+      .setName("Render HTML")
+      .setDesc(``)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderHTML).onChange(value => {
+          this.plugin.settings.renderHTML = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFold", {
+            image: this.plugin.settings.foldImages,
+            link: this.plugin.settings.foldLinks,
+            html: this.plugin.settings.renderHTML,
+            code: this.plugin.settings.renderCode,
+            math: this.plugin.settings.renderMath,
+          });
+        })
+      );
+    new Setting(containerEl)
+      .setName("Render Math")
+      .setDesc(``)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderMath).onChange(value => {
+          this.plugin.settings.renderMath = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFold", {
+            image: this.plugin.settings.foldImages,
+            link: this.plugin.settings.foldLinks,
+            html: this.plugin.settings.renderHTML,
+            code: this.plugin.settings.renderCode,
+            math: this.plugin.settings.renderMath,
+          });
+        })
+      );
+    new Setting(containerEl)
+      .setName("Render Math Preview")
+      .setDesc(``)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderMathPreview).onChange(value => {
+          this.plugin.settings.renderMathPreview = value;
+          this.plugin.saveData(this.plugin.settings);
+          if (this.plugin.settings.renderMathPreview) {
+            this.app.workspace.iterateCodeMirrors(cm => {
+              init_math_preview(cm);
+            });
+          } else {
+            const previewEl = document.querySelector("#math-preview");
+            if (previewEl) {
+              document.querySelector("#math-preview").detach();
+            }
+            this.app.workspace.iterateCodeMirrors(cm => {
+              unload_math_preview(cm);
+            });
+          }
+        })
+      );
     new Setting(containerEl)
       .setName("Render Code Blocks")
       .setDesc(`If this is disabled, none of the options below will do anything`)
@@ -207,14 +257,13 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             link: this.plugin.settings.foldLinks,
             html: this.plugin.settings.renderHTML,
             code: this.plugin.settings.renderCode,
+            math: this.plugin.settings.renderMath,
           });
         })
       );
-      new Setting(containerEl)
+    new Setting(containerEl)
       .setName("Render Admonitions")
-      .setDesc(
-        ``
-      )
+      .setDesc(``)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.renderAdmonition).onChange(value => {
           this.plugin.settings.renderAdmonition = value;
@@ -227,11 +276,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           });
         })
       );
-      new Setting(containerEl)
+    new Setting(containerEl)
       .setName("Render Charts")
-      .setDesc(
-        ``
-      )
+      .setDesc(``)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.renderChart).onChange(value => {
           this.plugin.settings.renderChart = value;
@@ -244,11 +291,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           });
         })
       );
-      new Setting(containerEl)
+    new Setting(containerEl)
       .setName("Render Embedded Search")
-      .setDesc(
-        ``
-      )
+      .setDesc(``)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.renderQuery).onChange(value => {
           this.plugin.settings.renderQuery = value;
@@ -261,11 +306,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           });
         })
       );
-      new Setting(containerEl)
+    new Setting(containerEl)
       .setName("Render Dataview")
-      .setDesc(
-        ``
-      )
+      .setDesc(``)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.renderDataview).onChange(value => {
           this.plugin.settings.renderDataview = value;
@@ -297,7 +340,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       );
     new Setting(containerEl)
       .setName("Auto Align Tables")
-      .setDesc(`Automatically align markdown tables as they are being built. Note: This setting currently requires that OpenMD Mode be enabled.`)
+      .setDesc(
+        `Automatically align markdown tables as they are being built. Note: This setting currently requires that OpenMD Mode be enabled.`
+      )
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.autoAlignTables).onChange(value => {
           this.plugin.settings.autoAlignTables = value;

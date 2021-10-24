@@ -530,20 +530,19 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 
 .rendered-code-block-wrapper .CodeMirror-line .CodeMirror-widget .hmd-fold-code-stub {
   height: 1.7em;
-  font-size: .7rem;
+  font-size: 0.7rem;
   font-family: var(--font-monospace);
   font-weight: 600;
 }
 
-
 .rendered-code-block-wrapper.rendered-query-wrapper .CodeMirror-line .CodeMirror-widget {
-  right: .1em;
-  top: .1em;
+  right: 0.1em;
+  top: 0.1em;
 }
 
 .rendered-code-block-wrapper.rendered-dataview-wrapper .CodeMirror-line .CodeMirror-widget {
   right: 0;
-  top: .2em;
+  top: 0.2em;
 }
 
 .rendered-code-block-wrapper.rendered-chart-wrapper .CodeMirror-line .CodeMirror-widget {
@@ -562,10 +561,11 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 
 /* END: Render HTML Styling */
 
-
 /* Ozan doesn't have a setting to only disable image rendering 
    so here we try and hide them if the "render images" setting is on */
-.cm-render-images-inline .oz-image-widget img:where([src*=".png"],[src*=".gif"],[src*=".svg"],[src*=".bmp"],[src*=".jpg"],[src*=".jpeg"]) {
+.cm-render-images-inline
+  .oz-image-widget
+  img:where([src*=".png"], [src*=".gif"], [src*=".svg"], [src*=".bmp"], [src*=".jpg"], [src*=".jpeg"]) {
   display: none;
 }
 
@@ -1223,3 +1223,77 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre code span
 }
 
 /* END FALL BACK CODE BLOCK PREVIEW MODE SYNTAX HIGHLIGHTING */
+
+/* START Mathjax Preview */
+
+#math-preview.float-win {
+  position: absolute;
+  position: fixed;
+  z-index: 3;
+  background: var(--background-primary);
+  background-image: linear-gradient(to bottom, var(--background-primary), var(--background-primary-alt));
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  max-width: 70%;
+}
+
+#math-preview.float-win-hidden {
+  display: none;
+}
+
+#math-preview .float-win-close {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  top: 0;
+  color: #fff;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  width: 28px;
+  border: none !important;
+  margin-right: 4px;
+  padding: 0;
+  vertical-align: middle;
+}
+
+#math-preview .float-win-close:hover {
+  background-color: transparent !important;
+}
+
+#math-preview .float-win-title {
+  position: relative;
+  background: var(--text-accent);
+  font-size: 0.87em;
+  color: var(--background-primary);
+  padding: 5px 15px;
+  padding-right: 50px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: move;
+}
+
+#math-preview .float-win-content {
+  max-height: 80vh;
+  overflow: auto;
+  padding: 10px 20px;
+}
+#math-preview button.float-win-close:focus {
+  box-shadow: none;
+}
+#math-preview .float-win-close .icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  stroke-width: 0;
+  color: var(--background-primary);
+  stroke: currentColor;
+  fill: currentColor;
+  vertical-align: bottom;
+}
+/* END Mathjax preview */

@@ -231,6 +231,19 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.5.0
+
+# Shiny new things
+- Inline Mathjax Rendering
+  - Mathjax inside of `$ $` or `$$ $$` will now render directly in edit mode. Click into the rendered element to edit it
+  - Rendering is done by the built-in Obsidian Mathjax renderer and has all of the same features and settings
+- Mathjax Preview
+  - When editing a Mathjax element, a draggable preview modal will appear showing you what the rendered Mathjax will look like
+
+# Bug fixes
+- Fixed an issue that was preventing the current file path from being passed to edit-mode rendered Dataview blocks
+  - This was preventing calls like `dv.current()` from working
+
 ### 0.4.2
 
 - Added "Copy Image to Clipboard" to the editor context menu, when clicking on inline rendered images. This only triggers if the IMG has the class "hmd-image", which is set on all inline rendered images by default.
