@@ -19,7 +19,7 @@ import gte from "semver/functions/gte";
   var DataviewRenderer = function (code, info) {
     var el = document.createElement("div");
     var ctx = new Component();
-    ctx.sourcePath = info.editor.filePath;
+    ctx.sourcePath = info.editor.state.fileName;
     if (dependencyCheck()) {
       if (info.lang === "dataview") {
         window.app.plugins.getPlugin("dataview").dataview(code, el, ctx, ctx.sourcePath);
