@@ -1,3 +1,4 @@
+import { loadMathJax } from "obsidian";
 export function unload_math_preview(cm) {
   cm.setOption("hmdFoldMath", {
     onPreview: null,
@@ -6,6 +7,7 @@ export function unload_math_preview(cm) {
 }
 
 export function init_math_preview(cm) {
+  if (loadMathJax) loadMathJax();
   if (!document.querySelector("#math-preview")) {
     const mathPreviewEl = document.createElement("div");
     mathPreviewEl.className = "float-win float-win-hidden";
