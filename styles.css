@@ -1226,6 +1226,10 @@ body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre code span
 
 /* START Mathjax Preview */
 
+.hmd-math-mathjax mjx-container[jax="CHTML"][display="true"] {
+  margin: 0;
+}
+
 #math-preview.float-win {
   position: absolute;
   position: fixed;

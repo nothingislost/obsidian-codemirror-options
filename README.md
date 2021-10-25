@@ -231,6 +231,15 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.5.1
+
+- Added an option to not style rendered edit mode checkboxes
+- Added a new data attribute to edit mode checkboxes `data-task` which will contain the character inside of the task `[ ]` brackets
+  - `<span class="cm-formatting cm-formatting-task cm-property hmd-hidden-token" data-task="?">[?]</span>`
+
+- Fixed a bug that was preventing Mathjax from being rendered as a block
+- Fixed a bug that was causing math to not be styled correctly
+
 ### 0.5.0
 
 # Shiny new things
