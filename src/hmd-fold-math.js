@@ -166,7 +166,7 @@ import gte from "semver/functions/gte";
         if (!this.dependencyCheck()) {
           el.innerHTML = '<span class="mod-warning">Obsidian v0.12.16+ is needed to render Mathjax</span>';
         } else {
-          el.innerHTML = renderMath(expr, { display: true }).innerHTML;
+          el.innerHTML = renderMath(expr, { display: true }).outerHTML;
           // this.container.appendChild(this.el);
           finishRenderMath();
         }
