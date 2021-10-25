@@ -78,7 +78,7 @@
         var css;
         if (_this.tokenTypes.indexOf("task") === -1) css = "";
         else
-          css = `.hide-tokens .cm-s-obsidian span.cm-formatting-task {
+          css = `.hide-tokens.style-check-box .cm-s-obsidian span.cm-formatting-task {
           white-space: pre;
           display: inline-block;
           height: 1em;
@@ -93,10 +93,10 @@
           background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAMAAAA8VkqRAAAAclBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACa4vOeAAAAJXRSTlMADcjpDswcLZOzsvOYBvWdbtvTX0D69+ORa1dRJCDtuaF7ZDkoQyuUXgAAAMhJREFUOMvt0reywjAUhOFjKxmcrgMZboL//V8Rm6GwkNUx0LClvhkVZ1fEZoqHqMwO7wuUSb0YxcJKxtLpxIt2SzJRykkQp5RgdAjaIKRJCEn6gWdA9OzRoqLVRscQnc9bdtXX/eyurOF7N3erLVDPwCGHxoVwamH1LwGUBfBbhrCvoLlMitL9DY8trLtJg7qoCj18VAN1OYE/YJBuDe1RJtBVo5wbqPb+GL5yWG1GLX0YZYw5iQ93yQ/yAHfZzu5qt/mxr97VFS15JGSVM0C6AAAAAElFTkSuQmCC");
           background-size: 1em;
         }
-        .theme-dark.hide-tokens .cm-s-obsidian span.cm-formatting-task {
+        .theme-dark.hide-tokens.style-check-box .cm-s-obsidian span.cm-formatting-task {
           filter: invert(1);
         }
-        .hide-tokens .cm-s-obsidian span.cm-formatting-task.cm-property {
+        .hide-tokens.style-check-box .cm-s-obsidian span.cm-formatting-task.cm-property {
           background-position-y: -1em;
         }`;
         _this.styleEl.textContent = _this._lastCSS = css;
@@ -185,6 +185,12 @@
               if (shallHideTokens ? addClass(domParent, hideClassName) : rmClass(domParent, hideClassName)) {
                 if (DEBUG) console.log("HEAD DOM CHANGED");
                 changed = true;
+              }
+              if (domParent && domParent.classList && domParent.classList.contains("cm-formatting-task")) {
+                if (!domParent.dataset.hasOwnProperty("task")) {
+                  domParent.dataset.task = domNode.textContent.substring(1, 2);
+                  changed = true;
+                }
               }
               if (
                 domParent.nextElementSibling &&

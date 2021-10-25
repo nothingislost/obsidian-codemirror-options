@@ -31,6 +31,7 @@ export class ObsidianCodeMirrorOptionsSettings {
   renderDataview: boolean;
   renderMath: boolean;
   renderMathPreview: boolean;
+  styleCheckBox: boolean;
 }
 
 export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
@@ -59,6 +60,7 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   renderDataview: false,
   renderMath: false,
   renderMathPreview: false,
+  styleCheckBox: true,
   tokenList: "em|strong|strikethrough|code|linkText|task|internalLink|highlight",
 };
 
@@ -177,7 +179,6 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           });
         })
       );
-
     new Setting(containerEl)
       .setName("Edit Mode Click Handler")
       .setDesc(`Allow mouse clicks to toggle checkboxes in edit mode.`)
@@ -186,6 +187,18 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.settings.editModeClickHandler = value;
           this.plugin.saveData(this.plugin.settings);
           this.plugin.updateCodeMirrorOption("hmdClick", this.plugin.settings.editModeClickHandler);
+        })
+      );
+    new Setting(containerEl)
+      .setName("Style Checkboxes")
+      .setDesc(
+        `Disable this if you want to do your own styling of edit mode checkboxes. This setting does nothing if Hide Markdown Tokens is disabled`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.styleCheckBox).onChange(value => {
+          this.plugin.settings.styleCheckBox = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses();
         })
       );
     containerEl.createEl("h3", {

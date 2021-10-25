@@ -685,6 +685,11 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         ? document.body.addClass("hide-tokens")
         : null
       : document.body.removeClass("hide-tokens");
+    this.settings.styleCheckBox
+      ? !document.body.hasClass("style-check-box")
+        ? document.body.addClass("style-check-box")
+        : null
+      : document.body.removeClass("style-check-box");
     this.settings.markSelection
       ? !document.body.hasClass("style-active-selection")
         ? document.body.addClass("style-active-selection")
