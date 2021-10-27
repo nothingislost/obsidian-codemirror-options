@@ -102,7 +102,7 @@
         img.alt = alt;
         img.title = title;
         var _url, _resolvedUrl;
-        if (/^(app|https):\/\//.test(url)) {
+        if (/^(app|http|https):\/\//.test(url)) {
           _url = url;
         } else {
           _resolvedUrl = window.app.metadataCache.getFirstLinkpathDest(decodeURIComponent(url), "");
