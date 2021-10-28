@@ -232,6 +232,9 @@
       } else {
         /** use lineWidget to insert element */
         replacedWith = stub;
+        // this causes any text selection to immediately stop if the cursor is coming out of a block html element
+        // without this, the line widget will get duplicated on cursor selection. see issue #51
+        if (cm.state.selectingText) cm.state.selectingText();
         var lineWidget_1 = cm.addLineWidget(to.line, el, {
           above: false,
           coverGutter: false,
