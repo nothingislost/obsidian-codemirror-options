@@ -293,6 +293,7 @@ var __assign =
                 name: "stex",
               });
               var noTexMode = texMode["name"] !== "stex";
+              var block = mathLevel > 1 ? "math-block" : "";
               ans += enterMode(stream, state, texMode, {
                 style: "math",
                 skipFirstToken: noTexMode,
@@ -300,11 +301,11 @@ var __assign =
                   return createDummyMode(endTag_1);
                 },
                 exitChecker: createSimpleInnerModeExitChecker(endTag_1, {
-                  style: "formatting formatting-math formatting-math-end math-" + mathLevel,
+                  style: `formatting formatting-math formatting-math-end ${block} math-` + mathLevel,
                 }),
               });
               if (noTexMode) stream.pos += tmp[0].length;
-              ans += " formatting formatting-math formatting-math-begin math-" + mathLevel;
+              ans += ` formatting formatting-math formatting-math-begin ${block} math-` + mathLevel;
               return ans;
             }
           }
@@ -612,7 +613,7 @@ var __assign =
                   stream.eat("|");
                   // console.log(current);
                   if (/\.(jpe?g|png|gif|svg|bmp)/.test(stream.current())) {
-                    state.hmdImage = 1
+                    state.hmdImage = 1;
                     ans += " " + "internal-link-name hmd-image";
                   } else {
                     ans += " " + "internal-link-url";
@@ -622,7 +623,7 @@ var __assign =
                     state.hmdImage = 0;
                     ans += " " + "internal-link-url";
                   } else {
-                  ans += " " + "internal-link-name";
+                    ans += " " + "internal-link-name";
                   }
                 } else {
                   // ans += " " + "internal-link-ref";
