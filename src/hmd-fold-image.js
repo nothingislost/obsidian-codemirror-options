@@ -51,14 +51,18 @@
           url = split.url;
           title = split.title;
           var _matches;
-          if (_matches = url.match(/^([^|]+)\|(.*)$/)) {
-            url = _matches[1]
-            dimensions = _matches[2]
+          if ((_matches = url.match(/^([^|]+)\|(.*)$/))) {
+            url = _matches[1];
+            dimensions = _matches[2];
           }
         }
         {
           // extract the alt
           alt = cm.getRange({ line: lineNo, ch: from.ch + 2 }, { line: lineNo, ch: url_begin.token.start - 1 });
+        }
+        var _altMatches;
+        if ((_altMatches = alt.match(/^(?:([^|]*)\|)?([0-9x]+)$/))) {
+          dimensions = _altMatches[2];
         }
         var img = document.createElement("img");
         var marker = cm.markText(from, to, {
@@ -110,15 +114,15 @@
             _url = window.app.vault.getResourcePath(_resolvedUrl);
           } else {
             _url = "";
-            img.alt = "⚠️"
+            img.alt = "⚠️";
           }
         }
-        
+
         img.setAttribute("data-src", _url);
         if (_resolvedUrl && _resolvedUrl.path) img.setAttribute("data-path", _resolvedUrl.path);
         img.setAttribute("src", _url);
         if (dimensions) {
-          var _dims = dimensions.match(/^([0-9]+)x?([0-9]+)?$/)
+          var _dims = dimensions.match(/^([0-9]+)x?([0-9]+)?$/);
           var width = _dims[1] ? `width: ${_dims[1]}px;` : "";
           var height = _dims[2] ? `height: ${_dims[2]}px;` : "";
           img.setAttribute("style", `${width} ${height}`);
