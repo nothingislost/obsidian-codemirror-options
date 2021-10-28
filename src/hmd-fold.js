@@ -6,17 +6,28 @@
 // You may set `hmdFold.customFolders` option to fold more, where `customFolders` is Array<FolderFunc>
 //
 //
-var ___extends = (this && this.__extends) || (function () {
+
+import { debounce } from "obsidian";
+
+var ___extends = (function () {
   var extendStatics = function (d, b) {
-      extendStatics = Object.setPrototypeOf ||
-          ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-          function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-      return extendStatics(d, b);
+    extendStatics =
+      Object.setPrototypeOf ||
+      ({ __proto__: [] } instanceof Array &&
+        function (d, b) {
+          d.__proto__ = b;
+        }) ||
+      function (d, b) {
+        for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+      };
+    return extendStatics(d, b);
   };
   return function (d, b) {
-      extendStatics(d, b);
-      function __() { this.constructor = d; }
-      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    extendStatics(d, b);
+    function __() {
+      this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
   };
 })();
 
@@ -151,10 +162,20 @@ var ___extends = (this && this.__extends) || (function () {
       this.onViewportChange = function (cm, from, to) {
         _this.startFold(from, to);
       };
+      this.checkForPreview = debounce(
+        function () {
+          document.querySelector("#math-preview")?.addClass("float-win-hidden");
+        },
+        500,
+        true
+      );
       this.onChange = function (cm, changes) {
         var changedMarkers = [];
         for (var _i = 0, changes_1 = changes; _i < changes_1.length; _i++) {
           var change = changes_1[_i];
+          if (change.removed && change.removed.filter(text => text.includes("$")).length) {
+            _this.checkForPreview();
+          }
           var markers = cm.findMarks(change.from, change.to);
           for (var _a = 0, markers_1 = markers; _a < markers_1.length; _a++) {
             var marker = markers_1[_a];
