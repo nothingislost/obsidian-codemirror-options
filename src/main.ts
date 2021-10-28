@@ -146,7 +146,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     if (target.dataset.path) {
       file = this.app.vault.getAbstractFileByPath(target.dataset.path);
       if (!(file instanceof TFile)) return;
-    } else if (/^https/i.test(target.getAttribute("src"))) {
+    } else if (/^http/i.test(target.getAttribute("src"))) {
       file = target.getAttribute("src");
     }
     if (file) this.addContextMenuItem(menu, file);
@@ -798,5 +798,6 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessor);
     this.refreshPanes();
     document.off("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);
+    document.off("contextmenu", `.rendered-widget img:not(.hmd-image)`, this.onImageContextMenu, false);
   }
 }
