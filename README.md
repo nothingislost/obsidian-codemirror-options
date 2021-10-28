@@ -231,6 +231,17 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.5.2
+
+- Additional fixes to Math formatting and layout
+- Updated the `<HTML>` and `<CODE>` button behavior to be less obtrusive
+- Fixed a bug that caused rendered HTML elements to be duplicated in some circumstances
+- The math preview will now properly close when the active expression is deleted
+- Added support for image sizing in markdown images `[100]()`
+- Allowed rendering of images over the plain HTTP:// protocol
+- HTML and Code blocks will no longer collapse when moving the cursor into or near them
+  - The only way to break a HTML or Code block is to click the `<HTML>` or `<CODE>` button
+
 ### 0.5.1
 
 - Added an option to not style rendered edit mode checkboxes

@@ -1,6 +1,6 @@
 {
     "name": "obsidian-codemirror-options",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "Customize the functionality and appearance of Obsidian's edit mode",
     "main": "main.js",
     "scripts": {
