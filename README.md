@@ -231,6 +231,10 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.5.3
+
+- Fixed a regression that was causing widget heights to not be calculated properly, leading to cursor placement issues
+
 ### 0.5.2
 
 - Additional fixes to Math formatting and layout

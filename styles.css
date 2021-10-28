@@ -538,6 +538,12 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 .rendered-code-block-wrapper:hover .CodeMirror-line .CodeMirror-widget {
   display: inline-flex;
 }
+.rendered-html-block-wrapper .CodeMirror-linewidget,
+.rendered-code-block-wrapper .CodeMirror-linewidget {
+  /* this is needed to have CM properly calculate the widget height */
+  /* when using display: block, margins on child elements don't cause the parent to expand */
+  display: grid;
+}
 
 .cm-s-obsidian .CodeMirror-widget :where(.hmd-fold-code-stub, .hmd-fold-html-stub) {
   font-size: 0.7rem;

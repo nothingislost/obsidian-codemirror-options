@@ -233,7 +233,7 @@
         this.lineWidget = lineWidget;
         this.widgetChanged();
       });
-      observer.observe(el, { childList: true, subtree: true, attributes: true });
+      observer.observe($wrapper, { childList: true, subtree: true, attributes: true });
       //-----------------------------
       var $stub = document.createElement("span");
       $stub.className = stubClass + type;
