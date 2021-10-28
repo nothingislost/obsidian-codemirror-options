@@ -490,7 +490,7 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 /* Admonitions have margins by default. We don't need these in edit mode */
 /* You can add the margins back in, if you want, but you'll need to adjust the <CODE> button positioning */
 .rendered-code-block-wrapper .admonition {
-  margin: 0.2em;
+  margin: 0em;
 }
 
 /* END: Style rendered code blocks */
@@ -518,24 +518,37 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 
 /* START: Reset default theme styling of rendered tables */
 
-/* START: Rendered code block <CODE> button styling and placement */
+/* START: Rendered code & html block <CODE> button styling and placement */
 
-.rendered-code-block-wrapper .CodeMirror-line .CodeMirror-widget {
+.rendered-code-block-wrapper .CodeMirror-line .CodeMirror-widget,
+.rendered-html-block-wrapper .CodeMirror-line .CodeMirror-widget {
   position: absolute;
-  right: 2em;
-  top: 0.85em;
-  z-index: 3 !important;
+  left: 5px;
+  top: -1.5em;
+  padding-bottom: 0.5em;
+  z-index: 3;
   line-height: 1.5;
+  display: none;
+}
+.cm-s-obsidian .CodeMirror-linewidget.rendered-html-block,
+.cm-s-obsidian .CodeMirror-linewidget.rendered-code-block {
+  padding: 0 5px;
+}
+.rendered-html-block-wrapper:hover .CodeMirror-line .CodeMirror-widget,
+.rendered-code-block-wrapper:hover .CodeMirror-line .CodeMirror-widget {
+  display: inline-flex;
 }
 
-.rendered-code-block-wrapper .CodeMirror-line .CodeMirror-widget .hmd-fold-code-stub {
-  height: 1.7em;
+.cm-s-obsidian .CodeMirror-widget :where(.hmd-fold-code-stub, .hmd-fold-html-stub) {
   font-size: 0.7rem;
   font-family: var(--font-monospace);
   font-weight: 600;
+  margin: 0;
+  padding: 0em 0.2em;
+  line-height: 1.75em;
 }
 
-.rendered-code-block-wrapper.rendered-query-wrapper .CodeMirror-line .CodeMirror-widget {
+/* .rendered-code-block-wrapper.rendered-query-wrapper .CodeMirror-line .CodeMirror-widget {
   right: 0.1em;
   top: 0.1em;
 }
@@ -548,7 +561,7 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 .rendered-code-block-wrapper.rendered-chart-wrapper .CodeMirror-line .CodeMirror-widget {
   right: 0.2em;
   top: 0.2em;
-}
+} */
 
 /* END: Rendered code block <CODE> button styling and placement */
 

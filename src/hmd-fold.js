@@ -89,10 +89,12 @@ var ___extends = (function () {
       fromPos = { line: fromPos.line, ch: fromPos.ch + ~~chOffset };
       var toPos = marker.find().to;
       toPos = { line: toPos.line, ch: toPos.ch + ~~chOffset };
+      // need to clear before setting the cursor since some markers don't allow the
+      // cursor to be placed next to them
+      marker.clear();
       cm.setCursor(fromPos);
       // cm.setSelection(fromPos, toPos);
       cm.focus();
-      marker.clear();
     });
   }
   exports.breakMark = breakMark;

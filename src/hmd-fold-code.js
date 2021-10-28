@@ -240,6 +240,8 @@
       $stub.textContent = "<CODE>";
       var marker = (info.marker = cm.markText(from, to, {
         replacedWith: $stub,
+        inclusiveLeft: true,
+        inclusiveRight: true,
       }));
       //-----------------------------
       var highlightON = function () {

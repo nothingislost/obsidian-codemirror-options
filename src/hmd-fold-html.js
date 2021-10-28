@@ -201,11 +201,12 @@
       if (!el.tagName.match(this.isolatedTagName || /^$/)) el.addEventListener("click", breakFn, false);
       var replacedWith;
       var marker;
+      var isBlock = false;
       if (inlineMode) {
         /** put HTML inline */
         var span = document.createElement("span");
         span.setAttribute("class", "hmd-fold-html rendered-widget");
-        span.setAttribute("style", "display: inline-block");
+        span.setAttribute("style", "display: inline-flex");
         span.appendChild(stub);
         span.appendChild(el);
 
@@ -230,6 +231,7 @@
           });
         }, 0);
       } else {
+        isBlock = true;
         /** use lineWidget to insert element */
         replacedWith = stub;
         // this causes any text selection to immediately stop if the cursor is coming out of a block html element
@@ -238,10 +240,12 @@
         var lineWidget_1 = cm.addLineWidget(to.line, el, {
           above: false,
           coverGutter: false,
-          className: "rendered-html rendered-widget",
+          className: "rendered-html rendered-html-block rendered-widget",
           noHScroll: false,
           showIfHidden: false,
         });
+        var wrapperLine = from.line;
+        cm.addLineClass(wrapperLine, "wrap", "rendered-html-block-wrapper");
         // var highlightON_1 = function () {
         //   return (stub.className = stubClassHighlight);
         // };
@@ -259,6 +263,7 @@
           marker.on("clear", function () {
             watcher.stop();
             lineWidget_1.clear();
+            cm.removeLineClass(wrapperLine, "wrap", "rendered-html-block-wrapper");
             // el.removeEventListener("mouseenter", highlightON_1, false);
             // el.removeEventListener("mouseleave", highlightOFF_1, false);
           });
@@ -266,6 +271,9 @@
       }
       marker = cm.markText(from, to, {
         replacedWith: replacedWith,
+        atomic: false,
+        inclusiveLeft: isBlock,
+        inclusiveRight: isBlock,
       });
       return marker;
     };
