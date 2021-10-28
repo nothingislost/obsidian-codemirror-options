@@ -34,7 +34,7 @@ import gte from "semver/functions/gte";
     if (!mathBeginRE.test(token.type)) return null;
     var cm = stream.cm;
     var line = stream.lineNo;
-    var maySpanLines = /math-2\b/.test(token.type); // $$ may span lines!
+    var maySpanLines = /math-block\b/.test(token.type); // $$ may span lines!
     var tokenLength = maySpanLines ? 2 : 1; // "$$" or "$"
     // CodeMirror GFM mode split "$$" into two tokens, so do a extra check.
     if (tokenLength == 2 && token.string.length == 1) {
@@ -75,7 +75,7 @@ import gte from "semver/functions/gte";
       return null;
     }
     // Now let's make a math widget!
-    var isDisplayMode = tokenLength > 1 && from.ch == 0 && (noEndingToken || to.ch >= cm.getLine(to.line).length);
+    var isDisplayMode = tokenLength > 1; // && from.ch == 0 && (noEndingToken || to.ch >= cm.getLine(to.line).length);
     var marker = insertMathMark(cm, from, to, expr, tokenLength, isDisplayMode);
     foldMathAddon.editingExpr = null; // try to hide preview
     return marker;
