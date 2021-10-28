@@ -335,7 +335,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
-          math: this.settings.renderCode,
+          math: this.settings.renderMath,
         });
       },
     });
@@ -351,7 +351,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
-          math: this.settings.renderCode,
+          math: this.settings.renderMath,
         });
       },
     });
@@ -367,7 +367,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
-          math: this.settings.renderCode,
+          math: this.settings.renderMath,
         });
       },
     });
@@ -383,7 +383,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
-          math: this.settings.renderCode,
+          math: this.settings.renderMath,
         });
       },
     });
@@ -421,7 +421,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           link: this.settings.foldLinks,
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
-          math: this.settings.renderCode,
+          math: this.settings.renderMath,
         });
       },
     });
