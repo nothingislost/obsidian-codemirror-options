@@ -524,11 +524,13 @@ body.cm-render-banners div[data-banner] .CodeMirror-vscrollbar::before {
   background: var(--banner);
   background-size: cover;
   background-position: var(--banner_x) var(--banner_y);
-  -webkit-mask-image: linear-gradient(to bottom, black, transparent);
 }
 body.cm-render-banners div[data-banner] .CodeMirror-gutter.CodeMirror-linenumbers,
 .mod-root .CodeMirror-gutter.CodeMirror-foldgutter {
   background: transparent;
+}
+body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirror-vscrollbar::before {
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent);
 }
 
 /* END: Banner rendering */

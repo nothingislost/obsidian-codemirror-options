@@ -47,7 +47,7 @@ function procLine(
     const scrollEl = display?.scrollbars?.vert;
     const approvedAttrs = plugin.settings.allowedYamlKeys.split(",").map(item => item.trim());
     if (plugin.settings.renderBanner) {
-      approvedAttrs.push("banner_x", "banner_y", "banner", "banner-height");
+      approvedAttrs.push("banner_x", "banner_y", "banner", "banner-height", "banner-style");
     }
     // try and parse the frontmatter into yaml key/value pairs
     let kv;

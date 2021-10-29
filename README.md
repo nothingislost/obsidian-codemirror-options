@@ -281,14 +281,18 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 # Shiny new things
 
 - Render Banners in edit mode
-  - This new option will render banners in edit mode in the same way that the Banners plugin renders them in preview mode.
+  - This option will render banners in edit mode in the same way that the Banners plugin renders them in preview mode
+  - Two new front matter attributes have been added but will currently only be respected in edit mode
+    - banner-height: [measurement]
+    - banner-style: [gradient|solid]
+
 - Use Front Matter variables as CSS selectors or as CSS variables
   - The Container Attributes feature will now parse front matter variables and add them to `div.view-content` as CSS variables as well as data attributes.
   - This allows you to use front matter variables as selectors or as values.
   - Since the variables and attributes are applied on `div.view-content`, you can use them to style both edit and preview modes
   - Variables must be registered within the plugin settings page before they can be used in CSS
     - This is to prevent polluting the DOM with everything inside of front matter
-  - Front Matter variables with values that look like file paths will converted to the full `app://...` path so that the files can be referenced within CSS
+  - Front Matter variables with values that look like file paths will be converted to the full `app://...` path so that the files can be referenced within CSS
     - This is useful for setting a local vault image as the background-image for a certain element on the page
 
 # Improvements
