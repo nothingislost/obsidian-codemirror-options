@@ -67,7 +67,44 @@ Rendering
   - Rendering is done by the built-in Obsidian Mathjax renderer and has all of the same features and settings
 - Mathjax Preview
   - When editing a Mathjax element, a draggable preview modal will appear showing you what the rendered Mathjax will look like
+
+###### Banners
+- Render banners in edit mode in the same way that the Banners plugin renders them in preview mode.
+
 #### Visual Styling
+### Container Attributes
+- This option applies data attributes to all CodeMirror line divs that describe the child elements contained within the line
+- Think of this like Contextual Typography for Edit Mode
+- This option currently applies the following attributes to each CodeMirror line
+  - [data-tag-name="<html_element_type>"]
+    - Currently supported HTML tags: ol, ul, h1-h6, code, frontmatter
+  - [data-heading="<the_full_text_of_any_heading_found>"]
+  - [data-hashtags="<space_delimited_list_of_all_tags_found>"]
+
+#### Front Matter CSS
+This feature will parse front matter variables and add them to `div.view-content` as CSS variables as well as data attributes.
+
+This allows you to use front matter variables as selectors or as values as seen in the snippet below.
+
+```yaml
+---
+custom-font-size: 1em
+text-color: pink
+tags: [codemirror, plugin, demo]
+---
+```
+
+```css
+div[data-tags*="demo"] .CodeMirror-line,
+div[data-tags*="demo"] p {
+  font-size: var(--custom-font-size);
+}
+```
+
+Since the variables and attributes are applied on `div.view-content`, you can use them to style both edit and preview modes.
+
+Variables must be registered within the plugin settings page before they can be used in CSS. This is to prevent polluting the DOM with everything inside of front matter.
+
 ### Inline Images
 This adds support for inline images in edit mode, similar to Ozan's Image in Editor plugin. The main difference with this implementation is that it renders the image inline, and hides the source text. When clicking on the image, the image will collapse back down to its source text.
 
@@ -238,6 +275,30 @@ To manually install
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
+
+### 0.6.0
+
+# Shiny new things
+
+- Render Banners in edit mode
+  - This new option will render banners in edit mode in the same way that the Banners plugin renders them in preview mode.
+- Use Front Matter variables as CSS selectors or as CSS variables
+  - The Container Attributes feature will now parse front matter variables and add them to `div.view-content` as CSS variables as well as data attributes.
+  - This allows you to use front matter variables as selectors or as values.
+  - Since the variables and attributes are applied on `div.view-content`, you can use them to style both edit and preview modes
+  - Variables must be registered within the plugin settings page before they can be used in CSS
+    - This is to prevent polluting the DOM with everything inside of front matter
+  - Front Matter variables with values that look like file paths will converted to the full `app://...` path so that the files can be referenced within CSS
+    - This is useful for setting a local vault image as the background-image for a certain element on the page
+
+# Improvements
+
+- Allowed for longer rendering times on rendered Dataview & Embedded Search widgets
+  - This should help avoid any rendering issues on initial application load
+- General improvements to the UX of rendered code blocks and HTML
+  - Rendered block elements should no longer break open when the cursor is placed next to them or when a selection touches them
+  - Restyled and repositioned the `<CODE>` and `<HTML>` buttons
+- The math preview will now properly close when the active expression is deleted
 
 ### 0.5.3
 

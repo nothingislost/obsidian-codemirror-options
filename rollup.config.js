@@ -36,6 +36,7 @@ export default {
     copy({
       targets: [
         { src: './manifest.json', dest: './dist/' },
+        { src: './manifest-beta.json', dest: './dist/' },
         { src: './styles.css', dest: './dist/' }
       ], flatten: false
     })
