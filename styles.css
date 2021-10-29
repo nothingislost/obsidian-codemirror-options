@@ -469,20 +469,6 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   padding: 0;
 }
 
-/* .rendered-code-block-wrapper .CodeMirror-linebackground {
-  background: none !important;
-}
-
-.rendered-code-block-wrapper .HyperMD-codeblock {
-  border: none !important;
-} */
-
-/* Make sure the <CODE> button is on top of the rendered element */
-.cm-s-obsidian .rendered-code-block-wrapper .CodeMirror-linewidget,
-.cm-s-obsidian .rendered-code-block-wrapper pre.CodeMirror-line {
-  z-index: unset !important;
-}
-
 /* Remove the default code block background and let the rendered element set it */
 .rendered-code-block-wrapper .HyperMD-codeblock-bg {
   opacity: 0;
