@@ -1,17 +1,24 @@
+import yaml from "js-yaml";
+import { debounce } from "obsidian";
+import ObsidianCodeMirrorOptionsPlugin from "./main";
+
 export function onRenderLine(cm: CodeMirror.Editor, line: CodeMirror.LineHandle, el: HTMLElement) {
-  // setTimeout here since the renderLine event is emitted before the element is added to the DOM
-  // if we don't wait, we won't know who our parent is
   const parentElement = el.parentElement;
   if (!parentElement)
     el.addEventListener(
       "DOMNodeInserted",
-      (event: MutationEvent) => procLine(cm, line, el, event.relatedNode as HTMLElement),
+      (event: MutationEvent) => procLine(cm, line, el, event.relatedNode as HTMLElement, this),
       { once: true }
     );
-  // we can't do anything with a parentless element
 }
 
-function procLine(cm: CodeMirror.Editor, line: CodeMirror.LineHandle, el: HTMLElement, parentEl: HTMLElement) {
+function procLine(
+  cm: CodeMirror.Editor,
+  line: CodeMirror.LineHandle,
+  el: HTMLElement,
+  parentEl: HTMLElement,
+  plugin: ObsidianCodeMirrorOptionsPlugin
+) {
   // for some reason, codemirror or hmd skips putting elements in a wrapping div
   // unsure what causes this to happen but try and account for it by falling back
   // if the parent is the root codemirror-code element
@@ -30,6 +37,55 @@ function procLine(cm: CodeMirror.Editor, line: CodeMirror.LineHandle, el: HTMLEl
     .join(" ")
     .split(" ")
     .filter((v, i, a) => a.indexOf(v) === i);
+
+  // raise yaml frontmatter attributes up as CSS vars and attrs
+  if (childElementClasses.contains("hmd-frontmatter") && line.text !== "---") {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    const display = cm.display as any;
+    const viewEl = display?.wrapper?.parentElement?.parentElement;
+    const scrollEl = display?.scrollbars?.vert;
+    const approvedAttrs = plugin.settings.allowedYamlKeys.split(",").map(item => item.trim());
+    if (plugin.settings.renderBanner) {
+      approvedAttrs.push("banner_x", "banner_y", "banner", "banner-height");
+    }
+    // try and parse the frontmatter into yaml key/value pairs
+    let kv;
+    try {
+      const parsedYaml = yaml.load(line.text);
+      kv = Object.entries(parsedYaml).map(([key, value]) => ({ key, value }));
+    } catch {
+      kv = [];
+    }
+
+    kv.forEach(item => {
+      // if the key is not registered, skip
+      if (!approvedAttrs.includes(item.key)) return;
+
+      // if the value looks like a file, try and resolve the full path
+      if (/\.(jpg|jpeg|md|png|gif)$/.test(item.value)) {
+        let file, filePath;
+        try {
+          (file = plugin.app.metadataCache.getFirstLinkpathDest(decodeURIComponent(item.value), "")) &&
+            (filePath = plugin.app.vault.getResourcePath(file));
+        } catch {}
+        if (file && filePath) {
+          viewEl.style.setProperty(`--${item.key}`, `url(${filePath})`);
+        } else {
+          viewEl.style.setProperty(`--${item.key}`, `${item.value}`);
+        }
+      } else {
+        // special handling for the banner plugin to turn decimals into percents
+        if (/^banner_[xy]$/.test(item.key)) {
+          item.value = `${item.value * 100}%`;
+        }
+        viewEl.style.setProperty(`--${item.key}`, `${item.value}`);
+      }
+      try {
+        viewEl.setAttribute(`data-${item.key}`, item.value);
+      } catch {}
+    });
+  }
 
   // look for anything labeled as a header
   // extract its full text value (minus the initial hash)

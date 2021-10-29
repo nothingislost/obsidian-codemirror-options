@@ -180,33 +180,47 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       onLoadFile(old) {
         // old is the original onLoadFile function
         return function (file) {
-          // NOTE: be careful with this code, if any part of it fails, it will block all other
-          // plugins from loading files.
-          const previewEl = document.querySelector("#math-preview") as HTMLElement;
-          if (previewEl && !previewEl.hasClass("float-win-hidden")) {
-            previewEl.addClass("float-win-hidden");
-          }
-          const cm = this.sourceMode?.editor.cm;
-          if (cm) {
-            cm.state.fileName = file.path;
-            cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
-            cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
-          }
+          // TODO: emit a trigger and create event handlers instead of performing direct actions here
+          try {
+            const previewEl = document.querySelector("#math-preview") as HTMLElement;
+            if (previewEl && !previewEl.hasClass("float-win-hidden")) {
+              previewEl.addClass("float-win-hidden");
+            }
+            const cm = this.sourceMode?.editor.cm;
+            if (cm) {
+              const viewEl = cm.display?.wrapper?.parentElement?.parentElement;
+              if (viewEl) {
+                Object.keys(viewEl.dataset).forEach(el => viewEl.removeAttribute("data-" + el));
+                viewEl.style = null;
+              }
+              cm.state.fileName = file.path;
+              cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
+              cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
+            }
+          } catch {}
           return old.call(this, file); // call the orignal function and bind the current scope to it
         };
       },
       // @ts-ignore
       onClose(old) {
         return function () {
-          const cm = this.sourceMode?.editor.cm;
-          if (cm) {
-            cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
-            cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
-          }
-          const previewEl = document.querySelector("#math-preview") as HTMLElement;
-          if (previewEl && !previewEl.hasClass("float-win-hidden")) {
-            previewEl.addClass("float-win-hidden");
-          }
+          // TODO: emit a trigger and create event handlers instead of performing direct actions here
+          try {
+            const cm = this.sourceMode?.editor.cm;
+            if (cm) {
+              const viewEl = cm.display?.wrapper?.parentElement?.parentElement;
+              if (viewEl) {
+                Object.keys(viewEl.dataset).forEach(el => viewEl.removeAttribute("data-" + el));
+                viewEl.style = null;
+              }
+              cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
+              cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
+            }
+            const previewEl = document.querySelector("#math-preview") as HTMLElement;
+            if (previewEl && !previewEl.hasClass("float-win-hidden")) {
+              previewEl.addClass("float-win-hidden");
+            }
+          } catch {}
           return old.call(this);
         };
       },
@@ -491,7 +505,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       callback: () => {
         this.settings.containerAttributes = !this.settings.containerAttributes;
         this.saveData(this.settings);
-        this.updateCodeMirrorHandlers("renderLine", onRenderLine, this.settings.containerAttributes, true);
+        this.updateCodeMirrorHandlers("renderLine", this.onRenderLineBound, this.settings.containerAttributes, true);
       },
     });
     this.addCommand({
@@ -671,9 +685,12 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         dataview: this.settings.renderDataview,
       });
       if (this.settings.renderMathPreview) init_math_preview(cm);
-      if (this.settings.containerAttributes) this.updateCodeMirrorHandlers("renderLine", onRenderLine, true, true);
+      if (this.settings.containerAttributes)
+        this.updateCodeMirrorHandlers("renderLine", this.onRenderLineBound, true, true);
     });
   }
+
+  onRenderLineBound = onRenderLine.bind(this);
 
   onImageClick = args => {
     args.breakMark(args.editor, args.marker);
@@ -725,6 +742,11 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         ? document.body.addClass("cm-collapse-external-links")
         : null
       : document.body.removeClass("cm-collapse-external-links");
+    this.settings.renderBanner
+      ? !document.body.hasClass("cm-render-banners")
+        ? document.body.addClass("cm-render-banners")
+        : null
+      : document.body.removeClass("cm-render-banners");
     this.settings.enableCMinPreview
       ? this.registerMarkdownPostProcessor(this.mdProcessor)
       : MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessor);
@@ -743,14 +765,14 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("hmdTableAlign", false);
       cm.setOption("hmdClick", false);
       cm.setOption("cursorBlinkRate", 530);
-      cm.off("renderLine", onRenderLine);
+      cm.off("renderLine", this.onRenderLineBound);
       unload_math_preview(cm);
       // cm.off("imageClicked", this.onImageClick);
       cm.refresh();
     });
-    document.body.removeClass("style-active-selection");
-    document.body.removeClass("hide-tokens");
-    document.body.removeClass("fallback-highlighting");
+    document.body.classList.remove("style-active-selection", "style-check-box", "hide-tokens", "fallback-highlighting");
+    document.body.classList.remove("cm-render-banners", "cm-collapse-external-links", "cm-render-images-inline");
+    document.body.classList.remove("unified-cm-highlighting", "cm-show-copy-button-on-pre", "cm-show-line-nums");
   }
 
   refreshPanes() {

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import ObsidianCodeMirrorOptionsPlugin from "./main";
 import { App, PluginSettingTab, Setting } from "obsidian";
-import { onRenderLine } from "./container-attributes";
 import { init_math_preview, unload_math_preview } from "./math-preview";
 
 export class ObsidianCodeMirrorOptionsSettings {
@@ -31,7 +30,9 @@ export class ObsidianCodeMirrorOptionsSettings {
   renderDataview: boolean;
   renderMath: boolean;
   renderMathPreview: boolean;
+  renderBanner: boolean;
   styleCheckBox: boolean;
+  allowedYamlKeys: string;
 }
 
 export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
@@ -60,7 +61,9 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   renderDataview: false,
   renderMath: false,
   renderMathPreview: false,
+  renderBanner: true,
   styleCheckBox: true,
+  allowedYamlKeys: "document-font-size",
   tokenList: "em|strong|strikethrough|code|linkText|task|internalLink|highlight",
 };
 
@@ -334,6 +337,19 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           });
         })
       );
+    new Setting(containerEl)
+      .setName("Render Banners")
+      .setDesc(`This settings requires that the "Container Attributes" setting is enabled`)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderBanner).onChange(value => {
+          this.plugin.settings.renderBanner = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses();
+          this.app.workspace.iterateCodeMirrors(cm => {
+            cm.refresh();
+          });
+        })
+      );
 
     containerEl.createEl("h3", {
       text: "Visual Styling",
@@ -348,9 +364,22 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.containerAttributes).onChange(value => {
           this.plugin.settings.containerAttributes = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateCodeMirrorHandlers("renderLine", onRenderLine, value, true);
+          this.plugin.updateCodeMirrorHandlers("renderLine", this.plugin.onRenderLineBound, value, true);
         })
       );
+    const frontMatterValuesSettings = new Setting(this.containerEl)
+      .setName("⚠️ Allowed Front Matter Keys")
+      .setDesc(`A comma seperated list of front matter keys to turn into CSS variables and data attributes`)
+      .setClass("frontmatter-key-list-setting")
+      .addText(textfield => {
+        textfield.setPlaceholder(String(""));
+        textfield.inputEl.type = "text";
+        textfield.setValue(String(this.plugin.settings.allowedYamlKeys));
+        textfield.onChange(async value => {
+          this.plugin.settings.allowedYamlKeys = value;
+          this.plugin.saveData(this.plugin.settings);
+        });
+      });
     new Setting(containerEl)
       .setName("Auto Align Tables")
       .setDesc(

@@ -502,7 +502,36 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   padding: 0px;
 }
 
-/* START: Reset default theme styling of rendered tables */
+/* START: Banner rendering */
+
+body.cm-render-banners div[data-banner] .CodeMirror-code {
+  margin-top: var(--banner-height);
+  margin-bottom: calc(-1 * var(--banner-height));
+}
+/* the style below is needed to ensure the banner isn't removed when there is
+   no vertical scroll bar */
+body.cm-render-banners div[data-banner] .CodeMirror-vscrollbar {
+  display: block;
+  bottom: 0;
+}
+body.cm-render-banners div[data-banner] .CodeMirror-vscrollbar::before {
+  content: "";
+  height: var(--banner-height);
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--banner);
+  background-size: cover;
+  background-position: var(--banner_x) var(--banner_y);
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent);
+}
+body.cm-render-banners div[data-banner] .CodeMirror-gutter.CodeMirror-linenumbers,
+.mod-root .CodeMirror-gutter.CodeMirror-foldgutter {
+  background: transparent;
+}
+
+/* END: Banner rendering */
 
 /* START: Rendered code & html block <CODE> button styling and placement */
 
