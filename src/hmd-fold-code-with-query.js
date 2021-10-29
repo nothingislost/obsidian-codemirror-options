@@ -44,7 +44,7 @@
         });
         // we naively wait here because search query results are async
         // if we clean up too fast, we don't get results
-      }, 5000);
+      }, 15000);
     } else {
       queryEl.innerText = "Error: Unable to find the Global Search plugin";
     }

@@ -31,7 +31,7 @@ import gte from "semver/functions/gte";
       setTimeout(() => {
         ctx._children[0].unload();
         ctx.unload();
-      }, 500);
+      }, 15000);
       return {
         element: el,
         asyncRenderer: null,
