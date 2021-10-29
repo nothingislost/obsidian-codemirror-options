@@ -42,6 +42,7 @@ Horizontal Rule (HR)
 >  > nested block quote
 
 #### Code Rendering
+![2021-10-22 13 11 32](https://user-images.githubusercontent.com/89109712/139353797-4e9bdd1c-52ea-417e-89a4-7311b04c0a55.gif)
 ##### HTML Rendering
 - HTML tags will be passed through DOMPurify and then rendered inline. You can click into the rendered element to see and edit the HTML source.
 - The stock Obsidian DOMPurify settings are enforced and this plugin should render the same subset of HTML that is supported, natively, by preview mode.
@@ -55,10 +56,17 @@ Horizontal Rule (HR)
 - **Limitations**
   - Embedded query results are only calculated at initial render time. They will not continue to update over time like they do in preview mode. If you want to refresh a query, you can click into the query and back out to force a refresh.
 ###### Embedded Search Queries
-- Renders
+- Renders Dataview blocks in edit mode using the Dataview plugin
 - **Limitations**
 	- Embedded query results are only calculated at initial render time. They will not continue to update over time like they do in preview mode. If you want to refresh a query, you can click into the query and back out to force a refresh.
-
+###### Math
+![2021-10-24 13 45 26](https://user-images.githubusercontent.com/89109712/139353712-622d9f53-cb69-49dd-a24d-8d14071d497e.gif)
+- Inline Mathjax 
+Rendering
+  - Mathjax inside of $ $ or $$ $$ will now render directly in edit mode. Click into the rendered element to edit it
+  - Rendering is done by the built-in Obsidian Mathjax renderer and has all of the same features and settings
+- Mathjax Preview
+  - When editing a Mathjax element, a draggable preview modal will appear showing you what the rendered Mathjax will look like
 #### Visual Styling
 ### Inline Images
 This adds support for inline images in edit mode, similar to Ozan's Image in Editor plugin. The main difference with this implementation is that it renders the image inline, and hides the source text. When clicking on the image, the image will collapse back down to its source text.
