@@ -1,5 +1,4 @@
-import yaml from "js-yaml";
-import { debounce } from "obsidian";
+import { parseYaml } from "obsidian";
 import ObsidianCodeMirrorOptionsPlugin from "./main";
 
 export function onRenderLine(cm: CodeMirror.Editor, line: CodeMirror.LineHandle, el: HTMLElement) {
@@ -44,7 +43,6 @@ function procLine(
     //@ts-ignore
     const display = cm.display as any;
     const viewEl = display?.wrapper?.parentElement?.parentElement;
-    const scrollEl = display?.scrollbars?.vert;
     const approvedAttrs = plugin.settings.allowedYamlKeys.split(",").map(item => item.trim());
     if (plugin.settings.renderBanner) {
       approvedAttrs.push("banner_x", "banner_y", "banner", "banner-height", "banner-style");
@@ -52,7 +50,7 @@ function procLine(
     // try and parse the frontmatter into yaml key/value pairs
     let kv;
     try {
-      const parsedYaml = yaml.load(line.text);
+      const parsedYaml = parseYaml(line.text);
       kv = Object.entries(parsedYaml).map(([key, value]) => ({ key, value }));
     } catch {
       kv = [];
