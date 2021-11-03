@@ -4,6 +4,7 @@
 // POWERPACK for "addon/fold-code"
 //
 // This module provides `ChartRenderer` for FoldCode addon
+import { Component } from "obsidian";
 
 (function (mod) {
   mod(null, {}, CodeMirror, HyperMD.Fold, HyperMD.FoldCode);
@@ -16,14 +17,39 @@
   };
   var ChartRenderer = function (code, info) {
     var el = document.createElement("div");
+    var ctx = new Component();
     if (dependencyCheck()) {
-      window.app.plugins.getPlugin("obsidian-charts").postprocessor(code, el);
+      var asyncRenderer = () => {
+        try {
+          window.app.plugins.getPlugin("obsidian-charts").postprocessor(code, el, ctx);
+          ctx.load();
+          // el = ctx._children[0].containerEl;
+        } catch (error) {
+          el.innerText = "Failed to render Chart: " + error;
+        }
+      };
     } else {
       el.innerText = "Error: Unable to find the Obsidian Charts plugin";
     }
+    // charts have an element detach listener that causes charts to disappear when they leave
+    // the codemirror viewport. this redraw function forces them to redraw once they're back
+    // in the visible viewport
+    info.redraw = function () {
+      try {
+        ctx._children[0].chart.attached = true;
+        ctx._children[0].chart.resize();
+      } catch {}
+    };
+    function unload() {
+      ctx._children[0].unload();
+      ctx.unload();
+      ctx._children[0] = null;
+      ctx._children = null;
+    }
+    info.unload = unload;
     return {
       element: el,
-      asyncRenderer: null,
+      asyncRenderer: asyncRenderer,
     };
   };
   exports.ChartRenderer = ChartRenderer;
