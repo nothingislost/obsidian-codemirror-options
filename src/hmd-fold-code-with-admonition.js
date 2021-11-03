@@ -4,7 +4,7 @@
 // POWERPACK for "addon/fold-code"
 //
 // This module provides `AdmonitionRenderer` for FoldCode addon
-
+import { Component } from "obsidian";
 import gte from "semver/functions/gte";
 
 (function (mod) {
@@ -19,15 +19,23 @@ import gte from "semver/functions/gte";
     const adType = info.lang.substring(3);
     var el = document.createElement("div");
     var asyncRenderer;
+    var ctx = new Component();
+    ctx.sourcePath = info.editor.state.fileName;
     if (dependencyCheck()) {
-      asyncRenderer = () => {
+      asyncRenderer = async () => {
         try {
-          window.app.plugins
-            .getPlugin("obsidian-admonition")
-            .postprocessor(adType, code, el, info.editor.state.fileName);
+          window.app.plugins.getPlugin("obsidian-admonition").postprocessor(adType, code, el, ctx);
+          ctx.load();
         } catch (error) {
           el.innerText = "Failed to render Admonition: " + error;
         }
+        function unload() {
+          ctx._children[0].unload();
+          ctx.unload();
+          ctx._children[0] = null;
+          ctx._children = null;
+        }
+        info.unload = unload;
       };
     } else {
       el.innerText = "Error: Unable to find the Admonitions plugin or Admonition version not 6.3.6 or higher";
