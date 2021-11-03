@@ -33,18 +33,23 @@
       // Sanitize the HTML to make sure there's no funny business
       window.DOMPurify.sanitize(queryEl, purifySettings);
       renderer.owner.postProcess({ el: queryEl }, promises, renderer.frontmatter);
+      var targetChild;
+      Array.from(renderer.owner._children).forEach(child => {
+        if (child.containerEl === queryEl.firstChild) {
+          targetChild = child;
+        }
+      });
       // But wait... we have to clean up after ourselves so that we don't cause a memory leak
       // We do so by removing the node we just created from the preview mode's child list
-      setTimeout(() => {
-        renderer.owner._children.forEach(child => {
-          if (child.containerEl === queryEl.firstChild) {
-            child.unload();
-            previewMode.removeChild(child);
-          }
-        });
-        // we naively wait here because search query results are async
-        // if we clean up too fast, we don't get results
-      }, 15000);
+      function unload() {
+        previewMode.removeChild(targetChild);
+        renderer.owner._children.remove(targetChild);
+        targetChild.unload();
+        targetChild = null;
+      }
+      info.unload = unload;
+      // we naively wait here because search query results are async
+      // if we clean up too fast, we don't get results
     } else {
       queryEl.innerText = "Error: Unable to find the Global Search plugin";
     }
