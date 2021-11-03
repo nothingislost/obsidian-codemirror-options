@@ -506,8 +506,13 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 
 body.cm-render-banners div[data-banner] .CodeMirror-code {
   margin-top: var(--banner-height);
-  margin-bottom: calc(-1 * var(--banner-height));
+  /* margin-bottom: calc(-1 * var(--banner-height)); */
 }
+
+/* body.cm-render-banners div[data-banner] .CodeMirror-lines>div>div:last-child {
+  margin-bottom: calc(-1 * var(--banner-height));
+} */
+
 /* the style below is needed to ensure the banner isn't removed when there is
    no vertical scroll bar */
 body.cm-render-banners div[data-banner] .CodeMirror-vscrollbar {

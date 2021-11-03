@@ -31,6 +31,8 @@ export class ObsidianCodeMirrorOptionsSettings {
   renderMath: boolean;
   renderMathPreview: boolean;
   renderBanner: boolean;
+  renderTasks: boolean;
+  showBacklinks: boolean;
   styleCheckBox: boolean;
   allowedYamlKeys: string;
 }
@@ -61,7 +63,9 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   renderDataview: false,
   renderMath: false,
   renderMathPreview: false,
-  renderBanner: true,
+  renderBanner: false,
+  renderTasks: false,
+  showBacklinks: false,
   styleCheckBox: true,
   allowedYamlKeys: "document-font-size",
   tokenList: "em|strong|strikethrough|code|linkText|task|internalLink|highlight",
@@ -289,6 +293,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             chart: this.plugin.settings.renderChart,
             query: this.plugin.settings.renderQuery,
             dataview: this.plugin.settings.renderDataview,
+            tasks: this.plugin.settings.renderTasks,
           });
         })
       );
@@ -304,6 +309,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             chart: this.plugin.settings.renderChart,
             query: this.plugin.settings.renderQuery,
             dataview: this.plugin.settings.renderDataview,
+            tasks: this.plugin.settings.renderTasks,
           });
         })
       );
@@ -319,6 +325,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             chart: this.plugin.settings.renderChart,
             query: this.plugin.settings.renderQuery,
             dataview: this.plugin.settings.renderDataview,
+            tasks: this.plugin.settings.renderTasks,
           });
         })
       );
@@ -334,6 +341,23 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             chart: this.plugin.settings.renderChart,
             query: this.plugin.settings.renderQuery,
             dataview: this.plugin.settings.renderDataview,
+            tasks: this.plugin.settings.renderTasks,
+          });
+        })
+      );
+    new Setting(containerEl)
+      .setName("Render Tasks")
+      .setDesc(``)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderTasks).onChange(value => {
+          this.plugin.settings.renderTasks = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFoldCode", {
+            admonition: this.plugin.settings.renderAdmonition,
+            chart: this.plugin.settings.renderChart,
+            query: this.plugin.settings.renderQuery,
+            dataview: this.plugin.settings.renderDataview,
+            tasks: this.plugin.settings.renderTasks,
           });
         })
       );
@@ -355,6 +379,19 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       text: "Visual Styling",
     });
     new Setting(containerEl)
+      .setName("Show Backlinks in Editor")
+      .setDesc(`Append a backlinks component to the footer of edit mode documents`)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.showBacklinks).onChange(value => {
+          this.plugin.settings.showBacklinks = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.settings.showBacklinks
+            ? this.plugin.addBacklinksImmediately()
+            : this.plugin.removeBacklinksImmediately();
+          // this.plugin.updateCodeMirrorHandlers("renderLine", this.plugin.onRenderLineBound, value, true);
+        })
+      );
+    new Setting(containerEl)
       .setName("Container Attributes")
       .setDesc(
         `Apply data attributes to the CodeMirror line div elements that describe the contained child elements. Think of
@@ -369,7 +406,9 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       );
     const frontMatterValuesSettings = new Setting(this.containerEl)
       .setName("⚠️ Allowed Front Matter Keys")
-      .setDesc(`A comma seperated list of front matter keys to turn into CSS variables and data attributes`)
+      .setDesc(
+        `A comma seperated list of front matter keys to turn into CSS variables and data attributes. This setting requires that the Container Attributes setting is enabled.`
+      )
       .setClass("frontmatter-key-list-setting")
       .addText(textfield => {
         textfield.setPlaceholder(String(""));
