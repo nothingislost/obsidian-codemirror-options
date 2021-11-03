@@ -276,6 +276,20 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.7.0
+
+# Shiny new things
+
+- Show backlinks in the edit mode footer
+- Render Tasks (from the Tasks plugin) in edit mode
+
+# Improvements
+
+- Rendered code blocks in edit mode now have proper lifecycle management
+  - This means that rendered code blocks will now update in real time without the need to click into the block and rerender
+- Admonitions in edit mode will now properly render nested code blocks
+  - This means you can render things like Tasks or Charts inside an Admonition
+
 ### 0.6.0
 
 # Shiny new things

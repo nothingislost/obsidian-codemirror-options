@@ -591,6 +591,31 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       },
     });
     this.addCommand({
+      id: "toggle-render-tasks",
+      name: "Toggle Render Tasks",
+      callback: () => {
+        this.settings.renderTasks = !this.settings.renderTasks;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFoldCode", {
+          admonition: this.settings.renderAdmonition,
+          chart: this.settings.renderChart,
+          query: this.settings.renderQuery,
+          dataview: this.settings.renderDataview,
+          tasks: this.settings.renderTasks,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-backlinks-in-editor",
+      name: "Toggle Backlinks in Editor",
+      callback: () => {
+        this.settings.showBacklinks = !this.settings.showBacklinks;
+        this.saveData(this.settings);
+        this.settings.showBacklinks ? this.addBacklinksImmediately() : this.removeBacklinksImmediately();
+      },
+    });
+    this.addCommand({
       id: "toggle-container-attributes",
       name: "Toggle Container Attributes",
       callback: () => {
