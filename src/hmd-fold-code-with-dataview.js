@@ -28,10 +28,13 @@ import gte from "semver/functions/gte";
       }
       ctx.load();
       el = ctx._children[0].containerEl;
-      setTimeout(() => {
+      function unload() {
         ctx._children[0].unload();
         ctx.unload();
-      }, 15000);
+        ctx._children[0] = null;
+        ctx._children = null;
+      }
+      info.unload = unload;
       return {
         element: el,
         asyncRenderer: null,
