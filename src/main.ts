@@ -18,6 +18,7 @@ import "./hmd-fold-code-with-admonition";
 import "./hmd-fold-code-with-chart";
 import "./hmd-fold-code-with-query";
 import "./hmd-fold-code-with-dataview";
+import "./hmd-fold-code-with-tasks";
 import "./hmd-fold-math";
 import "./hmd-table-align";
 
@@ -43,6 +44,11 @@ import { around } from "monkey-around";
 declare module "obsidian" {
   interface MarkdownSourceView {
     attachDomEvents(): void;
+  }
+  export interface Workspace extends Events {
+    on(name: "initial-file-load", callback: (file, contentEl, editor, leaf) => any): EventRef;
+    on(name: "editor-close", callback: (file, contentEl, editor, leaf) => any): EventRef;
+    on(name: "file-unload", callback: (file, contentEl, editor, leaf) => any): EventRef;
   }
 }
 
@@ -111,6 +117,15 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     // add the settings tab
     this.addSettingTab(new ObsidianCodeMirrorOptionsSettingsTab(this.app, this));
 
+    // initial-file-load is a custom event emitted by a patched MarkdownView.onLoadFile
+    this.registerEvent(this.app.workspace.on("initial-file-load", this.onFileLoad));
+
+    // file-unload is a custom event emitted by a patched MarkdownView.onUnloadFile
+    this.registerEvent(this.app.workspace.on("file-unload", this.onFileUnload));
+
+    // editor-close is a custom event emitted by a patched MarkdownView.onClose
+    this.registerEvent(this.app.workspace.on("editor-close", this.onEditorClose));
+
     this.app.workspace.onLayoutReady(() => {
       this.registerCodeMirrorSettings();
       this.applyBodyClasses();
@@ -123,7 +138,6 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     });
     document.on("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);
     document.on("contextmenu", `.rendered-widget img:not(.hmd-image)`, this.onImageContextMenu, false);
-    // this.registerEvent(this.app.workspace.on("editor-menu", this.handleHighlighterMenu));
   }
 
   async loadSettings() {
@@ -173,59 +187,132 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     });
   };
 
+  onFileLoad = (file, contentEl, editor, leaf) => {
+    editor.state.fileName = file.path;
+    if (this.settings.showBacklinks) {
+      this.addBackLinks(file, editor, leaf);
+    }
+  };
+
+  onFileUnload = (file, contentEl, editor, leaf) => {
+    try {
+      this.resetCodeMirrorState(file, contentEl, editor);
+      editor.doc.clearHistory();
+      editor.clearGutter("CodeMirror-foldgutter");
+      this.hideMathPreview();
+    } catch {
+      // console.log("unable to clear editor");
+    }
+  };
+
+  onEditorClose = (file, contentEl, editor, leaf) => {
+    this.removeBackLinks(editor);
+    this.unsetCodeMirrorOptions(editor);
+    setTimeout(() => {
+      try {
+        editor.display.renderedView = [];
+        editor.display.lineDiv?.empty();
+        editor.display.currentWheelTarget?.empty();
+        editor.display = null;
+        editor.blockHTMLObserver.disconnect();
+        editor.blockHTMLObserver = null;
+        Object.keys(editor._handlers).forEach(handler => (editor._handlers[handler] = null));
+      } catch {}
+    }, 500);
+  };
+
+  resetCodeMirrorState(file, contentEl, editor) {
+    // remove any attributes and styles created by the Container Attributes feature
+    if (contentEl) {
+      Object.keys(contentEl.dataset).forEach(el => contentEl.removeAttribute("data-" + el));
+      contentEl.style = null;
+    }
+    // add the current file path to the CodeMirror state for access by native CM methods
+    editor.hmd.Fold.clearAll();
+    editor.hmd.FoldCode.clearAll();
+  }
+
+  removeBackLinks(editor) {
+    if (editor.backlinksWidget) {
+      editor.backlinksWidget.unload();
+      editor.display.lineDiv.parentElement.removeChild(editor.backlinksWidget.contentEl);
+      editor.backlinksWidget = null;
+    }
+  }
+
+  removeBacklinksImmediately() {
+    try {
+      //@ts-ignore
+      this.app.workspace.iterateRootLeaves(leaf => this.removeBackLinks(leaf.view.editor.cm));
+    } catch (err) {
+      // console.log(err);
+    }
+  }
+
+  addBacklinksImmediately() {
+    try {
+      //@ts-ignore
+      this.app.workspace.iterateRootLeaves(leaf => this.addBackLinks(leaf.view.file, leaf.view.editor.cm, leaf));
+    } catch {}
+  }
+
+  addBackLinks(file, editor, leaf) {
+    if (!editor.backlinksWidget) {
+      //@ts-ignore
+      editor.backlinksWidget = this.app.viewRegistry.getViewCreatorByType("backlink")(leaf);
+      editor.display.lineDiv.parentElement.appendChild(editor.backlinksWidget.contentEl);
+    }
+    editor.backlinksWidget.backlink.update = function () {
+      const e = file;
+      this.backlinkFile !== e && this.recomputeBacklink(e), this.unlinkedFile !== e && this.recomputeUnlinked(e);
+      this.updateHeaderTooltip(this.backlinkHeaderEl, this.backlinkCollapsed),
+        this.updateHeaderTooltip(this.unlinkedHeaderEl, this.unlinkedCollapsed);
+    };
+    if (!editor.backlinksWidget._loaded) {
+      editor.backlinksWidget.load();
+    }
+  }
+
+  hideMathPreview() {
+    const previewEl = document.querySelector("#math-preview") as HTMLElement;
+    if (previewEl && !previewEl.hasClass("float-win-hidden")) {
+      previewEl.addClass("float-win-hidden");
+    }
+  }
+
   applyMonkeyPatches() {
     // patching onLoadFile to clear CM specific state in order to avoid fold related memory leaks
     // we also add the current file name to the CM state so that CM native actions have a reference
-    const patchOnLoadFile = around(MarkdownView.prototype, {
+    const patchFileLifecycle = around(MarkdownView.prototype, {
       onLoadFile(old) {
-        // old is the original onLoadFile function
         return function (file) {
-          // TODO: emit a trigger and create event handlers instead of performing direct actions here
           try {
-            const previewEl = document.querySelector("#math-preview") as HTMLElement;
-            if (previewEl && !previewEl.hasClass("float-win-hidden")) {
-              previewEl.addClass("float-win-hidden");
-            }
-            const cm = this.sourceMode?.editor.cm;
-            if (cm) {
-              const viewEl = cm.display?.wrapper?.parentElement?.parentElement;
-              if (viewEl) {
-                Object.keys(viewEl.dataset).forEach(el => viewEl.removeAttribute("data-" + el));
-                viewEl.style = null;
-              }
-              cm.state.fileName = file.path;
-              cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
-              cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
-            }
+            this.app.workspace.trigger("initial-file-load", file, this.contentEl, this.editor.cm, this.leaf);
           } catch {}
-          return old.call(this, file); // call the orignal function and bind the current scope to it
+          return old.call(this, file);
+        };
+      },
+      // @ts-ignore
+      onUnloadFile(old) {
+        return function (file) {
+          const result = old.call(this);
+          try {
+            this.app.workspace.trigger("file-unload", this.file, this.contentEl, this.editor.cm, this.leaf);
+          } catch {}
+          return result;
         };
       },
       // @ts-ignore
       onClose(old) {
         return function () {
-          // TODO: emit a trigger and create event handlers instead of performing direct actions here
           try {
-            const cm = this.sourceMode?.editor.cm;
-            if (cm) {
-              const viewEl = cm.display?.wrapper?.parentElement?.parentElement;
-              if (viewEl) {
-                Object.keys(viewEl.dataset).forEach(el => viewEl.removeAttribute("data-" + el));
-                viewEl.style = null;
-              }
-              cm.hmd.Fold.folded = {}; // these objects can hold references to detached elements
-              cm.hmd.FoldCode.folded = {}; // these objects can hold references to detached elements
-            }
-            const previewEl = document.querySelector("#math-preview") as HTMLElement;
-            if (previewEl && !previewEl.hasClass("float-win-hidden")) {
-              previewEl.addClass("float-win-hidden");
-            }
+            this.app.workspace.trigger("editor-close", this.file, this.contentEl, this.editor.cm, this.leaf);
           } catch {}
           return old.call(this);
         };
       },
     });
-    this.register(patchOnLoadFile);
+    this.register(patchFileLifecycle);
 
     // patch the preview mode click handlers so that we get preview context menus on edit mode rendered widgets
     const patchSourceView = around(MarkdownSourceView.prototype, {
@@ -451,6 +538,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           chart: this.settings.renderChart,
           query: this.settings.renderQuery,
           dataview: this.settings.renderDataview,
+          tasks: this.settings.renderTasks,
         });
       },
     });
@@ -466,6 +554,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           chart: this.settings.renderChart,
           query: this.settings.renderQuery,
           dataview: this.settings.renderDataview,
+          tasks: this.settings.renderTasks,
         });
       },
     });
@@ -481,6 +570,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           chart: this.settings.renderChart,
           query: this.settings.renderQuery,
           dataview: this.settings.renderDataview,
+          tasks: this.settings.renderTasks,
         });
       },
     });
@@ -496,6 +586,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           chart: this.settings.renderChart,
           query: this.settings.renderQuery,
           dataview: this.settings.renderDataview,
+          tasks: this.settings.renderTasks,
         });
       },
     });
@@ -683,6 +774,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         chart: this.settings.renderChart,
         query: this.settings.renderQuery,
         dataview: this.settings.renderDataview,
+        tasks: this.settings.renderTasks,
       });
       if (this.settings.renderMathPreview) init_math_preview(cm);
       if (this.settings.containerAttributes)
@@ -753,22 +845,32 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     if (refresh) this.refreshPanes();
   }
 
-  unsetCodeMirrorOptions() {
+  unsetCodeMirrorOptions(cm) {
+    cm.setOption("styleSelectedText", false);
+    cm.setOption("singleCursorHeightPerLine", true);
+    cm.setOption("styleActiveLine", true);
+    cm.setOption("mode", "hypermd");
+    cm.setOption("hmdHideToken", false);
+    cm.setOption("hmdFold", { image: false, link: false, html: false, code: false, math: false });
+    cm.setOption("hmdTableAlign", false);
+    cm.setOption("hmdClick", false);
+    cm.setOption("cursorBlinkRate", 530);
+    cm.off("renderLine", this.onRenderLineBound);
+    unload_math_preview(cm);
+    // cm.off("imageClicked", this.onImageClick);
+    cm.refresh();
+  }
+
+  unsetAllCodeMirrorOptions() {
     this.app.workspace.iterateCodeMirrors(cm => {
       // revert CodeMirror options back to the CM/Obsidian defaults
-      cm.setOption("styleSelectedText", false);
-      cm.setOption("singleCursorHeightPerLine", true);
-      cm.setOption("styleActiveLine", true);
-      cm.setOption("mode", "hypermd");
-      cm.setOption("hmdHideToken", false);
-      cm.setOption("hmdFold", { image: false, link: false, html: false, code: false, math: false });
-      cm.setOption("hmdTableAlign", false);
-      cm.setOption("hmdClick", false);
-      cm.setOption("cursorBlinkRate", 530);
-      cm.off("renderLine", this.onRenderLineBound);
-      unload_math_preview(cm);
-      // cm.off("imageClicked", this.onImageClick);
-      cm.refresh();
+      try {
+        //@ts-ignore
+        cm.hmd.Fold.clearAll();
+        //@ts-ignore
+        cm.hmd.FoldCode.clearAll();
+      } catch {}
+      this.unsetCodeMirrorOptions(cm);
     });
     document.body.classList.remove("style-active-selection", "style-check-box", "hide-tokens", "fallback-highlighting");
     document.body.classList.remove("cm-render-banners", "cm-collapse-external-links", "cm-render-images-inline");
@@ -816,7 +918,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   );
 
   onunload() {
-    this.unsetCodeMirrorOptions();
+    this.unsetAllCodeMirrorOptions();
     MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessor);
     this.refreshPanes();
     document.off("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);

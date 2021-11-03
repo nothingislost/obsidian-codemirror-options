@@ -4,6 +4,8 @@
 // DESCRIPTION: Turn code blocks into flow charts / playground sandboxes etc.
 //
 
+import { debounce } from "obsidian";
+
 (function (mod) {
   mod(null, (HyperMD.FoldCode = HyperMD.FoldCode || {}), CodeMirror, HyperMD, HyperMD.Fold);
 })(function (require, exports, CodeMirror, core_1, fold_1) {
@@ -120,9 +122,26 @@
       var info;
       while ((info = folded.pop())) info.marker.clear();
     };
+    FoldCode.prototype.clearAll = function () {
+      var debug = false;
+      if (debug) console.log("clear all invoked");
+      fold_1.getAddon(this.cm).startFold.stop();
+      for (var type in this.folded) {
+        var folded = this.folded[type];
+        var info;
+        while ((info = folded.pop())) {
+          if (debug) console.log("clearing widget: " + info.lineWidget.id);
+          info.marker.explicitlyCleared = false;
+          info.marker.clear();
+          info.marker = null;
+          info = null;
+        }
+      }
+    };
     FoldCode.prototype.fold = function (stream, token) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       var _this = this;
+      var debug = false;
       if (token.start !== 0 || !token.type || token.type.indexOf("HyperMD-codeblock-begin") === -1) {
         return null;
       }
@@ -190,7 +209,6 @@
         info.marker.clear();
         return null;
       }
-      //-----------------------------
 
       var $wrapper = document.createElement("div");
       $wrapper.className = contentClass + type;
@@ -205,6 +223,8 @@
         noHScroll: false,
         showIfHidden: false,
       }));
+      if (debug) lineWidget.id = cm.state.fileName + ":" + info.lang + ":" + Math.floor(Math.random() * 1000);
+      if (debug) console.log("created line widget: " + lineWidget.id);
       if (asyncRenderer) {
         asyncRenderer();
       }
@@ -216,25 +236,26 @@
       // so that we can call widget.changed() to remeasure the element
       // and prevent any cursor placement issues
       // this allows our widget to shrink or grow to any size we want
-      this.widgetChanged = core_1.debounce(() => {
-        // console.log("widget change detected: " + this.lineWidget.node.className);
+
+      function updateWidget(widget) {
+        if (debug) console.log("debounced widget change: " + widget.id);
         try {
-          this.lineWidget.changed();
-        } catch {
-          // console.log("widget change failed");
+          widget.changed();
+        } catch (err) {
+          if (debug) console.log(err);
         }
-      }, 250);
-      // we're using MutationObserver rather than ResizeObserver here
-      // due to ResizeObserver causing a memory leak due to holding refs
-      const observer = new MutationObserver((mutations, observer) => {
-        // mutations.forEach(el => {
-        //   console.log(el.target.classList.value);
-        // });
-        this.lineWidget = lineWidget;
-        this.widgetChanged();
+      }
+
+      var widgetChanged = debounce(updateWidget, 250);
+
+      let observer = new ResizeObserver((mutations, observer) => {
+        try {
+          widgetChanged(lineWidget);
+        } catch {}
       });
-      observer.observe($wrapper, { childList: true, subtree: true, attributes: true });
-      //-----------------------------
+
+      observer.observe($wrapper);
+
       var $stub = document.createElement("span");
       $stub.className = stubClass + type;
       $stub.textContent = "<CODE>";
@@ -243,33 +264,59 @@
         inclusiveLeft: true,
         inclusiveRight: true,
       }));
-      //-----------------------------
-      var highlightON = function () {
-        return ($stub.className = stubClassHighlight + type);
-      };
-      var highlightOFF = function () {
-        return ($stub.className = stubClass + type);
-      };
-      // $wrapper.addEventListener("mouseenter", highlightON, false);
-      // $wrapper.addEventListener("mouseleave", highlightOFF, false);
+      if (debug) console.log("created widget marker: " + lineWidget.id + ":" + marker.id);
+
       info.changed = function () {
-        lineWidget.changed();
+        if (debug) console.log("info invoked widget change: " + lineWidget.id);
+        try {
+          lineWidget.changed();
+        } catch (err) {
+          if (debug) console.log("widget update failure", err);
+        }
       };
       info.break = function () {
+        if (debug) console.log("info invoked widget break: " + lineWidget.id);
         observer.disconnect();
+        observer = null;
         fold_1.breakMark(cm, marker);
       };
       $stub.addEventListener("click", info.break, false);
-      marker.on("clear", function () {
+      var redraw = info.redraw;
+      if (redraw) {
+        lineWidget.on("redraw", info.redraw);
+      }
+      function onCodeBlockClear() {
+        if (redraw) {
+          lineWidget.off("redraw", info.redraw);
+        }
+        marker.off("clear", onCodeBlockClear);
+        if (debug) console.log("clear invoked on widget: " + lineWidget.id);
+        $stub.removeEventListener("click", info.break);
+        if (info.unload) {
+          try {
+            info.unload();
+            info.unload = null;
+            info = null;
+            if (debug) console.log("info invoked widget unload: " + lineWidget.id);
+          } catch (err) {
+            if (debug) console.log("failed info invoked widget unload: ", err);
+          }
+        }
         var markers = _this.folded[type];
         var idx;
         if (markers && (idx = markers.indexOf(info)) !== -1) markers.splice(idx, 1);
-        if (typeof info.onRemove === "function") info.onRemove(info);
-        cm.addLineClass(wrapperLine, "wrap", `rendered-${type}-wrapper`);
+        cm.removeLineClass(wrapperLine, "wrap", `rendered-${type}-wrapper`);
         cm.removeLineClass(wrapperLine, "wrap", "rendered-code-block-wrapper");
-        observer.disconnect();
+        if (observer) observer.disconnect();
         lineWidget.clear();
-      });
+        if (debug) console.log("info invoked widget clear: " + lineWidget.id);
+        lineWidget = null;
+        observer = null;
+        marker.replacedWith = null;
+        marker.widgetNode = null;
+        marker = null;
+      }
+      marker.on("clear", onCodeBlockClear);
       if (!(type in this.folded)) this.folded[type] = [info];
       else this.folded[type].push(info);
       return marker;
@@ -281,7 +328,6 @@
   // End
   var contentClass = "hmd-fold-code-content hmd-fold-code-"; // + renderer_type
   var stubClass = "hmd-fold-code-stub hmd-fold-code-"; // + renderer_type
-  var stubClassHighlight = "hmd-fold-code-stub highlight hmd-fold-code-"; // + renderer_type
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   var undefined_function = function () {};
   /** ADDON GETTER (Singleton Pattern): a editor can have only one FoldCode instance */

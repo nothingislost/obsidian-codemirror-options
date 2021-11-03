@@ -116,7 +116,6 @@
   /********************************************************************************** */
   var stubClass = "hmd-fold-html-stub";
   var stubClassOmittable = "hmd-fold-html-stub omittable";
-  var stubClassHighlight = "hmd-fold-html-stub highlight";
   /********************************************************************************** */
   //#region Folder
   /**
@@ -202,8 +201,19 @@
       var replacedWith;
       var marker;
       var isBlock = false;
+      function updateWidgetByEl(targetEl) {
+        const found = cm.hmd.Fold.folded.html.filter(
+          el => el.replacedWith?.contains(targetEl) || el.associatedLineWidget?.node?.contains(targetEl)
+        );
+        if (found.length) {
+          found[0].changed();
+          // console.log("html widget size change");
+        }
+      }
       if (inlineMode) {
         /** put HTML inline */
+        stub.className = stubClassOmittable;
+
         var span = document.createElement("span");
         span.setAttribute("class", "hmd-fold-html rendered-widget");
         span.setAttribute("style", "display: inline-flex");
@@ -212,26 +222,49 @@
 
         replacedWith = span;
         /** If element size changed, we notify CodeMirror */
-        var watcher = core_1.watchSize(el, function (w, h) {
-          var computedStyle = getComputedStyle(el);
-          var getStyle = function (name) {
-            return computedStyle.getPropertyValue(name);
-          };
-          var floating =
-            w < 10 || h < 10 || !/^relative|static$/i.test(getStyle("position")) || !/^none$/i.test(getStyle("float"));
-          if (!floating) stub.className = stubClassOmittable;
-          else stub.className = stubClass;
-          marker.changed();
-        });
-        watcher.check(); // trig the checker once
-        // Marker is not created yet. Bind events later
+
+        function watchInlineSize(w, h, el) {
+          try {
+            updateWidgetByEl(el);
+          } catch (err) {}
+        }
+
+        const inlineObserverCallback = entries => {
+          for (let entry of entries) {
+            if (entry.contentRect) {
+              var width = entry.contentRect.width,
+                height = entry.contentRect.height;
+              try {
+                watchInlineSize(width, height, entry.target);
+              } catch {}
+              entry = null;
+            }
+          }
+        };
+        if (!cm.inlineHTMLObserver) {
+          cm.inlineHTMLObserver = new ResizeObserver(inlineObserverCallback);
+        }
+
+        cm.inlineHTMLObserver.observe(el);
+
+        function onInlineMarkClear() {
+          cm.inlineHTMLObserver.unobserve(el);
+          marker.off("clear", onInlineMarkClear);
+          stub.removeEventListener("click", breakFn);
+          el.removeEventListener("click", breakFn);
+          stub = null;
+          el = null;
+          marker.replacedWith = null;
+          marker.widgetNode = null;
+          marker = null;
+        }
+
         setTimeout(function () {
-          marker.on("clear", function () {
-            watcher.stop();
-          });
+          marker.on("clear", onInlineMarkClear);
         }, 0);
       } else {
         isBlock = true;
+        stub.className = stubClass;
         /** use lineWidget to insert element */
         replacedWith = stub;
         // this causes any text selection to immediately stop if the cursor is coming out of a block html element
@@ -246,27 +279,38 @@
         });
         var wrapperLine = from.line;
         cm.addLineClass(wrapperLine, "wrap", "rendered-html-block-wrapper");
-        // var highlightON_1 = function () {
-        //   return (stub.className = stubClassHighlight);
-        // };
-        // var highlightOFF_1 = function () {
-        //   return (stub.className = stubClass);
-        // };
-        // el.addEventListener("mouseenter", highlightON_1, false);
-        // el.addEventListener("mouseleave", highlightOFF_1, false);
-        var watcher = core_1.watchSize(el, function () {
-          return lineWidget_1.changed();
-        });
-        watcher.check();
+
+        const blockHTMLObserverCallback = entries => {
+          for (let entry of entries) {
+            if (entry.contentRect) {
+              try {
+                updateWidgetByEl(entry.target);
+              } catch {}
+            }
+          }
+        };
+        if (!cm.blockHTMLObserver) {
+          cm.blockHTMLObserver = new ResizeObserver(blockHTMLObserverCallback);
+        }
+        cm.blockHTMLObserver.observe(el);
         // Marker is not created yet. Bind events later
+        function onBlockClear() {
+          marker.off("clear", onBlockClear);
+          cm.blockHTMLObserver.unobserve(el);
+          stub.removeEventListener("click", breakFn);
+          el.removeEventListener("click", breakFn);
+          stub = null;
+          el = null;
+          lineWidget_1.clear();
+          lineWidget_1 = null;
+          cm.removeLineClass(wrapperLine, "wrap", "rendered-html-block-wrapper");
+          marker.replacedWith = null;
+          marker.widgetNode = null;
+          marker.associatedLineWidget = null;
+          marker = null;
+        }
         setTimeout(function () {
-          marker.on("clear", function () {
-            watcher.stop();
-            lineWidget_1.clear();
-            cm.removeLineClass(wrapperLine, "wrap", "rendered-html-block-wrapper");
-            // el.removeEventListener("mouseenter", highlightON_1, false);
-            // el.removeEventListener("mouseleave", highlightOFF_1, false);
-          });
+          marker.on("clear", onBlockClear);
         }, 0);
       }
       marker = cm.markText(from, to, {
@@ -275,6 +319,7 @@
         inclusiveLeft: isBlock,
         inclusiveRight: isBlock,
       });
+      marker.associatedLineWidget = lineWidget_1;
       return marker;
     };
     FoldHTML.prototype.makeStub = function () {
