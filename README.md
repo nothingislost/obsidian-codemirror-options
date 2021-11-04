@@ -219,7 +219,7 @@ Similarly, you can import a theme for use in light mode by using @@light:
 }
 ```
 
-The CSS properties match closely to the standard properties used by CodeMirror. You can find more theme colors here https://codemirror.net/theme/ and adapt them to this import format.
+The CSS properties match closely to the standard properties used by CodeMirror. You can find more theme colors [here](https://codemirror.net/theme/) and adapt them to the import format above. You can test view theme colors [here](https://codemirror.net/demo/theme.html).
 
 ## Settings
 
