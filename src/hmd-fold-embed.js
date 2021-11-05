@@ -98,13 +98,14 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
         var updateWidgetByElDebounced = debounce(updateWidgetByEl, 250);
         function watchInlineSize(w, h, el) {
           try {
+            if (debug) console.log("widget size change pre bounce");
             updateWidgetByElDebounced(el);
           } catch (err) {
             if (debug) console.log(el);
           }
         }
 
-        const inlineObserverCallback = entries => {
+        const embedObserverCallback = entries => {
           for (let entry of entries) {
             if (entry.contentRect) {
               var width = entry.contentRect.width,
@@ -120,21 +121,32 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
         };
 
         if (!cm.embedObserver) {
-          cm.embedObserver = new ResizeObserver(inlineObserverCallback);
+          cm.embedObserver = new ResizeObserver(embedObserverCallback);
         }
 
         if (inlineMode) {
           stub.className = stubClassOmittable;
 
+          var displayType, embedType
           var span = document.createElement("span");
-          span.setAttribute("class", "rendered-inline-embed rendered-widget");
-          span.setAttribute("style", "display: inline-flex;");
+          if (code.contains("^")) {
+            displayType = "inline";
+            embedType = "block";
+          } else if (code.contains("#")) {
+            displayType = "flex";
+            embedType = "header";
+          } else {
+            displayType = "flex";
+            embedType = "page";
+          }
+          span.setAttribute("class", "rendered-inline-embed rendered-widget embed-type-" + embedType);
+          span.setAttribute("style", `display: ${displayType};`);
           span.appendChild(stub);
           span.appendChild(el);
 
           replacedWith = span;
 
-          cm.embedObserver.observe(el);
+          cm.embedObserver.observe(span);
           info.changed = function () {
             if (debug) console.log("info invoked widget change");
             try {
@@ -157,14 +169,14 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
                 if (debug) console.log("failed info invoked widget unload: ", err);
               }
             }
-            var markers = cm.hmd.Fold.folded.embed;
-            var idx;
-            if (markers && (idx = markers.indexOf(marker)) !== -1) {
-              if (debug) console.log("found inline marker in registry", markers, marker);
-              markers.splice(idx, 1);
-            } else {
-              if (debug) console.log("unable to find inline wiget in fold registry", markers, marker);
-            }
+            // var markers = cm.hmd.Fold.folded.embed;
+            // var idx;
+            // if (markers && (idx = markers.indexOf(marker)) !== -1) {
+            //   if (debug) console.log("found inline marker in registry", markers, marker);
+            //   markers.splice(idx, 1);
+            // } else {
+            //   if (debug) console.log("unable to find inline wiget in fold registry", markers, marker);
+            // }
             marker.off("clear", onInlineMarkClear);
             stub.removeEventListener("click", breakFn);
             el.removeEventListener("click", breakFn);
@@ -185,6 +197,17 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
           $wrapper.className = contentClass;
           $wrapper.style.minHeight = "1em";
           $wrapper.appendChild(el);
+          if (code.contains("^")) {
+            displayType = "inline";
+            embedType = "block";
+          } else if (code.contains("#")) {
+            displayType = "flex";
+            embedType = "header";
+          } else {
+            displayType = "flex";
+            embedType = "page";
+          }
+          $wrapper.setAttribute("class", "rendered-embed rendered-widget embed-type-" + embedType);
 
           lineWidget = cm.addLineWidget(to.line, $wrapper, {
             above: false,
@@ -261,10 +284,13 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
         }
         marker = cm.markText(from, to, {
           replacedWith: replacedWith,
-          inclusiveLeft: false,
-          inclusiveRight: false,
+          inclusiveLeft: true,
+          inclusiveRight: true,
         });
         marker.associatedLineWidget = lineWidget;
+        setTimeout(() => {
+          marker.changed();  
+        }, 100);
         return marker;
       } else {
         if (debug && window["ECHOMD_DEBUG"]) {

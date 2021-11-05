@@ -477,6 +477,12 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   position: relative;
   border: 1px solid transparent;
 }
+.cm-s-obsidian .rendered-inline-embed .hmd-fold-embed-stub:hover,
+.cm-s-obsidian .rendered-embed .hmd-fold-embed-stub:hover {
+  color: #fff;
+  border-color: #c30;
+  background: #f40;
+}
 .cm-s-obsidian .rendered-inline-embed .hmd-fold-embed-stub.omittable {
   display: none;
 }
@@ -611,7 +617,7 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   display: none;
 }
 .cm-s-obsidian .CodeMirror-linewidget.rendered-html-block,
-.cm-s-obsidian .CodeMirror-linewidget.rendered-block-embed,
+.cm-s-obsidian .CodeMirror-linewidget.rendered-embed,
 .cm-s-obsidian .CodeMirror-linewidget.rendered-code-block {
   padding: 0 5px;
 }
@@ -635,8 +641,12 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   width: auto;
   max-width: 100%;
 }
-.rendered-block-embed .hmd-fold-embed-content {
+.rendered-embed .hmd-fold-embed-content,
+.rendered-inline-embed:not(.embed-type-block) .markdown-embed-content {
   max-width: 100%;
+}
+.rendered-inline-embed:not(.embed-type-block) > div {
+  width: 100%;
 }
 .cm-s-obsidian .CodeMirror-widget :where(.hmd-fold-code-stub, .hmd-fold-html-stub, .hmd-fold-embed-stub) {
   font-size: 0.7rem;
@@ -657,29 +667,41 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   padding: 0px;
   margin: 0px;
 }
+/* .rendered-inline-embed .markdown-embed-content {
+  white-space: normal;
+} */
 .rendered-inline-embed > div > p,
-.rendered-block-embed > div > div > p {
+.rendered-embed > div > p {
   margin-block: 0;
 }
-.rendered-inline-embed,
-.rendered-inline-embed .markdown-embed,
-.rendered-inline-embed .markdown-embed > .markdown-embed-content,
-.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view,
-.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer,
-.rendered-inline-embed
+.rendered-inline-embed > div,
+.rendered-inline-embed > div > p {
+  display: inline;
+}
+
+.rendered-inline-embed.embed-type-block,
+.rendered-inline-embed.embed-type-block .markdown-embed,
+.rendered-inline-embed.embed-type-block .markdown-embed > .markdown-embed-content,
+.rendered-inline-embed.embed-type-block .markdown-embed > .markdown-embed-content > .markdown-preview-view,
+.rendered-inline-embed.embed-type-block
+  .markdown-embed
+  > .markdown-embed-content
+  > .markdown-preview-view
+  > .markdown-preview-sizer,
+.rendered-inline-embed.embed-type-block
   .markdown-embed
   > .markdown-embed-content
   > .markdown-preview-view
   > .markdown-preview-sizer
   > div,
-.rendered-inline-embed
+.rendered-inline-embed.embed-type-block
   .markdown-embed
   > .markdown-embed-content
   > .markdown-preview-view
   > .markdown-preview-sizer
   > div
   > p,
-.rendered-inline-embed
+.rendered-inline-embed.embed-type-block
   .markdown-embed
   > .markdown-embed-content
   > .markdown-preview-view
@@ -692,9 +714,19 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
 }
 
 /* Convert bullet list block refs inline (remove the bullet) */
-.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer ul,
-.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer li,
-.rendered-inline-embed
+.rendered-inline-embed.embed-type-block
+  .markdown-embed
+  > .markdown-embed-content
+  > .markdown-preview-view
+  > .markdown-preview-sizer
+  ul,
+.rendered-inline-embed.embed-type-block
+  .markdown-embed
+  > .markdown-embed-content
+  > .markdown-preview-view
+  > .markdown-preview-sizer
+  li,
+.rendered-inline-embed.embed-type-block
   .markdown-embed
   > .markdown-embed-content
   > .markdown-preview-view
@@ -703,7 +735,7 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   > div {
   display: inline;
 }
-.rendered-inline-embed
+.rendered-inline-embed.embed-type-block
   div.markdown-embed
   > div.markdown-embed-content
   > div.markdown-preview-view
@@ -714,18 +746,18 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
 }
 
 /* Hide the block ref link unless hovered */
-.rendered-inline-embed div.markdown-embed > div.markdown-embed-link {
+.rendered-inline-embed.embed-type-block div.markdown-embed > div.markdown-embed-link {
   display: none;
   color: transparent;
   top: 0px;
   left: 20px;
 }
 /* Show the block ref link on hover */
-.rendered-inline-embed div.markdown-embed:hover > div.markdown-embed-link {
+.rendered-inline-embed.embed-type-block div.markdown-embed:hover > div.markdown-embed-link {
   display: block;
 }
 
-.rendered-inline-embed
+.rendered-inline-embed.embed-type-block
   div.markdown-embed
   > div.markdown-embed-content
   > div.markdown-preview-view
