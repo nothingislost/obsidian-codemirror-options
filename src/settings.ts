@@ -32,6 +32,7 @@ export class ObsidianCodeMirrorOptionsSettings {
   renderMathPreview: boolean;
   renderBanner: boolean;
   renderTasks: boolean;
+  renderEmbeds: boolean;
   showBacklinks: boolean;
   styleCheckBox: boolean;
   allowedYamlKeys: string;
@@ -64,6 +65,7 @@ export const DEFAULT_SETTINGS: ObsidianCodeMirrorOptionsSettings = {
   renderMath: false,
   renderMathPreview: false,
   renderBanner: false,
+  renderEmbeds: false,
   renderTasks: false,
   showBacklinks: false,
   styleCheckBox: true,
@@ -163,6 +165,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             html: this.plugin.settings.renderHTML,
             code: this.plugin.settings.renderCode,
             math: this.plugin.settings.renderMath,
+            embed: this.plugin.settings.renderEmbeds,
           });
         })
       );
@@ -183,6 +186,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             html: this.plugin.settings.renderHTML,
             code: this.plugin.settings.renderCode,
             math: this.plugin.settings.renderMath,
+            embed: this.plugin.settings.renderEmbeds,
           });
         })
       );
@@ -212,6 +216,23 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       text: "Edit Mode Code Rendering",
     });
     new Setting(containerEl)
+      .setName("Render Embeds")
+      .setDesc(``)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.renderEmbeds).onChange(value => {
+          this.plugin.settings.renderEmbeds = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.updateCodeMirrorOption("hmdFold", {
+            image: this.plugin.settings.foldImages,
+            link: this.plugin.settings.foldLinks,
+            html: this.plugin.settings.renderHTML,
+            code: this.plugin.settings.renderCode,
+            math: this.plugin.settings.renderMath,
+            embed: this.plugin.settings.renderEmbeds,
+          });
+        })
+      );
+    new Setting(containerEl)
       .setName("Render HTML")
       .setDesc(``)
       .addToggle(toggle =>
@@ -224,6 +245,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             html: this.plugin.settings.renderHTML,
             code: this.plugin.settings.renderCode,
             math: this.plugin.settings.renderMath,
+            embed: this.plugin.settings.renderEmbeds,
           });
         })
       );
@@ -240,6 +262,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             html: this.plugin.settings.renderHTML,
             code: this.plugin.settings.renderCode,
             math: this.plugin.settings.renderMath,
+            embed: this.plugin.settings.renderEmbeds,
           });
         })
       );
@@ -278,6 +301,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             html: this.plugin.settings.renderHTML,
             code: this.plugin.settings.renderCode,
             math: this.plugin.settings.renderMath,
+            embed: this.plugin.settings.renderEmbeds,
           });
         })
       );

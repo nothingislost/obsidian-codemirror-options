@@ -19,6 +19,7 @@ import "./hmd-fold-code-with-chart";
 import "./hmd-fold-code-with-query";
 import "./hmd-fold-code-with-dataview";
 import "./hmd-fold-code-with-tasks";
+import "./hmd-fold-embed";
 import "./hmd-fold-math";
 import "./hmd-table-align";
 
@@ -33,7 +34,6 @@ import {
   TFile,
   EditorPosition,
   debounce,
-  TextFileView,
   MarkdownSourceView,
 } from "obsidian";
 
@@ -437,6 +437,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
           math: this.settings.renderMath,
+          embed: this.settings.renderEmbeds,
         });
       },
     });
@@ -453,6 +454,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
           math: this.settings.renderMath,
+          embed: this.settings.renderEmbeds,
         });
       },
     });
@@ -469,6 +471,24 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
           math: this.settings.renderMath,
+          embed: this.settings.renderEmbeds,
+        });
+      },
+    });
+    this.addCommand({
+      id: "toggle-render-embeds",
+      name: "Toggle Render Embeds",
+      callback: () => {
+        this.settings.renderEmbeds = !this.settings.renderEmbeds;
+        this.saveData(this.settings);
+        this.applyBodyClasses();
+        this.updateCodeMirrorOption("hmdFold", {
+          image: this.settings.foldImages,
+          link: this.settings.foldLinks,
+          html: this.settings.renderHTML,
+          code: this.settings.renderCode,
+          math: this.settings.renderMath,
+          embed: this.settings.renderEmbeds,
         });
       },
     });
@@ -485,6 +505,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
           math: this.settings.renderMath,
+          embed: this.settings.renderEmbeds,
         });
       },
     });
@@ -523,6 +544,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
           html: this.settings.renderHTML,
           code: this.settings.renderCode,
           math: this.settings.renderMath,
+          embed: this.settings.renderEmbeds,
         });
       },
     });
@@ -793,6 +815,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         html: this.settings.renderHTML,
         code: this.settings.renderCode,
         math: this.settings.renderMath,
+        embed: this.settings.renderEmbeds,
       });
       cm.setOption("hmdFoldCode", {
         admonition: this.settings.renderAdmonition,

@@ -465,6 +465,63 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   user-select: text;
 }
 
+/* Embed Styling */
+.rendered-embed-wrapper .CodeMirror-line > span {
+  display: block;
+  height: 0px;
+}
+.rendered-embed-wrapper .hmd-fold-code-embed > div > p {
+  margin: 0;
+}
+.cm-s-obsidian .rendered-inline-embed {
+  position: relative;
+  border: 1px solid transparent;
+}
+.cm-s-obsidian .rendered-inline-embed .hmd-fold-embed-stub.omittable {
+  display: none;
+}
+.cm-s-obsidian .rendered-inline-embed:hover {
+  border: 1px dashed #999;
+}
+.cm-s-obsidian .rendered-embed-wrapper .hmd-fold-embed-stub {
+  display: inline-block;
+  font-size: 67%;
+  color: #999;
+  vertical-align: middle;
+  border: 1px solid #999;
+  padding: 0 0.2em;
+  border-radius: 5px;
+  margin: 0 0.5em;
+  background-color: var(--background-primary-alt);
+  cursor: pointer;
+}
+.cm-s-obsidian .rendered-inline-embed .hmd-fold-embed-stub {
+  display: inline-block;
+  font-size: 67%;
+  color: #999;
+  vertical-align: middle;
+  border: 1px solid #999;
+  padding: 0 0.2em;
+  border-radius: 5px;
+  margin: 0 0.5em;
+  background-color: var(--background-primary-alt);
+  cursor: pointer;
+}
+.cm-s-obsidian .rendered-inline-embed:hover .hmd-fold-embed-stub.omittable {
+  display: block;
+  right: 0;
+  bottom: 100%;
+  margin: 0;
+  position: absolute;
+  z-index: 100;
+}
+
+.cm-s-obsidian .hmd-fold-html-stub.omittable,
+.cm-s-obsidian .omittable.hmd-fold-code-stub {
+  display: none;
+}
+/* End Embed Styling */
+
 .cm-s-obsidian .rendered-code-block-wrapper pre.HyperMD-codeblock-begin {
   padding: 0;
 }
@@ -499,7 +556,7 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   border-right: none;
   border-bottom: solid;
   max-width: 100%;
-  padding: 0px;
+  /* padding: 0px; */
 }
 
 /* START: Banner rendering */
@@ -543,7 +600,8 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
 /* START: Rendered code & html block <CODE> button styling and placement */
 
 .rendered-code-block-wrapper .CodeMirror-line .CodeMirror-widget,
-.rendered-html-block-wrapper .CodeMirror-line .CodeMirror-widget {
+.rendered-html-block-wrapper .CodeMirror-line .CodeMirror-widget,
+.rendered-embed-wrapper .CodeMirror-line .CodeMirror-widget {
   position: absolute;
   left: 5px;
   top: -1.5em;
@@ -553,21 +611,34 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   display: none;
 }
 .cm-s-obsidian .CodeMirror-linewidget.rendered-html-block,
+.cm-s-obsidian .CodeMirror-linewidget.rendered-block-embed,
 .cm-s-obsidian .CodeMirror-linewidget.rendered-code-block {
   padding: 0 5px;
 }
 .rendered-html-block-wrapper:hover .CodeMirror-line .CodeMirror-widget,
+.rendered-embed-wrapper:hover .CodeMirror-line .CodeMirror-widget,
 .rendered-code-block-wrapper:hover .CodeMirror-line .CodeMirror-widget {
   display: inline-flex;
 }
 .rendered-html-block-wrapper .CodeMirror-linewidget,
+.rendered-embed-wrapper .CodeMirror-linewidget,
 .rendered-code-block-wrapper .CodeMirror-linewidget {
   /* this is needed to have CM properly calculate the widget height */
   /* when using display: block, margins on child elements don't cause the parent to expand */
   display: grid;
 }
-
-.cm-s-obsidian .CodeMirror-widget :where(.hmd-fold-code-stub, .hmd-fold-html-stub) {
+.mod-root .markdown-source-view.is-readable-line-width .rendered-embed-wrapper .CodeMirror,
+.mod-root .is-readable-line-width .rendered-embed-wrapper .markdown-preview-section {
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 auto 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+.rendered-block-embed .hmd-fold-embed-content {
+  max-width: 100%;
+}
+.cm-s-obsidian .CodeMirror-widget :where(.hmd-fold-code-stub, .hmd-fold-html-stub, .hmd-fold-embed-stub) {
   font-size: 0.7rem;
   font-family: var(--font-monospace);
   font-weight: 600;
@@ -576,22 +647,92 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   line-height: 1.75em;
 }
 
-/* .rendered-code-block-wrapper.rendered-query-wrapper .CodeMirror-line .CodeMirror-widget {
-  right: 0.1em;
-  top: 0.1em;
-}
-
-.rendered-code-block-wrapper.rendered-dataview-wrapper .CodeMirror-line .CodeMirror-widget {
-  right: 0;
-  top: 0.2em;
-}
-
-.rendered-code-block-wrapper.rendered-chart-wrapper .CodeMirror-line .CodeMirror-widget {
-  right: 0.2em;
-  top: 0.2em;
-} */
-
 /* END: Rendered code block <CODE> button styling and placement */
+
+/* Inline Embed Styling */
+.rendered-inline-embed div.markdown-embed {
+  border-top: none;
+  /* border-bottom-color: var(--block-ref-color); */
+  /* border-bottom-style: dashed; */
+  padding: 0px;
+  margin: 0px;
+}
+.rendered-inline-embed > div > p,
+.rendered-block-embed > div > div > p {
+  margin-block: 0;
+}
+.rendered-inline-embed,
+.rendered-inline-embed .markdown-embed,
+.rendered-inline-embed .markdown-embed > .markdown-embed-content,
+.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view,
+.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer,
+.rendered-inline-embed
+  .markdown-embed
+  > .markdown-embed-content
+  > .markdown-preview-view
+  > .markdown-preview-sizer
+  > div,
+.rendered-inline-embed
+  .markdown-embed
+  > .markdown-embed-content
+  > .markdown-preview-view
+  > .markdown-preview-sizer
+  > div
+  > p,
+.rendered-inline-embed
+  .markdown-embed
+  > .markdown-embed-content
+  > .markdown-preview-view
+  > .markdown-preview-sizer
+  > div
+  > div {
+  display: inline;
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+/* Convert bullet list block refs inline (remove the bullet) */
+.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer ul,
+.rendered-inline-embed .markdown-embed > .markdown-embed-content > .markdown-preview-view > .markdown-preview-sizer li,
+.rendered-inline-embed
+  .markdown-embed
+  > .markdown-embed-content
+  > .markdown-preview-view
+  > .markdown-preview-sizer
+  li
+  > div {
+  display: inline;
+}
+.rendered-inline-embed
+  div.markdown-embed
+  > div.markdown-embed-content
+  > div.markdown-preview-view
+  > div.markdown-preview-section
+  ul {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+/* Hide the block ref link unless hovered */
+.rendered-inline-embed div.markdown-embed > div.markdown-embed-link {
+  display: none;
+  color: transparent;
+  top: 0px;
+  left: 20px;
+}
+/* Show the block ref link on hover */
+.rendered-inline-embed div.markdown-embed:hover > div.markdown-embed-link {
+  display: block;
+}
+
+.rendered-inline-embed
+  div.markdown-embed
+  > div.markdown-embed-content
+  > div.markdown-preview-view
+  > div.markdown-preview-section {
+  min-height: 0px !important;
+}
+/* END: Inline Embed Styling */
 
 /* START: Render HTML Styling */
 
