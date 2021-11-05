@@ -276,6 +276,19 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.8.0
+
+# Shiny new things
+- Added the ability to render embeds in edit mode.
+	- Page, header, and block refs are all supported
+	- Embeds can be referenced inline or as a dedicated line block
+	- Embeds are rendered using the same renderer that generates the preview mode embeds. This means all plugins are supported out of the box and will render properly when embedded.
+
+# Known Issues
+- The Outliner plugin list styling can cause the `<EMBED>` button to get truncated due to setting `overflow: none` on the list list
+- In rare cases, embed widgets may render twice
+- Editing a ref to point to a new page can something cause the old ref content to not be cleared out
+
 ### 0.7.0
 
 # Shiny new things

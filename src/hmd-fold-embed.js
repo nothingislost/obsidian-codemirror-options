@@ -127,7 +127,7 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
         if (inlineMode) {
           stub.className = stubClassOmittable;
 
-          var displayType, embedType
+          var displayType, embedType;
           var span = document.createElement("span");
           if (code.contains("^")) {
             displayType = "inline";
@@ -289,8 +289,8 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
         });
         marker.associatedLineWidget = lineWidget;
         setTimeout(() => {
-          marker.changed();  
-        }, 100);
+          marker.changed();
+        }, 250);
         return marker;
       } else {
         if (debug && window["ECHOMD_DEBUG"]) {

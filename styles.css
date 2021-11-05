@@ -478,7 +478,7 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   border: 1px solid transparent;
 }
 .cm-s-obsidian .rendered-inline-embed .hmd-fold-embed-stub:hover,
-.cm-s-obsidian .rendered-embed .hmd-fold-embed-stub:hover {
+.cm-s-obsidian .rendered-embed-wrapper .hmd-fold-embed-stub:hover {
   color: #fff;
   border-color: #c30;
   background: #f40;
@@ -515,7 +515,7 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
 }
 .cm-s-obsidian .rendered-inline-embed:hover .hmd-fold-embed-stub.omittable {
   display: block;
-  right: 0;
+  left: 0;
   bottom: 100%;
   margin: 0;
   position: absolute;
@@ -678,6 +678,12 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
 .rendered-inline-embed > div > p {
   display: inline;
 }
+.rendered-embed p:first-of-type {
+  margin-block: 0;
+}
+.CodeMirror-linewidget.rendered-widget {
+  padding: 0 5px;
+}
 
 .rendered-inline-embed.embed-type-block,
 .rendered-inline-embed.embed-type-block .markdown-embed,
@@ -733,7 +739,7 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   > .markdown-preview-sizer
   li
   > div {
-  display: inline;
+  display: inline-flex;
 }
 .rendered-inline-embed.embed-type-block
   div.markdown-embed

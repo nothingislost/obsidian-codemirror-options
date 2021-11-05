@@ -216,7 +216,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       text: "Edit Mode Code Rendering",
     });
     new Setting(containerEl)
-      .setName("Render Embeds")
+      .setName("⚠️⚠️ Render Embeds")
       .setDesc(``)
       .addToggle(toggle =>
         toggle.setValue(this.plugin.settings.renderEmbeds).onChange(value => {
