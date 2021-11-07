@@ -270,13 +270,20 @@
         // this causes any text selection to immediately stop if the cursor is coming out of a block html element
         // without this, the line widget will get duplicated on cursor selection. see issue #51
         if (cm.state.selectingText) cm.state.selectingText();
-        var lineWidget_1 = cm.addLineWidget(to.line, el, {
-          above: false,
-          coverGutter: false,
-          className: "rendered-html rendered-html-block rendered-widget",
-          noHScroll: false,
-          showIfHidden: false,
-        });
+        var lineWidget_1
+        if (!cm.getLineHandle(from.line).widgets || cm.getLineHandle(from.line).widgets?.length === 0) {
+          lineWidget_1 = cm.addLineWidget(to.line, el, {
+            above: false,
+            coverGutter: false,
+            className: "rendered-html rendered-html-block rendered-widget",
+            noHScroll: false,
+            showIfHidden: false,
+          });
+        } else if (cm.getLineHandle(from.line).widgets?.length) {
+          lineWidget_1 = cm.getLineHandle(from.line).widgets[0];
+        } else {
+          return;
+        }
         var wrapperLine = from.line;
         cm.addLineClass(wrapperLine, "wrap", "rendered-html-block-wrapper");
 
@@ -320,6 +327,7 @@
         inclusiveRight: isBlock,
       });
       marker.associatedLineWidget = lineWidget_1;
+
       return marker;
     };
     FoldHTML.prototype.makeStub = function () {

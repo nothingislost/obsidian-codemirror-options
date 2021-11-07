@@ -521,6 +521,37 @@ body.unified-cm-highlighting.theme-dark.cm-theme-solarized-light {
   position: absolute;
   z-index: 100;
 }
+/* add padding to avoid cursor flicker when moving the cursor from line to line
+   without the padding, there's a slight gap between the lines */
+.rendered-inline-embed.embed-type-block :where(p, li) {
+  padding: 3px 0;
+}
+/* render any headers as normal sized inline text to avoid any cursor/button issues */
+/* why are you block referencing a header anyway? use a header ref */
+.rendered-inline-embed.embed-type-block :where(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  font-size: 1em;
+  display: inline;
+}
+
+/* move the <EMBED> button on list lines since Outliner hides xy overflow */
+.cm-s-obsidian .HyperMD-list-line .rendered-inline-embed:hover .hmd-fold-embed-stub.omittable {
+  display: block;
+  left: -4.8em;
+  height: 1.9em;
+  top: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 100;
+}
+.cm-s-obsidian .HyperMD-list-line .rendered-inline-embed:hover .hmd-fold-embed-stub.omittable.flip-stub {
+  display: inline-block;
+  height: 1.9em;
+  margin: 0;
+  position: static;
+  z-index: 100;
+  width: auto;
+}
 
 .cm-s-obsidian .hmd-fold-html-stub.omittable,
 .cm-s-obsidian .omittable.hmd-fold-code-stub {
@@ -594,7 +625,7 @@ body.cm-render-banners div[data-banner] .CodeMirror-vscrollbar::before {
   background-position: var(--banner_x) var(--banner_y);
 }
 body.cm-render-banners div[data-banner] .CodeMirror-gutter.CodeMirror-linenumbers,
-.mod-root .CodeMirror-gutter.CodeMirror-foldgutter {
+body.cm-render-banners .mod-root div[data-banner] .CodeMirror-gutter.CodeMirror-foldgutter {
   background: transparent;
 }
 body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirror-vscrollbar::before {
@@ -641,10 +672,12 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   width: auto;
   max-width: 100%;
 }
+/* fixes for yinyang embeds getting cut off on the right side gutter */
 .rendered-embed .hmd-fold-embed-content,
 .rendered-inline-embed:not(.embed-type-block) .markdown-embed-content {
   max-width: 100%;
 }
+/* fixes for yinyang embeds getting cut off on the right side gutter */
 .rendered-inline-embed:not(.embed-type-block) > div {
   width: 100%;
 }
@@ -684,7 +717,20 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
 .CodeMirror-linewidget.rendered-widget {
   padding: 0 5px;
 }
-
+/* fix styling of "file not created yet" block */
+.rendered-embed .file-embed:hover {
+  background-color: none;
+  border: none;
+}
+/* fix rendering of embedded pdfs */
+.rendered-embed .internal-embed:not(.image-embed) {
+  display: block;
+}
+.rendered-embed .pdf-embed {
+  width: 100%;
+  height: 800px;
+}
+/* style inline block refs */
 .rendered-inline-embed.embed-type-block,
 .rendered-inline-embed.embed-type-block .markdown-embed,
 .rendered-inline-embed.embed-type-block .markdown-embed > .markdown-embed-content,
@@ -739,7 +785,14 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   > .markdown-preview-sizer
   li
   > div {
-  display: inline-flex;
+  /* inline-flex solves the list item embedded into not list item problem */
+  display: inline;
+}
+.rendered-inline-embed.embed-type-block span.internal-embed {
+  white-space: normal;
+}
+.rendered-inline-embed.embed-type-block .markdown-preview-view span.internal-embed {
+  display: inline;
 }
 .rendered-inline-embed.embed-type-block
   div.markdown-embed
@@ -751,16 +804,13 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   margin: 0px !important;
 }
 
-/* Hide the block ref link unless hovered */
+/* Hide the block ref link since we created our own */
 .rendered-inline-embed.embed-type-block div.markdown-embed > div.markdown-embed-link {
   display: none;
-  color: transparent;
-  top: 0px;
-  left: 20px;
 }
-/* Show the block ref link on hover */
-.rendered-inline-embed.embed-type-block div.markdown-embed:hover > div.markdown-embed-link {
-  display: block;
+
+.rendered-inline-embed.embed-type-block:hover {
+  cursor: pointer;
 }
 
 .rendered-inline-embed.embed-type-block

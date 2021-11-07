@@ -85,14 +85,14 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
         stub.addEventListener("click", breakFn, false);
         var marker, lineWidget;
         function updateWidgetByEl(targetEl) {
-          const found = cm.hmd.Fold.folded.embed.filter(
+          const found = cm.hmd.Fold.folded.embed?.filter(
             el => el.replacedWith?.contains(targetEl) || el.associatedLineWidget?.node?.contains(targetEl)
           );
-          if (found.length) {
+          if (found?.length) {
             found[0].changed();
             if (debug) console.log("embed widget size change");
           } else {
-            if (debug) console.log("couldnt find", targetEl);
+            if (debug) console.log("couldnt find widget");
           }
         }
         var updateWidgetByElDebounced = debounce(updateWidgetByEl, 250);
@@ -141,8 +141,26 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
           }
           span.setAttribute("class", "rendered-inline-embed rendered-widget embed-type-" + embedType);
           span.setAttribute("style", `display: ${displayType};`);
+          if (token.start < 7) {
+            stub.addClass("flip-stub");
+          }
           span.appendChild(stub);
           span.appendChild(el);
+          var targetFile = rawurl.match(/^([^#]*)#/);
+          if (targetFile && targetFile.length > 1 && targetFile[1]) {
+            targetFile = targetFile[1];
+          } else {
+            targetFile = cm.state.fileName?.replace(/\.md$/, "");
+          }
+          span.setAttribute("aria-label", targetFile);
+          HTMLElement.prototype.onClickEvent = function (e, t) {
+            this.addEventListener("click", e, t), this.addEventListener("auxclick", e, t);
+          };
+          el.onClickEvent(function (e) {
+            if (e.composedPath()[0].className === "internal-link") return;
+            (0 !== e.button && 1 !== e.button) ||
+              (e.preventDefault(), window.app.workspace.openLinkText(rawurl, cm.state.fileName, false));
+          });
 
           replacedWith = span;
 
@@ -190,7 +208,7 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
 
           setTimeout(function () {
             marker.on("clear", onInlineMarkClear);
-          }, 0);
+          }, 100);
         } else {
           // Block Placement
           var $wrapper = document.createElement("div");
@@ -208,15 +226,20 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
             embedType = "page";
           }
           $wrapper.setAttribute("class", "rendered-embed rendered-widget embed-type-" + embedType);
-
-          lineWidget = cm.addLineWidget(to.line, $wrapper, {
-            above: false,
-            coverGutter: false,
-            handleMouseEvents: false,
-            className: "rendered-block-embed rendered-widget",
-            noHScroll: false,
-            showIfHidden: false,
-          });
+          if (!cm.getLineHandle(lineNo).widgets || cm.getLineHandle(lineNo).widgets?.length === 0) {
+            lineWidget = cm.addLineWidget(to.line, $wrapper, {
+              above: false,
+              coverGutter: false,
+              handleMouseEvents: false,
+              className: "rendered-block-embed rendered-widget",
+              noHScroll: false,
+              showIfHidden: false,
+            });
+          } else if (cm.getLineHandle(lineNo).widgets?.length) {
+            lineWidget = cm.getLineHandle(lineNo).widgets[0];
+          } else {
+            return;
+          }
 
           var wrapperLine = stream.lineNo;
           cm.addLineClass(wrapperLine, "wrap", `rendered-${type}-wrapper`);
@@ -290,7 +313,7 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
         marker.associatedLineWidget = lineWidget;
         setTimeout(() => {
           marker.changed();
-        }, 250);
+        }, 0);
         return marker;
       } else {
         if (debug && window["ECHOMD_DEBUG"]) {

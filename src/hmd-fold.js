@@ -155,14 +155,25 @@ var ___extends = (function () {
           cm.on("changes", _this.onChange);
           cm.on("viewportChange", _this.onViewportChange);
           cm.on("cursorActivity", _this.onCursorActivity);
+          cm.on("gutterClick", _this.onGutterClick);
         } else {
           cm.off("changes", _this.onChange);
           cm.off("viewportChange", _this.onViewportChange);
           cm.off("cursorActivity", _this.onCursorActivity);
+          cm.off("gutterClick", _this.onGutterClick);
         }
       };
       this.onViewportChange = function (cm, from, to) {
         _this.startFold(from, to);
+      };
+      this.onGutterClick = function (cm, line, gutter, clickEvent) {
+        // check for widgets to render when lists or headers are expanded
+        if (
+          gutter === "CodeMirror-foldgutter" &&
+          clickEvent.composedPath()[0]?.hasClass("CodeMirror-foldgutter-folded")
+        ) {
+          _this.startFoldImmediately(line, cm.getViewport().to + 1);
+        }
       };
       this.checkForPreview = debounce(
         function () {

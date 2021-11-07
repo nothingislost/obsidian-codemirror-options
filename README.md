@@ -276,6 +276,17 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.8.1-0.8.3
+
+- Inline Block Embed related styling fixes
+  - List item block references should now behave properly when embeded
+  - Tweaks to ensure the `<EMBED>` icon is always clickable
+- Rendered widgets now render properly when expanding lists or headers
+- Fixed the display of embedded PDFs
+- Fixed occasional line widget duplication with embeds and html
+- Updated the mouse over label on inline block refs to show the filename of the ref
+- Fixed the inline block ref click handler to cover the entire length of the block ref
+
 ### 0.8.0
 
 # Shiny new things
