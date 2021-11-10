@@ -153,7 +153,7 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
             targetFile = cm.state.fileName?.replace(/\.md$/, "");
           }
           span.setAttribute("aria-label", targetFile);
-          HTMLElement.prototype.onClickEvent = function (e, t) {
+          el.onClickEvent = function (e, t) {
             this.addEventListener("click", e, t), this.addEventListener("auxclick", e, t);
           };
           el.onClickEvent(function (e) {
@@ -178,7 +178,7 @@ import { Component, MarkdownRenderer, debounce } from "obsidian";
             fold_1.breakMark(cm, marker);
           };
           function onInlineMarkClear() {
-            cm.embedObserver.unobserve(el);
+            cm.embedObserver.unobserve(span);
             if (info.unload) {
               try {
                 info.unload();

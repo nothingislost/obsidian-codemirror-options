@@ -109,35 +109,38 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
 
   async onload() {
     // patch the default Obsidian methods, ASAP
-    this.applyMonkeyPatches();
+    //@ts-ignore
+    if (!this.app.vault.config?.livePreview) this.applyMonkeyPatches();
 
     // load settings
     await this.loadSettings();
 
     // add the settings tab
     this.addSettingTab(new ObsidianCodeMirrorOptionsSettingsTab(this.app, this));
+    //@ts-ignore
+    if (!this.app.vault.config?.livePreview) {
+      // initial-file-load is a custom event emitted by a patched MarkdownView.onLoadFile
+      this.registerEvent(this.app.workspace.on("initial-file-load", this.onFileLoad));
 
-    // initial-file-load is a custom event emitted by a patched MarkdownView.onLoadFile
-    this.registerEvent(this.app.workspace.on("initial-file-load", this.onFileLoad));
+      // file-unload is a custom event emitted by a patched MarkdownView.onUnloadFile
+      this.registerEvent(this.app.workspace.on("file-unload", this.onFileUnload));
 
-    // file-unload is a custom event emitted by a patched MarkdownView.onUnloadFile
-    this.registerEvent(this.app.workspace.on("file-unload", this.onFileUnload));
+      // editor-close is a custom event emitted by a patched MarkdownView.onClose
+      this.registerEvent(this.app.workspace.on("editor-close", this.onEditorClose));
 
-    // editor-close is a custom event emitted by a patched MarkdownView.onClose
-    this.registerEvent(this.app.workspace.on("editor-close", this.onEditorClose));
+      this.app.workspace.onLayoutReady(() => {
+        this.registerCodeMirrorSettings();
+        this.applyBodyClasses();
+        this.registerCommands();
 
-    this.app.workspace.onLayoutReady(() => {
-      this.registerCodeMirrorSettings();
-      this.applyBodyClasses();
-      this.registerCommands();
-
-      setTimeout(() => {
-        // workaround to ensure our plugin registers properly with Style Settings
-        this.app.workspace.trigger("css-change");
-      }, 1000);
-    });
-    document.on("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);
-    document.on("contextmenu", `.rendered-widget img:not(.hmd-image)`, this.onImageContextMenu, false);
+        setTimeout(() => {
+          // workaround to ensure our plugin registers properly with Style Settings
+          this.app.workspace.trigger("css-change");
+        }, 1000);
+      });
+      document.on("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);
+      document.on("contextmenu", `.rendered-widget img:not(.hmd-image)`, this.onImageContextMenu, false);
+    }
   }
 
   async loadSettings() {
@@ -352,7 +355,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       onResize(old) {
         return function () {
           setTimeout(() => {
-            const editor = this.owner.app.workspace.activeLeaf?.view.sourceMode.editorEl;
+            const editor = this.owner.app.workspace.activeLeaf?.view?.sourceMode?.editorEl;
             if (editor && !this.widgetHandlersRegistered && this.owner.type === "preview") {
               this.widgetHandlersRegistered = true;
               editor.on("click", ".rendered-widget a.internal-link", this.onInternalLinkClick.bind(this));

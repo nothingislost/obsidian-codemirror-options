@@ -2,6 +2,10 @@
 
 This plugin adds configurable options to customize the behavior of Obsidian's edit mode.
 
+## 11/10/2021 Notice
+- This plugin is not compatible with the new "Expermimental Live Preview" WYSIWYG mode
+- The plugin will still function as normal if the "Expermimental Live Preview" setting is disabled
+- You must restart Obsidian when switching between ""Expermimental Live Preview" states
 ## Disclaimer
 - The features in this plugin all rely on CodeMirror 5 and will not be compatible with CodeMirror 6. Once Obsidian enables CodeMirror 6 and native WYSIWYG mode on desktop, this plugin will not be compatible with the new mode.
 - We do not have any word from the Obsidian devs regarding when we can expect CodeMirror 6 on desktop but once it happens, I will do my best to replicate any of these features that are not implemented natively by Obsidian WYSIWYG.
@@ -275,6 +279,10 @@ To manually install
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
+
+### 0.8.4
+
+- Added logic to not load the plugin if the new Live Preview mode is enabled
 
 ### 0.8.1-0.8.3
 

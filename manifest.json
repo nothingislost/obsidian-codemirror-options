@@ -1,7 +1,7 @@
 {
     "id": "obsidian-codemirror-options",
     "name": "CodeMirror Options",
-    "version": "0.8.3",
+    "version": "0.8.4",
     "description": "Customize the functionality and appearance of Obsidian's edit mode",
     "author": "NothingIsLost",
     "authorUrl": "https://github.com/nothingislost",
