@@ -401,10 +401,10 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   }
 
   getHmdOptions(
-    type: "fold" | "foldCode",
+    type: "hmdFold" | "hmdFoldCode",
   ) {
     switch (type) {
-      case "fold": return ({
+      case "hmdFold": return ({
         image: this.settings.foldImages,
         link: this.settings.foldLinks,
         html: this.settings.renderHTML,
@@ -413,19 +413,18 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         embed: this.settings.renderEmbeds,
         emoji: this.settings.renderEmoji,
       });
-      case "foldCode": return {
-        image: this.settings.foldImages,
-        link: this.settings.foldLinks,
-        html: this.settings.renderHTML,
-        code: this.settings.renderCode,
-        math: this.settings.renderMath,
-        embed: this.settings.renderEmbeds,
+      case "hmdFoldCode": return {
+        admonition: this.settings.renderAdmonition,
+        chart: this.settings.renderChart,
+        query: this.settings.renderQuery,
+        dataview: this.settings.renderDataview,
+        tasks: this.settings.renderTasks,
       };
       default: assertNever(type);
     }
   }
   updateHmdOptions(type: Parameters<typeof this["getHmdOptions"]>[0]) {
-    return this.updateCodeMirrorOption("hmdFold", this.getHmdOptions(type));
+    return this.updateCodeMirrorOption(type, this.getHmdOptions(type));
   }
 
   registerCommands() {
@@ -465,7 +464,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.foldLinks = !this.settings.foldLinks;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("fold");
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -475,7 +474,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.foldImages = !this.settings.foldImages;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("fold");
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -485,7 +484,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderHTML = !this.settings.renderHTML;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("fold");
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -495,7 +494,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderEmbeds = !this.settings.renderEmbeds;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("fold");
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -505,7 +504,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderMath = !this.settings.renderMath;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("fold");
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -537,7 +536,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderCode = !this.settings.renderCode;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("fold");
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -547,7 +546,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderDataview = !this.settings.renderDataview;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("foldCode");
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -557,7 +556,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderChart = !this.settings.renderChart;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("foldCode");
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -567,7 +566,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderAdmonition = !this.settings.renderAdmonition;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("foldCode");
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -577,7 +576,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderQuery = !this.settings.renderQuery;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("foldCode");
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -587,7 +586,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderTasks = !this.settings.renderTasks;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateHmdOptions("foldCode");
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -771,8 +770,8 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("hmdClick", this.settings.editModeClickHandler);
       cm.setOption("hmdTableAlign", this.settings.autoAlignTables);
       cm.setOption("cursorBlinkRate", this.settings.cursorBlinkRate);
-      cm.setOption("hmdFold", this.getHmdOptions("fold"));
-      cm.setOption("hmdFoldCode", this.getHmdOptions("foldCode"));
+      cm.setOption("hmdFold", this.getHmdOptions("hmdFold"));
+      cm.setOption("hmdFoldCode", this.getHmdOptions("hmdFoldCode"));
       if (this.settings.renderMathPreview) init_math_preview(cm);
       if (this.settings.containerAttributes)
         this.updateCodeMirrorHandlers("renderLine", this.onRenderLineBound, true, true);

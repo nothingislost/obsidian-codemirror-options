@@ -161,7 +161,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.settings.foldLinks = value;
           this.plugin.saveData(this.plugin.settings);
           this.plugin.applyBodyClasses();
-          this.plugin.updateHmdOptions("fold");
+          this.plugin.updateHmdOptions("hmdFold");
         })
       );
 
@@ -175,7 +175,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           this.plugin.settings.foldImages = value;
           this.plugin.saveData(this.plugin.settings);
           this.plugin.applyBodyClasses();
-          this.plugin.updateHmdOptions("fold");
+          this.plugin.updateHmdOptions("hmdFold");
         })
       );
     new Setting(containerEl)
@@ -210,7 +210,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderEmbeds).onChange(value => {
           this.plugin.settings.renderEmbeds = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("fold");
+          this.plugin.updateHmdOptions("hmdFold");
         })
       );
     new Setting(containerEl)
@@ -220,7 +220,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderHTML).onChange(value => {
           this.plugin.settings.renderHTML = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("fold");
+          this.plugin.updateHmdOptions("hmdFold");
         })
       );
     new Setting(containerEl)
@@ -230,7 +230,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderMath).onChange(value => {
           this.plugin.settings.renderMath = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("fold");
+          this.plugin.updateHmdOptions("hmdFold");
         })
       );
     new Setting(containerEl)
@@ -262,7 +262,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderCode).onChange(value => {
           this.plugin.settings.renderCode = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("fold");
+          this.plugin.updateHmdOptions("hmdFold");
         })
       );
     new Setting(containerEl)
@@ -297,7 +297,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderAdmonition).onChange(value => {
           this.plugin.settings.renderAdmonition = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("foldCode");
+          this.plugin.updateHmdOptions("hmdFoldCode");
         })
       );
     new Setting(containerEl)
@@ -307,7 +307,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderChart).onChange(value => {
           this.plugin.settings.renderChart = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("foldCode");
+          this.plugin.updateHmdOptions("hmdFoldCode");
         })
       );
     new Setting(containerEl)
@@ -317,7 +317,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderQuery).onChange(value => {
           this.plugin.settings.renderQuery = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("foldCode");
+          this.plugin.updateHmdOptions("hmdFoldCode");
         })
       );
     new Setting(containerEl)
@@ -327,7 +327,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderDataview).onChange(value => {
           this.plugin.settings.renderDataview = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("foldCode");
+          this.plugin.updateHmdOptions("hmdFoldCode");
         })
       );
     new Setting(containerEl)
@@ -337,7 +337,7 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
         toggle.setValue(this.plugin.settings.renderTasks).onChange(value => {
           this.plugin.settings.renderTasks = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateHmdOptions("foldCode");
+          this.plugin.updateHmdOptions("hmdFoldCode");
         })
       );
     new Setting(containerEl)
