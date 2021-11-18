@@ -722,6 +722,9 @@ body.cm-render-banners div[data-banner][data-banner-style="gradient"] .CodeMirro
   background-color: none;
   border: none;
 }
+.rendered-inline-embed.embed-type-block .markdown-embed, .rendered-inline-embed.embed-type-block .file-embed {
+  border: none;
+}
 /* fix rendering of embedded pdfs */
 .rendered-embed .internal-embed:not(.image-embed) {
   display: block;
