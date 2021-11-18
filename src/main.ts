@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import assertNever from "assert-never";
 import { ObsidianCodeMirrorOptionsSettings, ObsidianCodeMirrorOptionsSettingsTab } from "./settings";
 import "./runmode";
 import "./colorize";
@@ -20,6 +21,7 @@ import "./hmd-fold-code-with-query";
 import "./hmd-fold-code-with-dataview";
 import "./hmd-fold-code-with-tasks";
 import "./hmd-fold-embed";
+import "./hmd-fold-emoji";
 import "./hmd-fold-math";
 import "./hmd-table-align";
 
@@ -398,6 +400,33 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.register(patchRenderer);
   }
 
+  getHmdOptions(
+    type: "hmdFold" | "hmdFoldCode",
+  ) {
+    switch (type) {
+      case "hmdFold": return ({
+        image: this.settings.foldImages,
+        link: this.settings.foldLinks,
+        html: this.settings.renderHTML,
+        code: this.settings.renderCode,
+        math: this.settings.renderMath,
+        embed: this.settings.renderEmbeds,
+        emoji: this.settings.renderEmoji,
+      });
+      case "hmdFoldCode": return {
+        admonition: this.settings.renderAdmonition,
+        chart: this.settings.renderChart,
+        query: this.settings.renderQuery,
+        dataview: this.settings.renderDataview,
+        tasks: this.settings.renderTasks,
+      };
+      default: assertNever(type);
+    }
+  }
+  updateHmdOptions(type: Parameters<typeof this["getHmdOptions"]>[0]) {
+    return this.updateCodeMirrorOption(type, this.getHmdOptions(type));
+  }
+
   registerCommands() {
     this.addCommand({
       id: "toggle-openmd",
@@ -427,6 +456,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.updateCodeMirrorOption("hmdClick", this.settings.editModeClickHandler);
       },
     });
+
     this.addCommand({
       id: "toggle-collapse-links",
       name: "Toggle Collapse External Links",
@@ -434,14 +464,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.foldLinks = !this.settings.foldLinks;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFold", {
-          image: this.settings.foldImages,
-          link: this.settings.foldLinks,
-          html: this.settings.renderHTML,
-          code: this.settings.renderCode,
-          math: this.settings.renderMath,
-          embed: this.settings.renderEmbeds,
-        });
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -451,14 +474,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.foldImages = !this.settings.foldImages;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFold", {
-          image: this.settings.foldImages,
-          link: this.settings.foldLinks,
-          html: this.settings.renderHTML,
-          code: this.settings.renderCode,
-          math: this.settings.renderMath,
-          embed: this.settings.renderEmbeds,
-        });
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -468,14 +484,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderHTML = !this.settings.renderHTML;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFold", {
-          image: this.settings.foldImages,
-          link: this.settings.foldLinks,
-          html: this.settings.renderHTML,
-          code: this.settings.renderCode,
-          math: this.settings.renderMath,
-          embed: this.settings.renderEmbeds,
-        });
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -485,14 +494,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderEmbeds = !this.settings.renderEmbeds;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFold", {
-          image: this.settings.foldImages,
-          link: this.settings.foldLinks,
-          html: this.settings.renderHTML,
-          code: this.settings.renderCode,
-          math: this.settings.renderMath,
-          embed: this.settings.renderEmbeds,
-        });
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -502,14 +504,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderMath = !this.settings.renderMath;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFold", {
-          image: this.settings.foldImages,
-          link: this.settings.foldLinks,
-          html: this.settings.renderHTML,
-          code: this.settings.renderCode,
-          math: this.settings.renderMath,
-          embed: this.settings.renderEmbeds,
-        });
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -541,14 +536,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderCode = !this.settings.renderCode;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFold", {
-          image: this.settings.foldImages,
-          link: this.settings.foldLinks,
-          html: this.settings.renderHTML,
-          code: this.settings.renderCode,
-          math: this.settings.renderMath,
-          embed: this.settings.renderEmbeds,
-        });
+        this.updateHmdOptions("hmdFold");
       },
     });
     this.addCommand({
@@ -558,13 +546,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderDataview = !this.settings.renderDataview;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFoldCode", {
-          admonition: this.settings.renderAdmonition,
-          chart: this.settings.renderChart,
-          query: this.settings.renderQuery,
-          dataview: this.settings.renderDataview,
-          tasks: this.settings.renderTasks,
-        });
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -574,13 +556,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderChart = !this.settings.renderChart;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFoldCode", {
-          admonition: this.settings.renderAdmonition,
-          chart: this.settings.renderChart,
-          query: this.settings.renderQuery,
-          dataview: this.settings.renderDataview,
-          tasks: this.settings.renderTasks,
-        });
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -590,13 +566,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderAdmonition = !this.settings.renderAdmonition;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFoldCode", {
-          admonition: this.settings.renderAdmonition,
-          chart: this.settings.renderChart,
-          query: this.settings.renderQuery,
-          dataview: this.settings.renderDataview,
-          tasks: this.settings.renderTasks,
-        });
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -606,13 +576,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderQuery = !this.settings.renderQuery;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFoldCode", {
-          admonition: this.settings.renderAdmonition,
-          chart: this.settings.renderChart,
-          query: this.settings.renderQuery,
-          dataview: this.settings.renderDataview,
-          tasks: this.settings.renderTasks,
-        });
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -622,13 +586,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
         this.settings.renderTasks = !this.settings.renderTasks;
         this.saveData(this.settings);
         this.applyBodyClasses();
-        this.updateCodeMirrorOption("hmdFoldCode", {
-          admonition: this.settings.renderAdmonition,
-          chart: this.settings.renderChart,
-          query: this.settings.renderQuery,
-          dataview: this.settings.renderDataview,
-          tasks: this.settings.renderTasks,
-        });
+        this.updateHmdOptions("hmdFoldCode");
       },
     });
     this.addCommand({
@@ -812,21 +770,8 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       cm.setOption("hmdClick", this.settings.editModeClickHandler);
       cm.setOption("hmdTableAlign", this.settings.autoAlignTables);
       cm.setOption("cursorBlinkRate", this.settings.cursorBlinkRate);
-      cm.setOption("hmdFold", {
-        image: this.settings.foldImages,
-        link: this.settings.foldLinks,
-        html: this.settings.renderHTML,
-        code: this.settings.renderCode,
-        math: this.settings.renderMath,
-        embed: this.settings.renderEmbeds,
-      });
-      cm.setOption("hmdFoldCode", {
-        admonition: this.settings.renderAdmonition,
-        chart: this.settings.renderChart,
-        query: this.settings.renderQuery,
-        dataview: this.settings.renderDataview,
-        tasks: this.settings.renderTasks,
-      });
+      cm.setOption("hmdFold", this.getHmdOptions("hmdFold"));
+      cm.setOption("hmdFoldCode", this.getHmdOptions("hmdFoldCode"));
       if (this.settings.renderMathPreview) init_math_preview(cm);
       if (this.settings.containerAttributes)
         this.updateCodeMirrorHandlers("renderLine", this.onRenderLineBound, true, true);
@@ -902,7 +847,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     cm.setOption("styleActiveLine", true);
     cm.setOption("mode", "hypermd");
     cm.setOption("hmdHideToken", false);
-    cm.setOption("hmdFold", { image: false, link: false, html: false, code: false, math: false });
+    cm.setOption("hmdFold", { image: false, link: false, html: false, code: false, math: false, emoji: false });
     cm.setOption("hmdTableAlign", false);
     cm.setOption("hmdClick", false);
     cm.setOption("cursorBlinkRate", 530);
