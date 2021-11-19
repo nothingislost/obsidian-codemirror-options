@@ -270,6 +270,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     if (!editor.backlinksWidget) {
       //@ts-ignore
       editor.backlinksWidget = this.app.viewRegistry.getViewCreatorByType("backlink")(leaf);
+      (editor.backlinksWidget.contentEl as HTMLElement).setAttribute("cm-ignore-events", "true");
       editor.display.lineDiv.parentElement.appendChild(editor.backlinksWidget.contentEl);
     }
     editor.backlinksWidget.backlink.update = function () {
