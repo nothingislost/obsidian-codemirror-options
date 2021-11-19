@@ -280,6 +280,14 @@ For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
 
+### 0.9.0
+
+- @aidenlx added the ability to render icon shortcodes in edit mode via @aidenlx's [Icon Shortcodes](https://github.com/aidenlx/obsidian-icon-shortcodes) plugin
+- Re-enabled syntax highlighting features when live preview is enabled
+- Added a new Style Settings option to enable minimal page & header embeds in edit mode
+- Removed a border from inline block ref embeds
+- Updated tsconfig to target ES6
+
 ### 0.8.4
 
 - Added logic to not load the plugin if the new Live Preview mode is enabled
