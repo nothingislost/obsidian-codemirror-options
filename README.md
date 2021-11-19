@@ -279,7 +279,10 @@ To manually install
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
-
+### 0.9.1
+- Fixes to syntax highlighting logic
+  - The plugin should now be more reliable when looking up languages like "java" and "bash" and others
+- Fixed broken syntax highlighting styles
 ### 0.9.0
 
 - @aidenlx added the ability to render icon shortcodes in edit mode via @aidenlx's [Icon Shortcodes](https://github.com/aidenlx/obsidian-icon-shortcodes) plugin
