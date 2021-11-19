@@ -3,6 +3,7 @@
 //
 // DESCRIPTION: Fold and render emoji :smile:
 //
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { getApi } = require("@aidenlx/obsidian-icon-shortcodes");
 (function (mod) {
   //[HyperMD] UMD patched!
@@ -51,7 +52,7 @@ const { getApi } = require("@aidenlx/obsidian-icon-shortcodes");
       name += t.string;
     }
     // filter text that is too long to be shortcode
-    if (name.length > 20) return;
+    if (name.length > 55) return;
     // filter using common shortcode pattern
     if (!EmojiPattern.test(name)) return;
 
