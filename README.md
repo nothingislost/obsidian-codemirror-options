@@ -279,6 +279,8 @@ To manually install
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
+### 0.9.2
+- When the editor backinks widget height exceeded a certain length, you could not longer click on elements. This has been resolved.
 ### 0.9.1
 - Fixes to syntax highlighting logic
   - The plugin should now be more reliable when looking up languages like "java" and "bash" and others
