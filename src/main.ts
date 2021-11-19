@@ -132,9 +132,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
 
       this.app.workspace.onLayoutReady(() => {
         this.registerCodeMirrorSettings();
-        this.applyBodyClasses();
         this.registerCommands();
-
         setTimeout(() => {
           // workaround to ensure our plugin registers properly with Style Settings
           this.app.workspace.trigger("css-change");
@@ -143,6 +141,13 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
       document.on("contextmenu", `img.hmd-image`, this.onImageContextMenu, false);
       document.on("contextmenu", `.rendered-widget img:not(.hmd-image)`, this.onImageContextMenu, false);
     }
+    this.app.workspace.onLayoutReady(() => {
+      this.applyBodyClasses();
+      setTimeout(() => {
+        // workaround to ensure our plugin registers properly with Style Settings
+        this.app.workspace.trigger("css-change");
+      }, 1000);
+    });
   }
 
   async loadSettings() {
@@ -400,27 +405,28 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     this.register(patchRenderer);
   }
 
-  getHmdOptions(
-    type: "hmdFold" | "hmdFoldCode",
-  ) {
+  getHmdOptions(type: "hmdFold" | "hmdFoldCode") {
     switch (type) {
-      case "hmdFold": return ({
-        image: this.settings.foldImages,
-        link: this.settings.foldLinks,
-        html: this.settings.renderHTML,
-        code: this.settings.renderCode,
-        math: this.settings.renderMath,
-        embed: this.settings.renderEmbeds,
-        emoji: this.settings.renderEmoji,
-      });
-      case "hmdFoldCode": return {
-        admonition: this.settings.renderAdmonition,
-        chart: this.settings.renderChart,
-        query: this.settings.renderQuery,
-        dataview: this.settings.renderDataview,
-        tasks: this.settings.renderTasks,
-      };
-      default: assertNever(type);
+      case "hmdFold":
+        return {
+          image: this.settings.foldImages,
+          link: this.settings.foldLinks,
+          html: this.settings.renderHTML,
+          code: this.settings.renderCode,
+          math: this.settings.renderMath,
+          embed: this.settings.renderEmbeds,
+          emoji: this.settings.renderEmoji,
+        };
+      case "hmdFoldCode":
+        return {
+          admonition: this.settings.renderAdmonition,
+          chart: this.settings.renderChart,
+          query: this.settings.renderQuery,
+          dataview: this.settings.renderDataview,
+          tasks: this.settings.renderTasks,
+        };
+      default:
+        assertNever(type);
     }
   }
   updateHmdOptions(type: Parameters<typeof this["getHmdOptions"]>[0]) {
