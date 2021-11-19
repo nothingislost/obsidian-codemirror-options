@@ -1116,11 +1116,15 @@ body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-hmd-frontmatter
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .templater-command-bg, /* templater block in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .templater-inline .cm-templater-command, /* templater inline in edit mode */
 body.unified-cm-highlighting[class*="theme-"] .cm-s-obsidian .cm-math.CodeMirror-linebackground, /* math block in edit mode */
-body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"],
-body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre.cm-s-obsidian[class*="language-"] code /* code block in preview mode */ {
+body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre[class*="language-"],
+body.fallback-highlighting[class*="theme-"] .markdown-preview-view pre[class*="language-"] code /* code block in preview mode */ {
   background: var(--cm-background-color);
   background-color: var(--cm-background-color);
   text-shadow: none; /* just no */
+}
+body.fallback-highlighting[class*="theme-"] code[class*="language-"],
+body.unified-cm-highlighting[class*="theme-"] code[class*="language-"] {
+  display: block;
 }
 
 /* edit modes */

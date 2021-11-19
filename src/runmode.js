@@ -6,7 +6,8 @@ function leftFillNum(num, targetLength) {
 }
 
 CodeMirror.runMode = function (string, modespec, callback, options) {
-  var mode = CodeMirror.getMode(CodeMirror.defaults, modespec);
+  var modeRef = CodeMirror.findModeByName(modespec);
+  var mode = CodeMirror.getMode(CodeMirror.defaults, modeRef?.mime);
   var lineNumber = 1;
   if (callback.nodeType == 1) {
     var tabSize = (options && options.tabSize) || CodeMirror.defaults.tabSize;
