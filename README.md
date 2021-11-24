@@ -1,17 +1,17 @@
 # Obsidian CodeMirror Options
 
-The CodeMirror Options plugin improves the Obsidian desktop editor experience by adding featues such as:
+The CodeMirror Options plugin improves the Obsidian desktop editor experience by adding features such as:
 
 - WYSIWYG/Live Preview markdown editing experience
 - Live rendering of certain Code Blocks in edit mode
 - Live rendering of inline HTML
 - Embed the Backlinks pane directly into the document footer
 - Live rendering of block and inline Latex
-- Enhanced CSS selectors in edit mode, similar to what the Contexual Typography plugin does for Preview mode
+- Enhanced CSS selectors in edit mode, similar to what the Contextual Typography plugin does for Preview mode
 - Unified Syntax Highlighting between edit and preview modes with full theming support
 - Plus many more options to customize the desktop editor experience!
 
-## Notice regarding "Expermimental Live Preview" mode
+## Notice regarding "Experimental Live Preview" mode
 
 The Obsidian developers have recently released "Live Preview" mode to insiders. This new mode upgrades the desktop editor from CodeMirror 5 to CodeMirror 6 and enables much of the live rendering functionality provided by the CodeMirror Options plugin.
 
