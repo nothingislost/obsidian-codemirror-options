@@ -264,16 +264,6 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
           })
         );
       new Setting(containerEl)
-        .setName("Render Code Blocks")
-        .setDesc(`If this is disabled, none of the options below will do anything`)
-        .addToggle(toggle =>
-          toggle.setValue(this.plugin.settings.renderCode).onChange(value => {
-            this.plugin.settings.renderCode = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.updateHmdOptions("hmdFold");
-          })
-        );
-      new Setting(containerEl)
         .setName("Render Emoji/Icon Shortcodes")
         .setDesc(
           createFragment(el => {
@@ -296,6 +286,16 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
             this.app.workspace.iterateCodeMirrors(cm => {
               cm.refresh();
             });
+          })
+        );
+      new Setting(containerEl)
+        .setName("Render Code Blocks")
+        .setDesc(`If this is disabled, none of the options below will do anything`)
+        .addToggle(toggle =>
+          toggle.setValue(this.plugin.settings.renderCode).onChange(value => {
+            this.plugin.settings.renderCode = value;
+            this.plugin.saveData(this.plugin.settings);
+            this.plugin.updateHmdOptions("hmdFold");
           })
         );
       new Setting(containerEl)

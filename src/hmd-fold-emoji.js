@@ -44,11 +44,14 @@ const { getApi } = require("@aidenlx/obsidian-icon-shortcodes");
     // if nearest colon is next token, it's not an emoji
     if (!nextToken || !nextColon || nextColon.i_token <= nextToken.i_token)
       return;
+
+    const tokenType = token.type;
     let name = "";
     for (let i = stream.i_token + 1; i < nextColon.i_token; i++) {
       const t = stream.lineTokens[i];
-      // if warpped tokens not plain text, it's not an emoji
-      if (t.type !== null || !AllowedChar.test(t.string)) return;
+      // if type of warpped tokens not the same as leading colon,
+      // it's not an emoji
+      if (t.type !== tokenType || !AllowedChar.test(t.string)) return;
       name += t.string;
     }
     // filter text that is too long to be shortcode
