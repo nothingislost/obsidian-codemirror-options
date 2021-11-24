@@ -1,26 +1,42 @@
 # Obsidian CodeMirror Options
 
-This plugin adds configurable options to customize the behavior of Obsidian's edit mode.
+The CodeMirror Options plugin improves the Obsidian desktop editor experience by adding featues such as:
 
-## 11/10/2021 Notice
-- This plugin is not compatible with the new "Expermimental Live Preview" WYSIWYG mode
-- The plugin will still function as normal if the "Expermimental Live Preview" setting is disabled
-- You must restart Obsidian when switching between ""Expermimental Live Preview" states
-## Disclaimer
-- The features in this plugin all rely on CodeMirror 5 and will not be compatible with CodeMirror 6. Once Obsidian enables CodeMirror 6 and native WYSIWYG mode on desktop, this plugin will not be compatible with the new mode.
-- We do not have any word from the Obsidian devs regarding when we can expect CodeMirror 6 on desktop but once it happens, I will do my best to replicate any of these features that are not implemented natively by Obsidian WYSIWYG.
+- WYSIWYG/Live Preview markdown editing experience
+- Live rendering of certain Code Blocks in edit mode
+- Live rendering of inline HTML
+- Embed the Backlinks pane directly into the document footer
+- Live rendering of block and inline Latex
+- Enhanced CSS selectors in edit mode, similar to what the Contexual Typography plugin does for Preview mode
+- Unified Syntax Highlighting between edit and preview modes with full theming support
+- Plus many more options to customize the desktop editor experience!
 
+## Notice regarding "Expermimental Live Preview" mode
+
+The Obsidian developers have recently released "Live Preview" mode to insiders. This new mode upgrades the desktop editor from CodeMirror 5 to CodeMirror 6 and enables much of the live rendering functionality provided by the CodeMirror Options plugin.
+
+Due to the overlapping functionality and the different CodeMirror versions, "CodeMirror Options" and "Live Preview" are not compatible.
+
+Once "Live Preview" is generally available, it will be recommended that you use that mode instead of the functionality provided by this plugin.
+
+That being said, this plugin will continue to be maintained and enhanced in order to provide a form of "Live Preview" to anyone who wishes to stay on the legacy desktop editor version. 
+
+The primary drivers for staying on the legacy editor, at this time, are:
+- Vim mode currently only supports CodeMirror 5
+- Not all community plugins support CodeMirror 6 and will need time to fully migrate over
+- Not all themes support CodeMirror 6 and will need time to fully migrate over
 ## Features
 
-### WYSIWYG Functionality
+### WYSIWYG/Live Preview Editing Experience
+
 - Much of the WYSIWYG functionality is achieved by incorporating components from the open source HyperMD project. Obsidian only uses a subset of HyperMD by default and this plugin adds in many of the missing HyperMD features.
-- The WYSIWYG features in this plugin can be resource intensive in certain situations. If you notice performance issues, it it recommended to turn off the settings under the Code Rendering section and see if that improves things.
+- The WYSIWYG features in this plugin can be resource intensive in certain situations. If you notice performance issues, it it recommended to try turning off the settings under the Code Rendering section and see if that improves things.
 
 #### Markdown Parsing
 
 ##### Hide Markdown Tokens
 
-This enables WYSIWYG like functionality in edit mode by hiding markdown tokens once you leave the marked up element
+This enables WYSIWYG/Live Preview like functionality in edit mode by hiding markdown tokens once you leave the marked up element
 
 Token hiding currently supports *em*, **strong**, ~~strikethrough~~, ==highlight==, `inline code`, 
 
@@ -146,7 +162,35 @@ This feature is similar to the Advanced Tables plugin and will automatically ali
 
 This setting can coexist nicely with Advanced Tables and it is recommended to use both since Advanced Tables adds additional features like tab/enter key handling and a number of other useful table features.
 
-### Syntax Highlighting
+## Settings
+
+### Dynamic Cursor Sizing
+
+<img src="https://user-images.githubusercontent.com/89109712/132953850-c2b4b791-9a7a-47fa-845f-62d72208c2e4.gif" width=50% height=50%>
+
+When enabled, the cursor height will be determined by the max height of the entire line. When disabled, the cursor's height is based on the height of the adjacent reference character.
+
+### Retain Active Line on Selection
+
+<img src="https://user-images.githubusercontent.com/89109712/132953861-07d4c5ed-3e81-4a5c-b630-88bcb4168697.gif" width=50% height=50%>
+
+When enabled, text selection will not remove the .active-line class on the current line. When disabled text selection on the active line will remove the .active-line class.
+
+### Mark Selected Text with a CSS class
+
+<img src="https://user-images.githubusercontent.com/89109712/132953864-82bab013-ed55-4226-a8e7-738fb387155e.gif" width=50% height=50%>
+
+When enabled, selected text will be marked with the CSS class .CodeMirror-selectedtext. This replaces the default CodeMirror selection functionality which mimics a selection by painting a background layer behind the text. This new option grants more styling flexibility and avoids issues when selecting items that have defined backgrounds.
+
+### Use CodeMirror for syntax highlighting in preview mode
+
+This setting creates consistent highlighting between edit and preview by using CodeMirror to highlight in both modes. **Note**: This setting requires the "Editor Syntax Highlight" plugin to function.
+
+### Fallback: Unify the default prism.js code block styling
+
+This setting is a fallback option if you do not want to inject CM into preview mode. It will try and unify the prism.js colors to match the CodeMirror theme as close as possible.
+
+## Syntax Highlighting
 
 <img src="https://user-images.githubusercontent.com/89109712/132953836-bac79ab0-581c-469b-a971-6c2dcde2773f.gif" width=70% height=70%>
 
@@ -225,34 +269,6 @@ Similarly, you can import a theme for use in light mode by using @@light:
 
 The CSS properties match closely to the standard properties used by CodeMirror. You can find more theme colors [here](https://codemirror.net/theme/) and adapt them to the import format above. You can test view theme colors [here](https://codemirror.net/demo/theme.html).
 
-## Settings
-
-### Dynamic Cursor Sizing
-
-<img src="https://user-images.githubusercontent.com/89109712/132953850-c2b4b791-9a7a-47fa-845f-62d72208c2e4.gif" width=50% height=50%>
-
-When enabled, the cursor height will be determined by the max height of the entire line. When disabled, the cursor's height is based on the height of the adjacent reference character.
-
-### Retain Active Line on Selection
-
-<img src="https://user-images.githubusercontent.com/89109712/132953861-07d4c5ed-3e81-4a5c-b630-88bcb4168697.gif" width=50% height=50%>
-
-When enabled, text selection will not remove the .active-line class on the current line. When disabled text selection on the active line will remove the .active-line class.
-
-### Mark Selected Text with a CSS class
-
-<img src="https://user-images.githubusercontent.com/89109712/132953864-82bab013-ed55-4226-a8e7-738fb387155e.gif" width=50% height=50%>
-
-When enabled, selected text will be marked with the CSS class .CodeMirror-selectedtext. This replaces the default CodeMirror selection functionality which mimics a selection by painting a background layer behind the text. This new option grants more styling flexibility and avoids issues when selecting items that have defined backgrounds.
-
-### Use CodeMirror for syntax highlighting in preview mode
-
-This setting creates consistent highlighting between edit and preview by using CodeMirror to highlight in both modes. **Note**: This setting requires the "Editor Syntax Highlight" plugin to function.
-
-### Fallback: Unify the default prism.js code block styling
-
-This setting is a fallback option if you do not want to inject CM into preview mode. It will try and unify the prism.js colors to match the CodeMirror theme as close as possible.
-
 ## Known Issues
 
 - This plugin leverages the CM5 API directly which is a deprecated option. Obsidian will be moving to CM6 soon and this plugin will break. I'm not sure yet if I'll be able to make these same tweaks on CM6.
@@ -279,6 +295,8 @@ To manually install
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
+### 0.9.3
+- @aidenlx fixed a few edge cases where emojis were not being detected and rendered
 ### 0.9.2
 - When the editor backinks widget height exceeded a certain length, you could not longer click on elements. This has been resolved.
 ### 0.9.1
