@@ -150,7 +150,7 @@
     checker: exports.defaultChecker,
     renderer: exports.defaultRenderer,
     stubText: "<HTML>",
-    isolatedTagName: /^(?:div|pre|form|mark|table|iframe|ul|ol|input|textarea|p|summary|a)$/i,
+    isolatedTagName: /^(?:div|pre|details|form|mark|table|iframe|ul|ol|input|textarea|p|summary|a)$/i,
   };
   exports.suggestedOption = {};
   core_1.suggestedEditorConfig.hmdFoldHTML = exports.suggestedOption;
