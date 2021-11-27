@@ -154,7 +154,7 @@
       title = mat[2] ? mat[2] : "";
       if (title.charAt(0) === '"') title = title.substr(1, title.length - 2).replace(/\\"/g, '"');
     }
-    return { url: url, title: title };
+    return { url: url?.trim(), title: title };
   }
   exports.ImageFolder = ImageFolder;
   fold_1.registerFolder("image", exports.ImageFolder, true);
