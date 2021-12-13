@@ -89,13 +89,13 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
     containerEl.addClass("codemirror-options-settings");
     let tokenSettings;
 
-    if ((this.app.vault as any).config?.livePreview) {
+    if (!(this.app.vault as any).getConfig("legacyEditor")) {
       containerEl.createEl("h3", {
         text: "⚠️ Notice: Most of this plugin does not function when Live Preview mode is enabled.",
       });
     }
 
-    if (!(this.app.vault as any).config?.livePreview) {
+    if ((this.app.vault as any).getConfig("legacyEditor")) {
       containerEl.createEl("h3", {
         text: "Markdown Parsing",
       });
@@ -483,95 +483,86 @@ export class ObsidianCodeMirrorOptionsSettingsTab extends PluginSettingTab {
       text: "Syntax Highlighting",
     });
     let lineNums, copyButton, copyButtonPre;
-    if (
-      //@ts-ignore
-      this.app.plugins.plugins["cm-editor-syntax-highlight-obsidian"]
-    ) {
-      new Setting(containerEl)
-        .setName("Enable Edit Mode Syntax Highlighting Themes")
-        .setDesc(
-          `Apply syntax highlighting themes to code blocks in edit mode. The default theme is Material Pale Night
+
+    new Setting(containerEl)
+      .setName("Enable Edit Mode Syntax Highlighting Themes")
+      .setDesc(
+        `Apply syntax highlighting themes to code blocks in edit mode. The default theme is Material Pale Night
                 but additional themes are available via the Style Settings plugin`
-        )
-        .addToggle(toggle =>
-          toggle.setValue(this.plugin.settings.syntaxHighlighting).onChange(value => {
-            this.plugin.settings.syntaxHighlighting = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.applyBodyClasses(true);
-          })
-        );
-      new Setting(containerEl)
-        .setName("Enable Preview Mode Syntax Highlighting Themes")
-        .setDesc(
-          `Apply syntax highlighting themes to code blocks in preview mode. The default theme is Material Pale Night
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.syntaxHighlighting).onChange(value => {
+          this.plugin.settings.syntaxHighlighting = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses(true);
+        })
+      );
+    new Setting(containerEl)
+      .setName("Enable Preview Mode Syntax Highlighting Themes")
+      .setDesc(
+        `Apply syntax highlighting themes to code blocks in preview mode. The default theme is Material Pale Night
         but additional themes are available via the Style Settings plugin`
-        )
-        .addToggle(toggle =>
-          toggle.setValue(this.plugin.settings.enablePrismJSStyling).onChange(value => {
-            this.plugin.settings.enablePrismJSStyling = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.applyBodyClasses(true);
-          })
-        );
-      new Setting(containerEl)
-        .setName("Use CodeMirror for syntax highlighting in preview mode")
-        .setDesc(
-          `This setting creates consistent highlighting between edit and preview by using CodeMirror to highlight code in both modes.`
-        )
-        .addToggle(toggle =>
-          toggle.setValue(this.plugin.settings.enableCMinPreview).onChange(value => {
-            this.plugin.settings.enableCMinPreview = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.applyBodyClasses(true);
-            this.plugin.settings.enableCMinPreview
-              ? (lineNums.settingEl.removeClass("setting-disabled"),
-                copyButton.settingEl.removeClass("setting-disabled"),
-                copyButtonPre.settingEl.removeClass("setting-disabled"))
-              : (lineNums.settingEl.addClass("setting-disabled"),
-                copyButton.settingEl.addClass("setting-disabled"),
-                copyButtonPre.settingEl.addClass("setting-disabled"));
-          })
-        );
-      lineNums = new Setting(containerEl)
-        .setName("⚠️ Show line numbers for code blocks in preview mode")
-        .setDesc(`This setting will add line numbers to code blocks in preview mode.`)
-        .addToggle(toggle =>
-          toggle.setValue(this.plugin.settings.showLineNums).onChange(value => {
-            this.plugin.settings.showLineNums = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.applyBodyClasses(true);
-          })
-        );
-      copyButton = new Setting(containerEl)
-        .setName("Enable copy button to code blocks in preview mode")
-        .setDesc(
-          `This setting will add a copy button to the bottom left corner of code blocks in preview mode. The button will show up on code block hover.`
-        )
-        .addToggle(toggle =>
-          toggle.setValue(this.plugin.settings.copyButton).onChange(value => {
-            this.plugin.settings.copyButton = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.applyBodyClasses(true);
-          })
-        );
-      copyButtonPre = new Setting(containerEl)
-        .setName("⚠️ Enable copy button to all PRE blocks in preview mode")
-        .setDesc(
-          `This setting will add a copy button to any PRE element. This could negatively impact certain plugins that render PRE blocks.`
-        )
-        .addToggle(toggle =>
-          toggle.setValue(this.plugin.settings.copyButtonOnPRE).onChange(value => {
-            this.plugin.settings.copyButtonOnPRE = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.applyBodyClasses(true);
-          })
-        );
-    } else {
-      new Setting(containerEl)
-        .setName("Use CodeMirror for syntax highlighting in preview mode")
-        .setDesc('⚠️ Install the plugin "Editor Syntax Highlight" in order to use this feature')
-        .setClass("info");
-    }
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.enablePrismJSStyling).onChange(value => {
+          this.plugin.settings.enablePrismJSStyling = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses(true);
+        })
+      );
+    new Setting(containerEl)
+      .setName("Use CodeMirror for syntax highlighting in preview mode")
+      .setDesc(
+        `This setting creates consistent highlighting between edit and preview by using CodeMirror to highlight code in both modes.`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.enableCMinPreview).onChange(value => {
+          this.plugin.settings.enableCMinPreview = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses(true);
+          this.plugin.settings.enableCMinPreview
+            ? (lineNums.settingEl.removeClass("setting-disabled"),
+              copyButton.settingEl.removeClass("setting-disabled"),
+              copyButtonPre.settingEl.removeClass("setting-disabled"))
+            : (lineNums.settingEl.addClass("setting-disabled"),
+              copyButton.settingEl.addClass("setting-disabled"),
+              copyButtonPre.settingEl.addClass("setting-disabled"));
+        })
+      );
+    lineNums = new Setting(containerEl)
+      .setName("⚠️ Show line numbers for code blocks in preview mode")
+      .setDesc(`This setting will add line numbers to code blocks in preview mode.`)
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.showLineNums).onChange(value => {
+          this.plugin.settings.showLineNums = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses(true);
+        })
+      );
+    copyButton = new Setting(containerEl)
+      .setName("Enable copy button to code blocks in preview mode")
+      .setDesc(
+        `This setting will add a copy button to the bottom left corner of code blocks in preview mode. The button will show up on code block hover.`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.copyButton).onChange(value => {
+          this.plugin.settings.copyButton = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses(true);
+        })
+      );
+    copyButtonPre = new Setting(containerEl)
+      .setName("⚠️ Enable copy button to all PRE blocks in preview mode")
+      .setDesc(
+        `This setting will add a copy button to any PRE element. This could negatively impact certain plugins that render PRE blocks.`
+      )
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.copyButtonOnPRE).onChange(value => {
+          this.plugin.settings.copyButtonOnPRE = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.plugin.applyBodyClasses(true);
+        })
+      );
     containerEl.createEl("h3", {
       text: "Syntax Highlighting Theme",
     });

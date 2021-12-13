@@ -112,7 +112,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
   async onload() {
     // patch the default Obsidian methods, ASAP
     //@ts-ignore
-    if (!this.app.vault.config?.livePreview) this.applyMonkeyPatches();
+    if (this.app.vault.getConfig("legacyEditor")) this.applyMonkeyPatches();
 
     // load settings
     await this.loadSettings();
@@ -120,7 +120,7 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
     // add the settings tab
     this.addSettingTab(new ObsidianCodeMirrorOptionsSettingsTab(this.app, this));
     //@ts-ignore
-    if (!this.app.vault.config?.livePreview) {
+    if (this.app.vault.getConfig("legacyEditor")) {
       // initial-file-load is a custom event emitted by a patched MarkdownView.onLoadFile
       this.registerEvent(this.app.workspace.on("initial-file-load", this.onFileLoad));
 

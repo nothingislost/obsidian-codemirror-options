@@ -295,6 +295,8 @@ To manually install
 For details see [the forums](https://forum.obsidian.md/t/plugins-mini-faq/7737).
 
 ## Changelog
+### 0.9.5
+- Better support for detecting the new Live Preview mode
 ### 0.9.4
 - Fixed a bug that was causing inline math to be rendered with block math styling
 ### 0.9.3

@@ -712,7 +712,7 @@ var __assign =
                   // successfully made one
                   state.hmdTable = tableType;
                   state.hmdTableColumns = rowStyles;
-                  state.hmdTableID = "T" + stream.lineOracle.line;
+                  state.hmdTableID = "T" + stream.lineOracle?.line;
                   state.hmdTableRow = state.hmdTableCol = 0;
                 }
               }
