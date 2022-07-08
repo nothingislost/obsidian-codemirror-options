@@ -122,10 +122,14 @@
         if (_resolvedUrl && _resolvedUrl.path) img.setAttribute("data-path", _resolvedUrl.path);
         img.setAttribute("src", _url);
         if (dimensions) {
+          console.log("dimensions", dimensions);
           var _dims = dimensions.match(/^([0-9]+)x?([0-9]+)?$/);
-          var width = _dims[1] ? `width: ${_dims[1]}px;` : "";
-          var height = _dims[2] ? `height: ${_dims[2]}px;` : "";
-          img.setAttribute("style", `${width} ${height}`);
+          console.log("_dims", _dims);
+          if (_dims != null) {
+            var width = _dims[1] ? `width: ${_dims[1]}px;` : "";
+            var height = _dims[2] ? `height: ${_dims[2]}px;` : "";
+            img.setAttribute("style", `${width} ${height}`);
+          }
         }
         CodeMirror.signal(cm, "imageReadyToLoad", {
           editor: cm,
