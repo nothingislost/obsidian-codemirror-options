@@ -123,9 +123,11 @@
         img.setAttribute("src", _url);
         if (dimensions) {
           var _dims = dimensions.match(/^([0-9]+)x?([0-9]+)?$/);
-          var width = _dims[1] ? `width: ${_dims[1]}px;` : "";
-          var height = _dims[2] ? `height: ${_dims[2]}px;` : "";
-          img.setAttribute("style", `${width} ${height}`);
+          if (_dims) {
+            var width = _dims[1] ? `width: ${_dims[1]}px;` : "";
+            var height = _dims[2] ? `height: ${_dims[2]}px;` : "";
+            img.setAttribute("style", `${width} ${height}`);
+          }
         }
         CodeMirror.signal(cm, "imageReadyToLoad", {
           editor: cm,

@@ -366,21 +366,21 @@ export default class ObsidianCodeMirrorOptionsPlugin extends Plugin {
             const editor = this.owner.app.workspace.activeLeaf?.view?.sourceMode?.editorEl;
             if (editor && !this.widgetHandlersRegistered && this.owner.type === "preview") {
               this.widgetHandlersRegistered = true;
-              editor.on("click", ".rendered-widget a.internal-link", this.onInternalLinkClick.bind(this));
-              editor.on("auxclick", ".rendered-widget a.internal-link", this.onInternalLinkClick.bind(this));
-              editor.on("contextmenu", ".rendered-widget a.internal-link", this.onInternalLinkContextMenu.bind(this));
+              editor.on("click", ".rendered-widget a.internal-link", this.onInternalLinkClick?.bind(this));
+              editor.on("auxclick", ".rendered-widget a.internal-link", this.onInternalLinkClick?.bind(this));
+              editor.on("contextmenu", ".rendered-widget a.internal-link", this.onInternalLinkContextMenu?.bind(this));
               // editor.on("mouseover", ".rendered-widget a.internal-link", this.onInternalLinkMouseover.bind(this));
-              editor.on("click", ".rendered-widget a.external-link", this.onExternalLinkClick.bind(this));
-              editor.on("click", ".rendered-widget a.footnote-link", this.onFootnoteLinkClick.bind(this));
-              editor.on("click", ".rendered-widget .task-list-item-checkbox", this.onCheckboxClick.bind(this));
-              editor.on("click", ".rendered-widget a.tag", this.onTagClick.bind(this));
-              editor.on("click", ".rendered-widget a.internal-query", this.onInternalQueryClick.bind(this));
+              editor.on("click", ".rendered-widget a.external-link", this.onExternalLinkClick?.bind(this));
+              editor.on("click", ".rendered-widget a.footnote-link", this.onFootnoteLinkClick?.bind(this));
+              editor.on("click", ".rendered-widget .task-list-item-checkbox", this.onCheckboxClick?.bind(this));
+              editor.on("click", ".rendered-widget a.tag", this.onTagClick?.bind(this));
+              editor.on("click", ".rendered-widget a.internal-query", this.onInternalQueryClick?.bind(this));
               editor.on(
                 "click",
                 ".rendered-widget .heading-collapse-indicator",
-                this.onHeadingCollapseClick.bind(this)
+                this.onHeadingCollapseClick?.bind(this)
               );
-              editor.on("click", ".rendered-widget li > .list-collapse-indicator", this.onListCollapseClick.bind(this));
+              editor.on("click", ".rendered-widget li > .list-collapse-indicator", this.onListCollapseClick?.bind(this));
               // editor.on("click", ".rendered-widget img", this.onImageClick.bind(this));
             }
           }, 100);
